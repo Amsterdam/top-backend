@@ -21,3 +21,9 @@ Run a command inside the docker container:
 ```bash
 docker-compose run --rm web [command]
 ```
+
+Creating a superuser:
+```bash
+docker-compose run --rm web python manage.py createsuperuser
+```
+A superuser can be used to access the Django backend

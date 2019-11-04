@@ -24,6 +24,7 @@ class Common(Configuration):
 
         # Your apps
         'apps.users',
+        'apps.itinerary',
 
     )
 
