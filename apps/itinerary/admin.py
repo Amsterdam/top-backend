@@ -1,9 +1,11 @@
 from django.contrib import admin
 from .models import Itinerary, ItineraryItem
 
-class ItineraryItemInline(admin.TabularInline):
+class ItineraryItemInline(admin.StackedInline):
     model = ItineraryItem
-    fields = ('case_id', 'address', 'postal_code_area', 'postal_code_street')
+    readonly_fields = ('case_id', 'address', 'postal_code_area', 'postal_code_street')
+    can_delete = False
+    extra = 0
 
 @admin.register(Itinerary)
 class ItineraryAdmin(admin.ModelAdmin):
@@ -12,7 +14,3 @@ class ItineraryAdmin(admin.ModelAdmin):
     inlines = [
         ItineraryItemInline,
     ]
-
-@admin.register(ItineraryItem)
-class ItineraryItemAdmin(admin.ModelAdmin):
-    list_display = ('__str__',)
