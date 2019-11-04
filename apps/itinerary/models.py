@@ -5,7 +5,6 @@ from utils import helpers
 class Itinerary(models.Model):
     """ Itinerary for visiting cases """
     title = models.CharField(max_length=300, blank=False)
-    week = models.IntegerField(default=1, validators=[MaxValueValidator(52), MinValueValidator(1)])
     plain_text_itinerary = models.TextField(max_length=4000, blank=True)
 
     def __str__(self):
@@ -13,7 +12,7 @@ class Itinerary(models.Model):
 
    # this is not needed if small_image is created at set_image
     def save(self, *args, **kwargs):
-        super(Itinerary, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         self.items.all().delete()
 
