@@ -1,6 +1,14 @@
 version: '2'
 
 services:
+  bwv_db:
+    build: ./bwv_db
+    ports:
+      - "5410:5432"
+    environment:
+      POSTGRES_DB: looplijsten_bwv
+      POSTGRES_USER: looplijsten_bwv
+      POSTGRES_PASSWORD: insecure
   database:
     image: amsterdam/postgres11
     shm_size: '512m'
@@ -26,6 +34,9 @@ services:
       - DATABASE_NAME=looplijsten
       - DATABASE_USER=looplijsten
       - DATABASE_PASSWORD=insecure
+      - BWV_DB_NAME=looplijsten_bwv
+      - BWV_DB_USER=looplijsten_bwv
+      - BWV_DB_PASSWORD=insecure
       - UWSGI_HTTP=0.0.0.0:8000
       - UWSGI_MASTER=1
       - UWSGI_STATIC_INDEX=index.html
