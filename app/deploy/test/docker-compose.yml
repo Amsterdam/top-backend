@@ -2,7 +2,7 @@ version: '2'
 
 services:
   bwv_db:
-    build: ./bwv_db
+    build: ../../../bwv_db
     ports:
       - "5410:5432"
     environment:
