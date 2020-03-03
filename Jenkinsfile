@@ -34,6 +34,15 @@ pipeline {
       }
     }
 
+    stage("Run tests") {
+      steps {
+        script {
+          sh "docker-compose run --rm api python manage.py test"
+          sh "docker-compose down --rmi local || true"
+        }
+      }
+    }
+
     stage("Build docker image") {
       // We only build a docker image when we're not deploying to production,
       // to make make sure images deployed to production are deployed to
