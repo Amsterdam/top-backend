@@ -64,7 +64,6 @@ pipeline {
       }
       steps {
         tag_image_as("acceptance")
-        tag_image_as("koenwashere")
         deploy("acceptance")
       }
     }
