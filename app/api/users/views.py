@@ -30,7 +30,7 @@ class ObtainAuthTokenOIDC(APIView):
         authentication_backend = OIDCAuthenticationBackend()
 
         try:
-            user = authentication_backend.authenticate(request, **kwargs)
+            user = authentication_backend.authenticate(request)
         except Exception as e:
             print(e)
             return HttpResponseBadRequest('Could not authenticate')

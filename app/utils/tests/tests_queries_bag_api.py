@@ -144,7 +144,7 @@ class DoBagSearchIdTest(TestCase):
 
 class GetBagDataTest(TestCase):
     @patch('utils.queries_bag_api.do_bag_search')
-    @patch('utils.queries.get_import_adres')
+    @patch('utils.queries_bag_api.get_import_adres')
     @patch('requests.get')
     def test_get_bag_data(self, mock_requests_get, mock_get_import_adres, mock_do_bag_search):
         """

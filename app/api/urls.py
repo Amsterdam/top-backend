@@ -6,7 +6,6 @@ from rest_framework.routers import DefaultRouter
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.itinerary.views import ItineraryViewSet, ItineraryItemViewSet, NoteViewSet
 from api.cases.views import CaseViewSet, CaseSearchViewSet
@@ -14,7 +13,6 @@ from api.health.views import health_default, health_bwv
 from api.users.views import ObtainAuthTokenOIDC, IsAuthenticatedView
 from api.planner.views import GenerateWeeklyItinerariesViewset, AlgorithmView
 from api.planner.views import ConstantsStadiaViewSet, ConstantsProjectsViewSet, SettingsPlannerViewSet
-
 
 admin.site.site_header = "Wonen looplijsten"
 admin.site.site_title = "Wonen looplijsten"
@@ -41,21 +39,16 @@ api_router.register(r'settings/planner', SettingsPlannerViewSet, basename='setti
 urlpatterns = [
     # Admin environment
     path('admin/', admin.site.urls),
+
+    # Algorithm sandbox environment
     path('algorithm/', AlgorithmView.as_view(), name='algorithm'),
 
-    # Health check url
+    # Health check urls
     path('looplijsten/health', health_default, name='health-default'),
     path('looplijsten/health_bwv', health_bwv, name='health-bwv'),
 
-    # OIDC helper urls
-    path('oidc/', include('mozilla_django_oidc.urls')),
-
     # The API for requesting data
     path('api/v1/', include(api_router.urls)),
-
-    # Authentication endpoints for exchanging user credentials for a token
-    path('api/v1/credentials-authenticate/',
-         TokenObtainPairView.as_view(), name='credentials-authenticate'),
 
     # Authentication endpoint for exchanging an OIDC code for a token
     path('api/v1/oidc-authenticate/', ObtainAuthTokenOIDC.as_view(), name='oidc-authenticate'),

@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 class OIDCAuthenticationBackend(auth.OIDCAuthenticationBackend):
 
     @safety_lock
-    def authenticate(self, request, **kwargs):
+    def authenticate(self, request):
         """Authenticates a user based on the OIDC code flow."""
         if request and hasattr(request, 'data') and request.data.get('code', False):
             self.request = request
@@ -26,18 +26,16 @@ class OIDCAuthenticationBackend(auth.OIDCAuthenticationBackend):
         else:
             return None
 
-        reverse_url = self.get_settings('OIDC_AUTHENTICATION_CALLBACK_URL',
-                                        'oidc_authentication_callback')
+        """ Retrieve the redirect uri from the request """
+        http_referer = request.META['HTTP_REFERER']
+        redirect_uri = http_referer.split('?')[0]
 
         token_payload = {
             'client_id': self.OIDC_RP_CLIENT_ID,
             'client_secret': self.OIDC_RP_CLIENT_SECRET,
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': absolutify(
-                self.request,
-                reverse(reverse_url)
-            ),
+            'redirect_uri': redirect_uri,
         }
 
         # Get the token
