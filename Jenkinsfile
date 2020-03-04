@@ -5,7 +5,7 @@ def push_image(tag) {
     def image = docker.image("${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.COMMIT_HASH}")
     image.push(tag)
     // delete local copy on the build server
-    sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${tag}"
+    sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${tag} || true"
   }
 }
 
@@ -86,8 +86,8 @@ pipeline {
     always {
       script {
         // delete local copies on the build server
-        sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:latest"
-        sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.COMMIT_HASH}"
+        sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:latest  || true"
+        sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.COMMIT_HASH} || true"
       }
     }
   }
