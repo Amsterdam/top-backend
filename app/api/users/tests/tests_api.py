@@ -107,10 +107,11 @@ class ObtainAuthTokenOIDCTest(APITestCase):
 
         token_response = response.json()
 
-        # The response contains a refresh and an access token
-        self.assertEquals(list(token_response.keys()), ['refresh', 'access'])
+        # The response contains a refresh and an access token and a user object
+        self.assertEquals(list(token_response.keys()), ['refresh', 'access', 'user'])
         self.assertIsNotNone(token_response['refresh'])
         self.assertIsNotNone(token_response['access'])
+        self.assertIsNotNone(token_response['user'])
 
     @patch('api.users.views.OIDCAuthenticationBackend')
     def test_with_failing_authentication_code(self, mock_OIDCAuthenticationBackend):

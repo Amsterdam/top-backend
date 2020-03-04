@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.users.auth import OIDCAuthenticationBackend
+from api.users.serializers import UserSerializer
 from utils.safety_lock import safety_lock
 
 
@@ -36,9 +37,14 @@ class ObtainAuthTokenOIDC(APIView):
             return HttpResponseBadRequest('Could not authenticate')
 
         refresh = RefreshToken.for_user(user)
+
+        serialized_user = UserSerializer(user)
         return Response(
-            {'refresh': str(refresh),
-             'access': str(refresh.access_token)}
+            {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': serialized_user.data
+            }
         )
 
 
