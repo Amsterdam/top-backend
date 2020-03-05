@@ -21,7 +21,11 @@ pipeline {
   agent any
   environment {
     APP = "looplijsten-api"
+<<<<<<< HEAD
     REPO_IMAGE = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten-backend"
+=======
+    REPO_IMAGE = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten"
+>>>>>>> Simplify Jenkinsfile
   }
 
   stages {
