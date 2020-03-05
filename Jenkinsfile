@@ -3,8 +3,8 @@
 // tag image, push to repo, remove local tagged image
 def tag_image_as(tag) {
   script {
-    docker.image("${REPO_IMAGE}:${env.COMMIT_HASH}").push(tag)
-    sh "docker rmi ${REPO_IMAGE}:${tag} || true"
+    docker.image("${DOCKER_IMAGE_URL}:${env.COMMIT_HASH}").push(tag)
+    sh "docker rmi ${DOCKER_IMAGE_URL}:${tag} || true"
   }
 }
 
@@ -21,7 +21,7 @@ pipeline {
   agent any
   environment {
     APP = "looplijsten-api"
-    REPO_IMAGE = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten"
+    DOCKER_IMAGE_URL = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten"
   }
 
   stages {
@@ -56,7 +56,7 @@ pipeline {
 
       steps {
         script {
-          def image = docker.build("${REPO_IMAGE}:${env.COMMIT_HASH}",
+          def image = docker.build("${DOCKER_IMAGE_URL}:${env.COMMIT_HASH}",
             "--no-cache " +
             "--shm-size 1G " +
             " ./app")
@@ -92,7 +92,7 @@ pipeline {
     always {
       script {
         // delete original image built on the build server
-        sh "docker rmi ${REPO_IMAGE}:${env.COMMIT_HASH} || true"
+        sh "docker rmi ${DOCKER_IMAGE_URL}:${env.COMMIT_HASH} || true"
       }
     }
   }
