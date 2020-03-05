@@ -1,11 +1,10 @@
 #!groovy
 
-def push_image(tag) {
+// tag image, push to repo, remove local tagged image
+def tag_image_as(tag) {
   script {
-    def image = docker.image("${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.COMMIT_HASH}")
-    image.push(tag)
-    // delete local copy on the build server
-    sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${tag} || true"
+    docker.image("${REPO_IMAGE}:${env.COMMIT_HASH}").push(tag)
+    sh "docker rmi ${REPO_IMAGE}:${tag} || true"
   }
 }
 
@@ -21,9 +20,8 @@ def deploy(environment) {
 pipeline {
   agent any
   environment {
-    DOCKER_IMAGE = "fixxx/looplijsten-backend"
     APP = "looplijsten-api"
-    DOCKER_REGISTRY = "repo.secure.amsterdam.nl"
+    REPO_IMAGE = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten-backend"
   }
 
   stages {
@@ -49,12 +47,12 @@ pipeline {
 
       steps {
         script {
-          def image = docker.build("${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.COMMIT_HASH}",
+          def image = docker.build("${REPO_IMAGE}:${env.COMMIT_HASH}",
             "--no-cache " +
             "--shm-size 1G " +
             " ./app")
           image.push()
-          image.push("latest")
+          tag_image_as("latest")
         }
       }
     }
@@ -65,8 +63,8 @@ pipeline {
         branch 'master'
       }
       steps {
-        push_image("acceptance")
-        push_image("koenwashere")
+        tag_image_as("acceptance")
+        tag_image_as("koenwashere")
         deploy("acceptance")
       }
     }
@@ -74,8 +72,8 @@ pipeline {
     stage("Push and deploy production image") {
       when { buildingTag() }
       steps {
-        push_image("production")
-        push_image(env.TAG_NAME)
+        tag_image_as("production")
+        tag_image_as(env.TAG_NAME)
         deploy("production")
       }
     }
@@ -85,9 +83,8 @@ pipeline {
   post {
     always {
       script {
-        // delete local copies on the build server
-        sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:latest  || true"
-        sh "docker rmi ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.COMMIT_HASH} || true"
+        // delete original image built on the build server
+        sh "docker rmi ${REPO_IMAGE}:${env.COMMIT_HASH} || true"
       }
     }
   }
