@@ -12,7 +12,7 @@ def deploy(environment) {
   build job: 'Subtask_Openstack_Playbook',
     parameters: [
         [$class: 'StringParameterValue', name: 'INFRASTRUCTURE', value: 'secure'],
-        [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
+        [$class: 'StringParameterValue', name: 'INVENTORY', value: environment],
         [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-looplijsten-backend.yml'],
     ]
 }
