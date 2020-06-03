@@ -5,7 +5,7 @@ Django==3.0.5
 # Rest apis
 djangorestframework==3.11.0
 django-cors-headers==3.2.1
-drf-spectacular==0.9.4
+drf-spectacular==0.9.6
 
 # Logging
 sentry-sdk==0.14.3
