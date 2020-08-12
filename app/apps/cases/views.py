@@ -81,8 +81,10 @@ class CaseViewSet(ViewSet):
 
         return JsonResponse({"cases": cases})
 
-
-    @extend_schema(description="Get all visits connected to this case", responses={200: VisitSerializer(many=True)})
+    @extend_schema(
+        description="Get all visits connected to this case",
+        responses={200: VisitSerializer(many=True)},
+    )
     @action(detail=True, methods=["get"], name="get_log_timeline")
     def get_log_timeline(self, request, pk):
         """
