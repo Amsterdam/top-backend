@@ -157,8 +157,8 @@ class CaseViewSetTest(APITestCase):
 
         case = baker.make(Case, case_id="test")
         itinerary_item = baker.make(ItineraryItem, case=case)
-        visit_1 = baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
-        visit_2 = baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
+        baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
+        baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
 
 
         url = reverse("case-get-log-timeline", kwargs={"pk": case.case_id})

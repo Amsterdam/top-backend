@@ -1,8 +1,11 @@
+import datetime
 from unittest.mock import patch
 
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItineraryItem
 from django.test import TestCase
+from django.utils import timezone
+from model_bakery import baker
 
 FOO_CASE_ID_A = "FOO_CASE_ID_A"
 FOO_CASE_ID_B = "FOO_CASE_ID_B"
@@ -111,3 +114,26 @@ class ItineraryItemModelTest(TestCase):
 
         with self.assertRaises(Exception):
             ItineraryItem.objects.create(itinerary=itinerary, case=same_case)
+
+    def test_get_visits_today(self, mock):
+        today = timezone.now().replace(hour=0, minute=0, second=0)
+
+        date_1 = today + datetime.timedelta(hours=5, minutes=43)
+        date_2 = today + datetime.timedelta(days=1, hours=5, minutes=43)
+
+        itinerary_item = baker.make(ItineraryItem)
+        visit_set_today = baker.make(
+            "visits.Visit",
+            itinerary_item=itinerary_item,
+            start_time=date_1,
+            _quantity=3,
+        )
+        visit_tomorrow = baker.make(
+            "visits.Visit", itinerary_item=itinerary_item, start_time=date_2
+        )
+
+        self.assertIn(visit_set_today[0], itinerary_item.get_visits_today())
+        self.assertIn(visit_set_today[1], itinerary_item.get_visits_today())
+        self.assertIn(visit_set_today[2], itinerary_item.get_visits_today())
+        self.assertNotIn(visit_tomorrow, itinerary_item.get_visits_today())
+

@@ -13,6 +13,7 @@ from apps.itinerary.models import (
     Note,
     PostalCodeSettings,
 )
+from apps.visits.serializers import VisitRelatedSerializer
 from apps.users.serializers import UserIdSerializer, UserSerializer
 from rest_framework import serializers
 
@@ -62,10 +63,11 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
 class ItineraryItemSerializer(serializers.ModelSerializer):
     case = CaseSerializer(read_only=True)
     notes = NoteSerializer(read_only=True, many=True)
+    visits_today = VisitRelatedSerializer(read_only=True, many=True, source='get_visits_today')
 
     class Meta:
         model = ItineraryItem
-        fields = ("id", "position", "notes", "case", "checked")
+        fields = ("id", "position", "notes", "case", "visits_today", "checked")
 
 
 class ItineraryItemUpdateSerializer(serializers.ModelSerializer):
