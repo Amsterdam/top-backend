@@ -7,6 +7,7 @@ class VisitSerializer(serializers.ModelSerializer):
         model = Visit
         fields = "__all__"
 
+
 class VisitRelatedSerializer(serializers.ModelSerializer):
     """
     Serializer for Visit m2m relation but with start_time added

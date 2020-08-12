@@ -136,4 +136,3 @@ class ItineraryItemModelTest(TestCase):
         self.assertIn(visit_set_today[1], itinerary_item.get_visits_today())
         self.assertIn(visit_set_today[2], itinerary_item.get_visits_today())
         self.assertNotIn(visit_tomorrow, itinerary_item.get_visits_today())
-

@@ -88,7 +88,7 @@ class CaseViewSet(ViewSet):
     @action(detail=True, methods=["get"], name="get_log_timeline")
     def get_log_timeline(self, request, pk):
         """
-        Get list of all visits 
+        Get list of all visits to the building of this case
         """
         visits = Visit.objects.filter(itinerary_item__case__case_id=pk)
         serializer = VisitSerializer(visits, many=True)

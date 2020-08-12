@@ -69,4 +69,3 @@ class Visit(models.Model):
 
     # personal notes to help make report at the office/as reminders for TH.
     personal_notes = models.TextField(blank=True, null=True)
-
