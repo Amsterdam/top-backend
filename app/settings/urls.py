@@ -54,7 +54,7 @@ urlpatterns = [
     path("looplijsten/health", health_default, name="health-default"),
     path("looplijsten/health_bwv", health_bwv, name="health-bwv"),
     # The API for requesting data
-    path("api/v1/", include(api_router.urls)),
+    path("api/v1/", include(api_router.urls), name="api"),
     # Authentication endpoint for exchanging an OIDC code for a token
     path(
         "api/v1/oidc-authenticate/",

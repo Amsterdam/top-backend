@@ -5,12 +5,15 @@ from apps.cases.swagger_parameters import case_search_parameters, unplanned_para
 from apps.fraudprediction.utils import add_fraud_predictions, get_fraud_prediction
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
+from apps.visits.models import Visit
+from apps.visits.serializers import VisitSerializer
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from utils import queries as q
 from utils import queries_bag_api as bag_api
@@ -77,6 +80,18 @@ class CaseViewSet(ViewSet):
         cases = add_fraud_predictions(unplanned_cases)
 
         return JsonResponse({"cases": cases})
+
+
+    @extend_schema(description="Get all visits connected to this case", responses={200: VisitSerializer(many=True)})
+    @action(detail=True, methods=["get"], name="get_log_timeline")
+    def get_log_timeline(self, request, pk):
+        """
+        Get list of all visits 
+        """
+        visits = Visit.objects.filter(itinerary_item__case__case_id=pk)
+        serializer = VisitSerializer(visits, many=True)
+
+        return Response(serializer.data)
 
 
 class CaseSearchViewSet(ViewSet, ListAPIView):

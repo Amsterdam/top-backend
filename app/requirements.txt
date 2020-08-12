@@ -12,6 +12,7 @@ sentry-sdk==0.15.1
 
 # Testing
 freezegun==0.3.15
+model_bakery
 
 # Settings
 django-constance[database]==2.6.0

@@ -1,30 +1,89 @@
 from apps.itinerary.models import ItineraryItem
 from apps.users.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
+# class VisitModelManager(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(suggest_visit_next_time=True)
+
 class Visit(models.Model):
     """ Captures data of a visit """
+    SITUATION_NOBODY_PRESENT = "nobody_present"
+    SITUATION_NO_COOPERATION = "no_cooperation"
+    SITUATION_ACCESS_GRANTED = "access_granted"
 
-    itinerary_item = models.ForeignKey(
-        ItineraryItem, on_delete=models.CASCADE, null=False, related_name="visits"
+    SITUATIONS = (
+        (SITUATION_NOBODY_PRESENT, "Niemand aanwezig"),
+        (SITUATION_NO_COOPERATION, "Geen medewerking"),
+        (SITUATION_ACCESS_GRANTED, "Toegang verleend"),
     )
-    author = models.ForeignKey(
-        to=User, null=False, blank=False, on_delete=models.CASCADE
+
+    OBSERVATION_MALFUNCTIONING_DOORBEL = "malfunctioning_doorbell"
+    OBSERVATION_VIDEO_CALL = "video_call"
+    OBSERVATION_HOTEL_FURNISHED = "hotel_furnished"
+    OBSERVATION_VACANT = "vacant"
+    OBSERVATION_LIKELY_INHABITED = "likely_inhabited"
+
+    OBSERVATIONS = (
+        (OBSERVATION_MALFUNCTIONING_DOORBEL, "Bel functioneert niet"),
+        (OBSERVATION_VIDEO_CALL, "Contact via videobel"),
+        (OBSERVATION_HOTEL_FURNISHED, "Hotelmatig ingericht"),
+        (OBSERVATION_VACANT, "Leegstaand"),
+        (OBSERVATION_LIKELY_INHABITED, "Vermoedelijk bewoond"),
     )
+
+    SUGGEST_VISIT_WEEKEND = "weekend"
+    SUGGEST_VISIT_DAYTIME = "daytime"
+    SUGGEST_VISIT_EVENING = "evening"
+    SUGGEST_VISIT_UNKNOWN = "unknown"
+
+    SUGGEST_NEXT_VISIT = (
+        (SUGGEST_VISIT_WEEKEND, "Weekend"),
+        (SUGGEST_VISIT_DAYTIME, "Overdag"),
+        (SUGGEST_VISIT_EVENING, "'s Avonds"),
+        (SUGGEST_VISIT_UNKNOWN, "Onbekend")
+    )
+
+    status = models.CharField(max_length=50, choices=SITUATIONS, null=True, blank=True)
+    observations = ArrayField(models.CharField(max_length=50, choices=OBSERVATIONS), blank=True, null=True)
+    itinerary_item = models.ForeignKey(ItineraryItem, on_delete=models.CASCADE, related_name='visits')
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
     start_time = models.DateTimeField(null=False)
-    description = models.CharField(null=True, max_length=255)
-    nobody_present = models.BooleanField(null=True)
-    suggest_next_visit_day = models.BooleanField(null=True)
-    suggest_next_visit_evening = models.BooleanField(null=True)
-    suggest_next_visit_weekend = models.BooleanField(null=True)
-    suggest_next_visit_unknown = models.BooleanField(null=True)
-    suggest_discontinue_case = models.BooleanField(null=True)
-    no_cooperation = models.BooleanField(null=True)
-    no_cooperation_malfunctioning_doorbell = models.BooleanField(null=True)
-    no_cooperation_video_call = models.BooleanField(null=True)
-    no_cooperation_hotel_furnished = models.BooleanField(null=True)
-    no_cooperation_vacant = models.BooleanField(null=True)
-    no_cooperation_likely_inhabited = models.BooleanField(null=True)
-    cooperation = models.BooleanField(null=True)
-    cooperation_likely_fraud = models.BooleanField(null=True)
+    
+    description = models.TextField(null=True) # these are the notes when access was granted
+
+    # Descripe if next visit can go ahead and why yes or no
+    can_next_visit_go_ahead = models.BooleanField(default=True, blank=True, null=True)
+    next_visit_can_go_ahead_description = models.TextField(null=True)
+
+    # suggest_visit_next_time = models.BooleanField(default=True) # TODO not sure about this one
+    suggest_next_visit = models.CharField(null=True, max_length=50, choices=SUGGEST_NEXT_VISIT)
+    suggest_next_visit_description = models.TextField(null=True, blank=True)
+
+    # personal notes to help make report at the office/as reminders for TH.
+    personal_notes = models.TextField(blank=True, null=True)
+
+
+    # standard filter out the "do not visit anymore"
+    # objects = VisitModelManager()
+    # objects_all = models.Manager()
+
+    # def get_description(self):
+    #     description_obj = {}
+
+    #     if not self.suggest_next_visit is None:
+    #         description_obj["suggest_next_visit"] = self.suggest_next_visit_description
+
+    #     if not self.can_next_visit_go_ahead is None:
+    #         description_obj["can_next_visit_go_ahead"] = self.next_visit_can_go_ahead_description
+
+    #     return description_obj
+
+  
+
+
+
+
+
