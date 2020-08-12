@@ -160,13 +160,11 @@ class CaseViewSetTest(APITestCase):
         baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
         baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
 
-
         url = reverse("case-get-log-timeline", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 2)
-
 
     def test_ordering_get_log_timeline(self):
         datetime_now = datetime.datetime.now()
@@ -174,16 +172,18 @@ class CaseViewSetTest(APITestCase):
 
         case = baker.make(Case, case_id="test")
         itinerary_item = baker.make(ItineraryItem, case=case)
-        visit_1 = baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
-        visit_2 = baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
-
+        visit_1 = baker.make(
+            Visit, itinerary_item=itinerary_item, start_time=datetime_now
+        )
+        visit_2 = baker.make(
+            Visit, itinerary_item=itinerary_item, start_time=datetime_future
+        )
 
         url = reverse("case-get-log-timeline", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
         self.assertEqual(response.json()[0]["id"], visit_2.id)
         self.assertEqual(response.json()[1]["id"], visit_1.id)
-
 
 
 class CaseSearchViewSetTest(APITestCase):
