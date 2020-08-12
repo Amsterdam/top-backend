@@ -63,13 +63,11 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
 class ItineraryItemSerializer(serializers.ModelSerializer):
     case = CaseSerializer(read_only=True)
     notes = NoteSerializer(read_only=True, many=True)
-    visits_today = VisitRelatedSerializer(
-        read_only=True, many=True, source="get_visits_today"
-    )
+    visits = VisitRelatedSerializer(read_only=True, many=True)
 
     class Meta:
         model = ItineraryItem
-        fields = ("id", "position", "notes", "case", "visits_today", "checked")
+        fields = ("id", "position", "notes", "case", "visits", "checked")
 
 
 class ItineraryItemUpdateSerializer(serializers.ModelSerializer):

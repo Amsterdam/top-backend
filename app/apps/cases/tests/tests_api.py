@@ -150,7 +150,7 @@ class CaseViewSetTest(APITestCase):
 
         self.assertEquals(response.json(), expected_response)
 
-    def test_get_log_timeline(self):
+    def test_get_all_visits_timeline(self):
         datetime_now = datetime.datetime.now()
         datetime_future = datetime.datetime.now() + datetime.timedelta(hours=1)
 
@@ -159,13 +159,13 @@ class CaseViewSetTest(APITestCase):
         baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
         baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
 
-        url = reverse("case-get-log-timeline", kwargs={"pk": case.case_id})
+        url = reverse("case-get-all-visits-timeline", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 2)
 
-    def test_ordering_get_log_timeline(self):
+    def test_ordering_get_all_visits_timeline(self):
         datetime_now = datetime.datetime.now()
         datetime_future = datetime.datetime.now() + datetime.timedelta(hours=1)
 
@@ -178,7 +178,7 @@ class CaseViewSetTest(APITestCase):
             Visit, itinerary_item=itinerary_item, start_time=datetime_future
         )
 
-        url = reverse("case-get-log-timeline", kwargs={"pk": case.case_id})
+        url = reverse("case-get-all-visits-timeline", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
         self.assertEqual(response.json()[0]["id"], visit_2.id)

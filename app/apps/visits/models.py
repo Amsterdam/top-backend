@@ -43,7 +43,9 @@ class Visit(models.Model):
         (SUGGEST_VISIT_UNKNOWN, "Onbekend"),
     )
 
-    status = models.CharField(max_length=50, choices=SITUATIONS, null=True, blank=True)
+    situation = models.CharField(
+        max_length=50, choices=SITUATIONS, null=True, blank=True
+    )
     observations = ArrayField(
         models.CharField(max_length=50, choices=OBSERVATIONS), blank=True, null=True
     )
@@ -57,9 +59,9 @@ class Visit(models.Model):
         null=True
     )  # these are the notes when access was granted
 
-    # Descripe if next visit can go ahead and why yes or no
+    # Describe if next visit can go ahead and why yes or no
     can_next_visit_go_ahead = models.BooleanField(default=True, blank=True, null=True)
-    next_visit_can_go_ahead_description = models.TextField(null=True)
+    can_next_visit_go_ahead_description = models.TextField(null=True)
 
     # suggest_visit_next_time = models.BooleanField(default=True) # TODO not sure about this one
     suggest_next_visit = models.CharField(

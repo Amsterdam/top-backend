@@ -350,11 +350,6 @@ class ItineraryItem(models.Model):
 
         super().save(*args, **kwargs)
 
-    def get_visits_today(self, *args, **kwargs):
-        today = timezone.now().replace(hour=0, minute=0, second=0)
-        tomorrow = today + datetime.timedelta(days=1)
-        return self.visits.filter(start_time__range=[today, tomorrow])
-
 
 class Note(models.Model):
     """ A note for an Itinerary Item """

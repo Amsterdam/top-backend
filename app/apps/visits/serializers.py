@@ -10,7 +10,7 @@ class VisitSerializer(serializers.ModelSerializer):
 
 class VisitRelatedSerializer(serializers.ModelSerializer):
     """
-    Serializer for Visit m2m relation but with start_time added
+    Serializer for Visit many-to-one relation but with start_time added
     """
 
     class Meta:
