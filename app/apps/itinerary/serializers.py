@@ -13,8 +13,8 @@ from apps.itinerary.models import (
     Note,
     PostalCodeSettings,
 )
-from apps.visits.serializers import VisitRelatedSerializer
 from apps.users.serializers import UserIdSerializer, UserSerializer
+from apps.visits.serializers import VisitRelatedSerializer
 from rest_framework import serializers
 
 
