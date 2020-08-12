@@ -14,7 +14,7 @@ from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from utils.unittest_helpers import (
+from app.utils.unittest_helpers import (
     get_authenticated_client,
     get_unauthenticated_client,
 )
