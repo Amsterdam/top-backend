@@ -8,7 +8,7 @@ django-cors-headers==3.4.0
 drf-spectacular==0.9.12
 
 # Logging
-sentry-sdk==0.16.3
+sentry-sdk==0.17.1
 
 # Testing
 freezegun==0.3.15
