@@ -5,7 +5,7 @@ psycopg2
 # Rest apis
 djangorestframework==3.11.1
 django-cors-headers==3.4.0
-drf-spectacular==0.9.13
+drf-spectacular==0.9.14
 
 # Logging
 sentry-sdk==0.18.0
