@@ -7,15 +7,12 @@ from multiprocessing import Process
 from apps.fraudprediction.fraud_predict import FraudPredict
 from apps.fraudprediction.permissions import FraudPredictionApiKeyAuth
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet
-from utils.safety_lock import safety_lock
 
 LOGGER = logging.getLogger(__name__)
 
 
-@method_decorator(safety_lock, "create")
 class FraudPredictionScoringViewSet(ViewSet):
     """
     A view for triggering fraud scoring

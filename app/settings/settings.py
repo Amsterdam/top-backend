@@ -4,8 +4,8 @@ from datetime import timedelta
 from os.path import join
 
 import sentry_sdk
-from apps.planner.const import EXAMPLE_PLANNER_SETTINGS
 from sentry_sdk.integrations.django import DjangoIntegration
+from settings import const as settings_const
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -181,17 +181,12 @@ SPECTACULAR_SETTINGS = {
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
-CONSTANCE_ALLOW_DATA_ACCESS_KEY = "ALLOW_DATA_ACCESS"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY = "BRK_AUTHENTICATION_TOKEN"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY = "BRK_AUTHENTICATION_TOKEN_EXPIRY"
 CONSTANCE_MAPS_KEY = "MAPS_KEY"
 CONSTANCE_PLANNER_SETTINGS_KEY = "PLANNER_SETTINGS"
 
 CONSTANCE_CONFIG = {
-    CONSTANCE_ALLOW_DATA_ACCESS_KEY: (
-        True,
-        "Allow data to be accesible through the API",
-    ),
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY: (
         "",
         "Authentication token for accessing BRK API",
@@ -202,7 +197,7 @@ CONSTANCE_CONFIG = {
     ),
     CONSTANCE_MAPS_KEY: ("", "Maps API Key"),
     CONSTANCE_PLANNER_SETTINGS_KEY: (
-        json.dumps(EXAMPLE_PLANNER_SETTINGS),
+        json.dumps(settings_const.EXAMPLE_PLANNER_SETTINGS),
         "Settings for planning and generating lists",
     ),
 }
@@ -289,8 +284,8 @@ if ENVIRONMENT == "acceptance":
 else:
     ZAKEN_API_URL = os.getenv("ZAKEN_API_URL", None)
 
-# Allows pushes
-PUSH_ZAKEN = os.getenv("PUSH_ZAKEN", True)
+# Allows pushes from Top to Zaken, defaults to True
+PUSH_ZAKEN = os.getenv("PUSH_ZAKEN", "True") == "True"
 
 # Settings to improve security
 is_secure_environment = True if ENVIRONMENT in ["production", "acceptance"] else False
@@ -329,3 +324,7 @@ DECOS_JOIN_VAKANTIEVERHUUR_ID = "TBD"
 DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS = "90642DCCC2DB46469657C3D0DF0B1ED7"
 DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
 USE_DECOS_MOCK_DATA = True
+
+
+# SUBJECTS FOR ZAKEN SYSTEEM TIMELINE
+TIMELINE_SUBJECT_VISIT = "Bezoek"

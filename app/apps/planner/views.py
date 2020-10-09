@@ -1,23 +1,21 @@
 import json
 
-from apps.cases.const import ISSUEMELDING, PROJECTS, STADIA
-from apps.planner.const import EXAMPLE_PLANNER_SETTINGS
-from apps.planner.serializers import PlannerSettingsSerializer, TeamSettingsSerializer
 from apps.planner.models import TeamSettings
+from apps.planner.serializers import PlannerSettingsSerializer, TeamSettingsSerializer
 from constance.backends.database.models import Constance
 from django.conf import settings
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from rest_framework.generics import CreateAPIView, GenericAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ViewSet
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateModelMixin
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from utils.safety_lock import safety_lock
+from rest_framework.viewsets import ViewSet
+from settings.const import ISSUEMELDING, PROJECTS, STADIA
 
 
-@method_decorator(safety_lock, "list")
+
 class ConstantsProjectsViewSet(ViewSet):
     """
     Retrieve the projects constants which are used for cases
@@ -29,7 +27,6 @@ class ConstantsProjectsViewSet(ViewSet):
         return JsonResponse({"constants": PROJECTS})
 
 
-@method_decorator(safety_lock, "list")
 class ConstantsStadiaViewSet(ViewSet):
     """
     Retrieve the stadia constants which are used for cases
@@ -43,8 +40,6 @@ class ConstantsStadiaViewSet(ViewSet):
         return JsonResponse({"constants": constants_stadia})
 
 
-@method_decorator(safety_lock, "list")
-@method_decorator(safety_lock, "create")
 class SettingsPlannerViewSet(ViewSet, CreateAPIView):
     """
     Retrieves the planner settings which are used for generating lists
@@ -64,7 +59,7 @@ class SettingsPlannerViewSet(ViewSet, CreateAPIView):
             settings_data = json.loads(settings_data)
         else:
             # Set the default value if nothing is set, and store it
-            settings_data = EXAMPLE_PLANNER_SETTINGS
+            settings_data = settings.EXAMPLE_PLANNER_SETTINGS
             planner_settings.value = json.dumps(settings_data)
             planner_settings.save()
 
@@ -118,14 +113,11 @@ class TeamSettingsViewSet(
         serializer = TeamSettingsSerializer(team_settings)
         return Response(serializer.data)
 
-    def create(self, request):
+    # TODO PlannerSettings is not defined!
+    # def create(self, request):
+    #     team_settings = PlannerSettings.objects.create(**request.data)
+    #     team_settings.save()
 
-        team_settings = PlannerSettings.objects.create(
-            **request.data
-        )
-        team_settings.save()
-
-        # Serialize and return data
-        serializer = TeamSettingsSerializer(team_settings, many=False)
-        return Response(serializer.data)
-
+    #     # Serialize and return data
+    #     serializer = TeamSettingsSerializer(team_settings, many=False)
+    #     return Response(serializer.data)

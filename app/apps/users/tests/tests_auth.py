@@ -7,9 +7,7 @@ with the OIDC provider
 from unittest.mock import Mock
 
 from apps.users.auth_grip import OIDCAuthenticationBackend
-from constance.test import override_config
 from django.core.exceptions import SuspiciousOperation
-from django.http.response import Http404
 from django.test import TestCase
 
 from app.utils.unittest_helpers import get_test_user
@@ -23,16 +21,6 @@ MOCK_AUTH_REQUEST.META["HTTP_REFERER"] = "FOO REDIRECT"
 
 
 class AuthTest(TestCase):
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        A request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        authentication_backend = OIDCAuthenticationBackend()
-
-        with self.assertRaises(Http404):
-            authentication_backend.authenticate(MOCK_AUTH_REQUEST)
-
     def test_no_code_in_request(self):
         """
         An authentication without given data and access code will not do anything

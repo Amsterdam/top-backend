@@ -1,18 +1,16 @@
 import datetime
 from unittest.mock import Mock, patch
 
-from apps.cases.const import ISSUEMELDING
 from apps.cases.models import Case
 from apps.fraudprediction.models import FraudPrediction
 from apps.fraudprediction.serializers import FraudPredictionSerializer
 from apps.itinerary.models import ItineraryItem
 from apps.visits.models import Visit
-from constance.test import override_config
-from django.test import Client
 from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APITestCase
+from settings.const import ISSUEMELDING
 
 from app.utils.unittest_helpers import (
     get_authenticated_client,
@@ -34,16 +32,6 @@ class CaseViewSetTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("case-detail", kwargs={"pk": "foo"})
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @patch("apps.cases.views.brk_api")
     @patch("apps.cases.views.bag_api")
@@ -204,16 +192,6 @@ class CaseSearchViewSetTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        An authenticated search should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("search-list")
-        client = get_authenticated_client()
-        response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @patch("apps.cases.views.q")
     def test_search_without_postal_code(self, mock_q):

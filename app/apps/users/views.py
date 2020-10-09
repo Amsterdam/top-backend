@@ -11,18 +11,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-from utils.safety_lock import safety_lock
 
 LOGGER = logging.getLogger(__name__)
 
 
-@method_decorator(safety_lock, "get")
 class UserListView(ViewSet, generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-@method_decorator(safety_lock, "get")
 class IsAuthenticatedView(APIView):
     permission_classes = ()
 
@@ -36,7 +33,6 @@ class OIDCAuthenticateSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
 
 
-@method_decorator(safety_lock, "post")
 class ObtainAuthTokenOIDC(APIView):
     serializer_class = OIDCAuthenticateSerializer
     permission_classes = ()

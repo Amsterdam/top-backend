@@ -2,7 +2,6 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from utils.safety_lock import safety_lock
 
 LOGGER = logging.getLogger(__name__)
 
@@ -13,7 +12,6 @@ DEFAULT_LAST_NAME = "user"
 
 
 class DevelopmentAuthenticationBackend:
-    @safety_lock
     def authenticate(self, request, **kwargs):
         assert settings.ENVIRONMENT not in [
             "production",

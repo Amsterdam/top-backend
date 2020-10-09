@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 from apps.itinerary.models import Itinerary, ItinerarySettings
-from constance.test import override_config
 from django.urls import reverse
 from freezegun import freeze_time
 from rest_framework import status
@@ -30,16 +29,6 @@ class ItineraryViewsGetTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_get(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("itinerary-list")
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_no_itinerary_get(self):
         """
@@ -246,16 +235,6 @@ class ItineraryViewsCreateTest(APITestCase):
         response = client.post(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_post(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("itinerary-list")
-        client = get_authenticated_client()
-        response = client.post(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     @patch("apps.itinerary.views.Itinerary.get_cases_from_settings")
     def test_create_fail(self, mock_get_cases_from_settings):
         """
@@ -333,19 +312,6 @@ class ItineraryViewsDeleteTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_delete(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        itinerary = Itinerary.objects.create()
-        url = reverse("itinerary-detail", kwargs={"pk": itinerary.id})
-
-        client = get_authenticated_client()
-        response = client.delete(url)
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_delete(self):
         """
         Removes a itinerary object using a delete request
@@ -375,18 +341,6 @@ class ItineraryViewsSuggestionsTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_get_suggestions(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        itinerary = Itinerary.objects.create()
-
-        url = reverse("itinerary-suggestions", kwargs={"pk": itinerary.id})
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @patch("apps.itinerary.views.Itinerary.get_suggestions")
     def test_get_suggestions(self, mock_get_suggestions):

@@ -1,7 +1,8 @@
 import datetime
-from apps.cases.const import PROJECTS, STADIA
+
 from apps.fraudprediction.models import FraudPrediction
 from django.db import models
+from settings.const import PROJECTS, STADIA
 from utils.queries import get_case
 
 
@@ -27,7 +28,7 @@ class Case(models.Model):
     @property
     def bwv_data(self):
         return self.__get_case__(self.case_id)
-    
+
     @property
     def itinerary(self):
         now = datetime.datetime.now()

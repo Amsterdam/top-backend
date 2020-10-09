@@ -1,7 +1,7 @@
-from apps.cases.const import PROJECTS, STADIA
 from apps.cases.models import Case, Project, Stadium
 from apps.fraudprediction.serializers import FraudPredictionSerializer
 from rest_framework import serializers
+from settings.const import PROJECTS, STADIA
 
 
 class CaseSimpleSerializer(serializers.ModelSerializer):

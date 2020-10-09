@@ -1,6 +1,5 @@
 from apps.itinerary.models import Itinerary
 from apps.users.models import User
-from constance.test import override_config
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -26,17 +25,6 @@ class ItineraryTeamsViewsTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_get(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        itinerary = Itinerary.objects.create()
-        url = reverse("itinerary-team", kwargs={"pk": itinerary.id})
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_itinerary_without_team(self):
         """

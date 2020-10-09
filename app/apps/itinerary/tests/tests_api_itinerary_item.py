@@ -1,6 +1,5 @@
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItineraryItem
-from constance.test import override_config
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -25,16 +24,6 @@ class ItineraryItemViewsCreateTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_post(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("itinerary-item-list")
-        client = get_authenticated_client()
-        response = client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_create(self):
         """
@@ -92,16 +81,6 @@ class ItineraryItemViewsDeleteTest(APITestCase):
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_delete(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("itinerary-item-detail", kwargs={"pk": "foo"})
-        client = get_authenticated_client()
-        response = client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_authenticated_delete(self):
         """
         An authenticated post should delete an Itinerary Item
@@ -134,16 +113,6 @@ class ItineraryItemViewsUpdateTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.put(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_delete(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("itinerary-item-detail", kwargs={"pk": "foo"})
-        client = get_authenticated_client()
-        response = client.put(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_update(self):
         """

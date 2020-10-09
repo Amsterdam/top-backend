@@ -1,6 +1,5 @@
 import logging
 
-from apps.cases.const import STADIA
 from apps.planner.utils import (
     filter_cases,
     filter_cases_with_missing_coordinates,
@@ -8,6 +7,7 @@ from apps.planner.utils import (
     filter_out_cases,
     remove_cases_from_list,
 )
+from settings.const import STADIA
 from utils.queries_planner import get_cases_from_bwv
 
 LOGGER = logging.getLogger(__name__)

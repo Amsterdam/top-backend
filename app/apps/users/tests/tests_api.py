@@ -1,6 +1,5 @@
 from unittest.mock import Mock, patch
 
-from constance.test import override_config
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -16,17 +15,6 @@ class IsAuthenticatedViewTest(APITestCase):
     """
     Tests for the API endpoints for IsAuthenticatedView
     """
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        An request to check authentication should not be possible if
-        the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("is-authenticated")
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_requests(self):
         """
@@ -57,16 +45,6 @@ class ObtainAuthTokenOIDCTest(APITestCase):
     """
     Tests for the API endpoints for optaining the OIDC access and refresh tokens
     """
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        A request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("oidc-authenticate")
-        client = get_unauthenticated_client()
-        response = client.post(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_without_authentication_code(self):
         """

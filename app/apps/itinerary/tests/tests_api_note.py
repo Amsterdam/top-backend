@@ -1,5 +1,4 @@
 from apps.itinerary.models import Itinerary, ItineraryItem, Note
-from constance.test import override_config
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -25,16 +24,6 @@ class NoteViewsCreateTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_post(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("notes-list")
-        client = get_authenticated_client()
-        response = client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_create(self):
         """
@@ -78,16 +67,6 @@ class NoteViewsUpdateTest(APITestCase):
         response = client.put(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_put(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("notes-detail", kwargs={"pk": "foo"})
-        client = get_authenticated_client()
-        response = client.put(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_authenticated_update(self):
         """
         An authenticated post should update a note
@@ -128,16 +107,6 @@ class NoteViewsDeleteTest(APITestCase):
         response = client.delete(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_delete(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("notes-detail", kwargs={"pk": "foo"})
-        client = get_authenticated_client()
-        response = client.delete(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_authenticated_delete(self):
         """
         An authenticated delete should remove a note
@@ -172,16 +141,6 @@ class NoteViewsGetTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request_get(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = reverse("notes-detail", kwargs={"pk": "foo"})
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_get(self):
         """

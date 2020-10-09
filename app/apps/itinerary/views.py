@@ -16,7 +16,6 @@ from apps.users.models import User
 from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
@@ -25,14 +24,8 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateMod
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from utils.safety_lock import safety_lock
 
 
-@method_decorator(safety_lock, name="team")
-@method_decorator(safety_lock, name="suggestions")
-@method_decorator(safety_lock, name="create")
-@method_decorator(safety_lock, name="destroy")
-@method_decorator(safety_lock, name="list")
 class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMixin):
     """
     CRUD for itineraries and teams
@@ -154,9 +147,6 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         })
 
 
-@method_decorator(safety_lock, name="update")
-@method_decorator(safety_lock, name="destroy")
-@method_decorator(safety_lock, name="create")
 class ItineraryItemViewSet(
     ViewSet, GenericAPIView, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 ):
@@ -193,10 +183,6 @@ class ItineraryItemViewSet(
         return Response(serializer.data)
 
 
-@method_decorator(safety_lock, name="retrieve")
-@method_decorator(safety_lock, name="update")
-@method_decorator(safety_lock, name="destroy")
-@method_decorator(safety_lock, name="create")
 class NoteViewSet(
     ViewSet, GenericAPIView, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 ):

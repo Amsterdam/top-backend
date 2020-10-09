@@ -1,8 +1,9 @@
-from apps.cases.const import PROJECTS, STADIA
-from .const import TEAM_TYPE_SETTINGS
 from apps.planner.models import TeamSettings
 from django.conf import settings
 from rest_framework import serializers
+from settings.const import PROJECTS, STADIA
+
+from .const import TEAM_TYPE_SETTINGS
 
 
 class PlannerListSettingsSerializer(serializers.Serializer):
@@ -107,18 +108,17 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
             "team_type",
             "settings",
         )
+
     @property
     def data(self):
         data = super().data
-        data['projects'] = data.get('team_type').get('project_choices')
-        data['stadia'] = data.get('team_type').get('stadia_choices')
+        data["projects"] = data.get("team_type").get("project_choices")
+        data["stadia"] = data.get("team_type").get("stadia_choices")
         return data
 
     def validate(self, data):
         data = super().validate(data)
-        settings = PlannerSettingsSerializer(data=data.get('settings'), required=True)
+        settings = PlannerSettingsSerializer(data=data.get("settings"), required=True)
         if not settings.is_valid():
-            raise serializers.ValidationError(
-                "Wrong settings format"
-            )
+            raise serializers.ValidationError("Wrong settings format")
         return data

@@ -3,8 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from app.apps.cases.const import ISSUEMELDING, PROJECTS, STADIA
 from app.apps.planner.const import EXAMPLE_PLANNER_SETTINGS
+from app.settings.const import ISSUEMELDING, PROJECTS, STADIA
 from app.utils.unittest_helpers import (
     get_authenticated_client,
     get_unauthenticated_client,
@@ -28,16 +28,6 @@ class ConstantsProjectsViewSet(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = self.get_url()
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_requests(self):
         """
@@ -69,16 +59,6 @@ class ConstantsStadiaViewSet(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = self.get_url()
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_authenticated_requests(self):
         """
@@ -113,16 +93,6 @@ class SettingsPlannerViewSet(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @override_config(ALLOW_DATA_ACCESS=False)
-    def test_safety_locked_request(self):
-        """
-        An authenticated request should not be possible if the safety_lock (ALLOW_DATA_ACCESS) is on
-        """
-        url = self.get_url()
-        client = get_authenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @override_config(PLANNER_SETTINGS='{"foo_settings": "foo"}')
     def test_settings(self):

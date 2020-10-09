@@ -1,7 +1,6 @@
 """
 Tests for the health views
 """
-from apps.cases.const import ISSUEMELDING, ONDERZOEK_BUITENDIENST, TWEEDE_CONTROLE
 from apps.planner.utils import (
     filter_cases,
     filter_cases_with_missing_coordinates,
@@ -11,6 +10,7 @@ from apps.planner.utils import (
     remove_cases_from_list,
 )
 from django.test import TestCase
+from settings.const import ISSUEMELDING, ONDERZOEK_BUITENDIENST, TWEEDE_CONTROLE
 
 
 class UtilsTests(TestCase):

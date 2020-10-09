@@ -30,11 +30,8 @@ from utils import queries as q
 from utils import queries_bag_api as bag_api
 from utils import queries_brk_api as brk_api
 from utils.queries_decos_api import DecosJoinRequest
-from utils.safety_lock import safety_lock
 
 
-@method_decorator(safety_lock, "retrieve")
-@method_decorator(safety_lock, "unplanned")
 class CaseViewSet(ViewSet):
     """
     A Viewset for showing a single Case in detail
@@ -166,8 +163,6 @@ class CaseSearchViewSet(ViewSet, ListAPIView):
     @extend_schema(
         parameters=case_search_parameters, description="Search query parameters"
     )
-    @action(detail=False, methods=["get"])
-    @safety_lock
     def list(self, request):
         """
         Returns a list of cases found with the given parameters

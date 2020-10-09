@@ -95,16 +95,67 @@ def push_case(case_id):
     return response
 
 
-@retry(stop=stop_after_attempt(3), after=after_log(logger, logging.ERROR))
-def push_checked_action(case_id, check):
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_random(min=0, max=0.03),
+    reraise=False,
+    after=after_log(logger, logging.ERROR),
+)
+def push_new_visit_to_zaken_action(visit, subject, authors, parameters, notes):
+    logger.info(f"Pushing visit {visit.id} to zaken")
+
     if not settings.ZAKEN_API_URL:
-        logger.info("ZAKEN_API_URL is not configured in settings")
+        logger.info("ZAKEN_API_URL is not configured in settings. Exit push.")
         return {}
     elif not settings.PUSH_ZAKEN:
-        logger.info("Pushes disabled")
+        logger.info("Pushes disabled. Exit push.")
         return {}
 
-    url = f"{settings.ZAKEN_API_URL}/push-check-action/"
-    data = {"identification": case_id, "check_action": check}
+    url = f"{settings.ZAKEN_API_URL}/case-timeline-threads/add-timeline-item/"
+
+    data = {
+        "case_identification": visit.case_id.case_id,
+        "subject": subject,
+        "parameters": parameters,
+        "notes": notes,
+        "authors": authors,
+    }
+
     response = requests.post(url, timeout=0.5, json=data, headers=get_headers())
+    logger.info(f"Finished pushing case {visit.case_id.case_id}")
+
+    visit.thread_id = response.json().get("id")
+    visit.save()
+    return response
+
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_random(min=0, max=0.03),
+    reraise=False,
+    after=after_log(logger, logging.ERROR),
+)
+def push_updated_visit_to_zaken_action(visit, subject, authors, parameters, notes):
+    logger.info(f"Pushing visit {visit.id} to zaken")
+
+    if not settings.ZAKEN_API_URL:
+        logger.info("ZAKEN_API_URL is not configured in settings. Exit push.")
+        return {}
+    elif not settings.PUSH_ZAKEN:
+        logger.info("Pushes disabled. Exit push.")
+        return {}
+
+    url = f"{settings.ZAKEN_API_URL}/case-timeline-threads/update-timeline-item/"
+
+    data = {
+        "subject": subject,
+        "parameters": parameters,
+        "notes": notes,
+        "thread_id": visit.thread_id,
+        "authors": authors,
+    }
+
+    response = requests.post(url, timeout=0.5, json=data, headers=get_headers())
+    logger.info(f"Finished pushing updated case {visit.case_id.case_id}")
+
     return response

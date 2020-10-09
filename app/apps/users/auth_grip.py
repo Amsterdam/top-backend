@@ -5,7 +5,6 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import SuspiciousOperation
 from django.db import transaction
 from mozilla_django_oidc import auth
-from utils.safety_lock import safety_lock
 
 CLAIMS_FIRST_NAME = "FirstName"
 CLAIMS_LAST_NAME = "LastName"
@@ -17,7 +16,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class OIDCAuthenticationBackend(auth.OIDCAuthenticationBackend):
-    @safety_lock
     def authenticate(self, request, **kwargs):
         """Authenticates a user based on the OIDC code flow."""
         if request and hasattr(request, "data") and request.data.get("code", False):

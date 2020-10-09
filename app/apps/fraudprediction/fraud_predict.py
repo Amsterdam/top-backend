@@ -5,10 +5,10 @@ import math
 import os
 from unittest.mock import Mock
 
-from apps.cases.const import PROJECTS, STADIA, STARTING_FROM_DATE
 from apps.fraudprediction.models import FraudPrediction
 from django.conf import settings
 from django.db import connections
+from settings.const import PROJECTS, STADIA, STARTING_FROM_DATE
 from utils.queries_planner import get_cases_from_bwv
 
 LOGGER = logging.getLogger(__name__)
