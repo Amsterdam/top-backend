@@ -13,11 +13,11 @@ from apps.itinerary.models import (
     Note,
     PostalCodeSettings,
 )
+from apps.planner.const import TEAM_TYPE_SETTINGS
+from apps.planner.models import TeamSettings
+from apps.planner.serializers import TeamSettingsSerializer
 from apps.users.serializers import UserIdSerializer, UserSerializer
 from apps.visits.serializers import VisitSerializer
-from apps.planner.serializers import TeamSettingsSerializer
-from apps.planner.models import TeamSettings
-from apps.planner.const import TEAM_TYPE_SETTINGS
 from rest_framework import serializers
 
 
@@ -124,17 +124,28 @@ class ItinerarySerializer(serializers.ModelSerializer):
 
     def __get_stadia_from_settings__(self, settings, list_name):
         """ Returns a list of Stadium objects from settings """
-        team_settings_stadia = TEAM_TYPE_SETTINGS[settings['team_settings']['team_type']['name']].get('stadia_choices')
+        team_settings_stadia = TEAM_TYPE_SETTINGS[
+            settings["team_settings"]["team_type"]["name"]
+        ].get("stadia_choices")
         stadia = settings.get(list_name, [])
-        stadia = [stadium.get("name") for stadium in stadia if stadium.get("name") in team_settings_stadia]
+        stadia = [
+            stadium.get("name")
+            for stadium in stadia
+            if stadium.get("name") in team_settings_stadia
+        ]
         stadia = [Stadium.get(name=stadium) for stadium in stadia]
 
         return stadia
 
     def __get_stadium_from_settings__(self, settings, name):
         """ Returns a single Stadium object from settings """
-        team_settings_stadia = TEAM_TYPE_SETTINGS[settings['team_settings']['team_type']['name']].get('stadia_choices')
-        if settings.get(name, None) and settings.get(name, None) in team_settings_stadia:
+        team_settings_stadia = TEAM_TYPE_SETTINGS[
+            settings["team_settings"]["team_type"]["name"]
+        ].get("stadia_choices")
+        if (
+            settings.get(name, None)
+            and settings.get(name, None) in team_settings_stadia
+        ):
             stadium = settings.get(name).get("name")
             stadium = Stadium.get(name=stadium)
 
@@ -142,9 +153,15 @@ class ItinerarySerializer(serializers.ModelSerializer):
 
     def __get_projects_from_settings__(self, settings):
         """ Returns the Projects objects from settings """
-        team_settings_projects = TEAM_TYPE_SETTINGS[settings['team_settings']['team_type']['name']].get('project_choices')
+        team_settings_projects = TEAM_TYPE_SETTINGS[
+            settings["team_settings"]["team_type"]["name"]
+        ].get("project_choices")
         projects = settings.get("projects", [])
-        projects = [project.get("name") for project in projects if project.get("name") in team_settings_projects]
+        projects = [
+            project.get("name")
+            for project in projects
+            if project.get("name") in team_settings_projects
+        ]
         projects = [Project.get(name=project) for project in projects]
 
         return projects
@@ -191,7 +208,9 @@ class ItinerarySerializer(serializers.ModelSerializer):
             primary_stadium=primary_stadium,
             target_length=target_length,
             start_case=start_case,
-            team_settings=TeamSettings.objects.get(id=settings.get('team_settings').get('id')),
+            team_settings=TeamSettings.objects.get(
+                id=settings.get("team_settings").get("id")
+            ),
         )
 
         # Next, add the many-to-many relations of the itinerary_Settings

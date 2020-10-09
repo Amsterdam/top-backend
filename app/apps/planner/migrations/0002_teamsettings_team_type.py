@@ -6,13 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('planner', '0001_initial'),
+        ("planner", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='teamsettings',
-            name='team_type',
-            field=models.CharField(choices=[['Vakantieverhuur', 'Vakantieverhuur'], ['Onderverhuur', 'Onderverhuur']], default='Vakantieverhuur', max_length=100),
+            model_name="teamsettings",
+            name="team_type",
+            field=models.CharField(
+                choices=[
+                    ["Vakantieverhuur", "Vakantieverhuur"],
+                    ["Onderverhuur", "Onderverhuur"],
+                ],
+                default="Vakantieverhuur",
+                max_length=100,
+            ),
         ),
     ]

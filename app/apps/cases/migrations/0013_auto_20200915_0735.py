@@ -6,18 +6,62 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cases', '0012_auto_20200407_1141'),
+        ("cases", "0012_auto_20200407_1141"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='project',
-            name='name',
-            field=models.CharField(choices=[('Bed en breakfast 2019', 'Bed en breakfast 2019'), ('Burgwallenproject Oudezijde', 'Burgwallenproject Oudezijde'), ('Corpo-rico', 'Corpo-rico'), ('Digital toezicht Safari', 'Digital toezicht Safari'), ('Digital toezicht Zebra', 'Digital toezicht Zebra'), ('Haarlemmerbuurt', 'Haarlemmerbuurt'), ('Hotline', 'Hotline'), ('Mystery Guest', 'Mystery Guest'), ('Project Andes', 'Project Andes'), ('Project Jordaan', 'Project Jordaan'), ('Project Lobith', 'Project Lobith'), ('Project Sahara', 'Project Sahara'), ('Safari', 'Safari'), ('Safari 2015', 'Safari 2015'), ('Sahara Adams Suites', 'Sahara Adams Suites'), ('Sahara hele woning', 'Sahara hele woning'), ('Sahara meer dan 4', 'Sahara meer dan 4'), ('Sahara Recensies', 'Sahara Recensies'), ('Sahara veel adv', 'Sahara veel adv'), ('Social Media 2019', 'Social Media 2019'), ('Woonschip (woonboot)', 'Woonschip (woonboot)'), ('Zebra', 'Zebra'), ('ZKL Doorverhuur', 'ZKL Doorverhuur')], max_length=255, unique=True),
+            model_name="project",
+            name="name",
+            field=models.CharField(
+                choices=[
+                    ("Bed en breakfast 2019", "Bed en breakfast 2019"),
+                    ("Burgwallenproject Oudezijde", "Burgwallenproject Oudezijde"),
+                    ("Corpo-rico", "Corpo-rico"),
+                    ("Digital toezicht Safari", "Digital toezicht Safari"),
+                    ("Digital toezicht Zebra", "Digital toezicht Zebra"),
+                    ("Haarlemmerbuurt", "Haarlemmerbuurt"),
+                    ("Hotline", "Hotline"),
+                    ("Mystery Guest", "Mystery Guest"),
+                    ("Project Andes", "Project Andes"),
+                    ("Project Jordaan", "Project Jordaan"),
+                    ("Project Lobith", "Project Lobith"),
+                    ("Project Sahara", "Project Sahara"),
+                    ("Safari", "Safari"),
+                    ("Safari 2015", "Safari 2015"),
+                    ("Sahara Adams Suites", "Sahara Adams Suites"),
+                    ("Sahara hele woning", "Sahara hele woning"),
+                    ("Sahara meer dan 4", "Sahara meer dan 4"),
+                    ("Sahara Recensies", "Sahara Recensies"),
+                    ("Sahara veel adv", "Sahara veel adv"),
+                    ("Social Media 2019", "Social Media 2019"),
+                    ("Woonschip (woonboot)", "Woonschip (woonboot)"),
+                    ("Zebra", "Zebra"),
+                    ("ZKL Doorverhuur", "ZKL Doorverhuur"),
+                ],
+                max_length=255,
+                unique=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='stadium',
-            name='name',
-            field=models.CharField(choices=[('Onderzoek buitendienst', 'Onderzoek buitendienst'), ('2de Controle', '2de Controle'), ('3de Controle', '3de Controle'), ('Hercontrole', 'Hercontrole'), ('2de hercontrole', '2de hercontrole'), ('3de hercontrole', '3de hercontrole'), ('Avondronde', 'Avondronde'), ('Onderzoek advertentie', 'Onderzoek advertentie'), ('Weekend buitendienstonderzoek', 'Weekend buitendienstonderzoek'), ('Issuemelding', 'Issuemelding'), ('ZL Corporatie', 'ZL Corporatie')], max_length=255, unique=True),
+            model_name="stadium",
+            name="name",
+            field=models.CharField(
+                choices=[
+                    ("Onderzoek buitendienst", "Onderzoek buitendienst"),
+                    ("2de Controle", "2de Controle"),
+                    ("3de Controle", "3de Controle"),
+                    ("Hercontrole", "Hercontrole"),
+                    ("2de hercontrole", "2de hercontrole"),
+                    ("3de hercontrole", "3de hercontrole"),
+                    ("Avondronde", "Avondronde"),
+                    ("Onderzoek advertentie", "Onderzoek advertentie"),
+                    ("Weekend buitendienstonderzoek", "Weekend buitendienstonderzoek"),
+                    ("Issuemelding", "Issuemelding"),
+                    ("ZL Corporatie", "ZL Corporatie"),
+                ],
+                max_length=255,
+                unique=True,
+            ),
         ),
     ]

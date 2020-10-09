@@ -1,6 +1,6 @@
-from rest_framework import serializers
-from apps.planner.serializers import TeamSettingsSerializer as TeamSettingsSerializer
 from apps.planner.models import TeamSettings
+from apps.planner.serializers import TeamSettingsSerializer as TeamSettingsSerializer
+from rest_framework import serializers
 
 
 class TeamSettingsIdSerializer(TeamSettingsSerializer):

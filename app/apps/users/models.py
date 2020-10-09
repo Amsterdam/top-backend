@@ -1,5 +1,6 @@
-import uuid
 import datetime
+import uuid
+
 from apps.users.user_manager import UserManager
 from apps.users.utils import generate_username
 from django.contrib.auth.models import AbstractUser
@@ -17,9 +18,7 @@ class User(AbstractUser):
         error_messages={"unique": "A user with that email already exists.",},
     )
     team_settings = models.ManyToManyField(
-        to='planner.TeamSettings',
-        blank=True, 
-        related_name="team_settings",
+        to="planner.TeamSettings", blank=True, related_name="team_settings",
     )
 
     USERNAME_FIELD = "email"

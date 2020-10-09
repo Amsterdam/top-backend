@@ -15,7 +15,6 @@ from rest_framework.viewsets import ViewSet
 from settings.const import ISSUEMELDING, PROJECTS, STADIA
 
 
-
 class ConstantsProjectsViewSet(ViewSet):
     """
     Retrieve the projects constants which are used for cases
@@ -88,11 +87,6 @@ class SettingsPlannerViewSet(ViewSet, CreateAPIView):
         return JsonResponse(data)
 
 
-@method_decorator(safety_lock, name="retrieve")
-@method_decorator(safety_lock, name="update")
-@method_decorator(safety_lock, name="destroy")
-@method_decorator(safety_lock, name="create")
-@method_decorator(safety_lock, name="list")
 class TeamSettingsViewSet(
     ViewSet, GenericAPIView, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 ):

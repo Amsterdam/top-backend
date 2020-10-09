@@ -41,9 +41,7 @@ api_router.register(
 api_router.register(
     r"settings/planner", SettingsPlannerViewSet, basename="settings-planner"
 )
-api_router.register(
-    r"team-settings", TeamSettingsViewSet, basename="team-settings"
-)
+api_router.register(r"team-settings", TeamSettingsViewSet, basename="team-settings")
 api_router.register(
     r"fraud-prediction/scoring",
     FraudPredictionScoringViewSet,

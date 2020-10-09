@@ -9,9 +9,7 @@ from apps.itinerary.serializers import (
     ItineraryTeamMemberSerializer,
     NoteCrudSerializer,
 )
-from apps.planner.serializers import (
-    TeamSettingsSerializer
-)
+from apps.planner.serializers import TeamSettingsSerializer
 from apps.users.models import User
 from django.db import transaction
 from django.http import Http404, JsonResponse
@@ -142,9 +140,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         user = get_object_or_404(User, id=request.user.id)
         itineraries = self.__get_all_itineraries__(user, date)
 
-        return Response({
-            "itineraries": itineraries,
-        })
+        return Response({"itineraries": itineraries,})
 
 
 class ItineraryItemViewSet(
