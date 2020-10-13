@@ -25,6 +25,8 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=300)),
                 ("members", models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
             ],
-            options={"ordering": ["name"],},
+            options={
+                "ordering": ["name"],
+            },
         ),
     ]

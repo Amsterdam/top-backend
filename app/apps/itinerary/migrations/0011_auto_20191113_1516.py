@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="itinerary", options={"ordering": ["-date"]},
+            name="itinerary",
+            options={"ordering": ["-date"]},
         ),
     ]

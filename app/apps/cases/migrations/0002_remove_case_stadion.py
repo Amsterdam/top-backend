@@ -9,5 +9,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="case", name="stadion",),
+        migrations.RemoveField(
+            model_name="case",
+            name="stadion",
+        ),
     ]

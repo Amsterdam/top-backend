@@ -9,9 +9,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="case", name="address",),
-        migrations.RemoveField(model_name="case", name="postal_code",),
-        migrations.RemoveField(model_name="case", name="stadium_code",),
+        migrations.RemoveField(
+            model_name="case",
+            name="address",
+        ),
+        migrations.RemoveField(
+            model_name="case",
+            name="postal_code",
+        ),
+        migrations.RemoveField(
+            model_name="case",
+            name="stadium_code",
+        ),
         migrations.AddField(
             model_name="case",
             name="case_id",

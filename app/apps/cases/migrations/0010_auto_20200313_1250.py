@@ -9,5 +9,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(name="case", options={"ordering": ["case_id"]},),
+        migrations.AlterModelOptions(
+            name="case",
+            options={"ordering": ["case_id"]},
+        ),
     ]

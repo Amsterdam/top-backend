@@ -11,7 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="postalcoderange", name="primary_stadium",),
+        migrations.RemoveField(
+            model_name="postalcoderange",
+            name="primary_stadium",
+        ),
         migrations.AddField(
             model_name="postalcoderange",
             name="itinerary_settings",

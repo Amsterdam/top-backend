@@ -10,7 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerary", name="plain_text_itinerary",),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="plain_text_itinerary",
+        ),
         migrations.AlterField(
             model_name="itinerary",
             name="enforcers",

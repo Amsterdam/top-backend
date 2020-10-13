@@ -10,7 +10,10 @@ class UserAdmin(UserAdmin):
             "None",
             {"fields": ("email", "password", "username", "first_name", "last_name")},
         ),
-        ("None", {"fields": ("team_settings",)},),
+        (
+            "None",
+            {"fields": ("team_settings",)},
+        ),
         (
             "Permissions",
             {
@@ -26,7 +29,13 @@ class UserAdmin(UserAdmin):
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
-        (None, {"classes": ("wide",), "fields": ("email", "password1", "password2"),}),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "password1", "password2"),
+            },
+        ),
     )
     list_display = ("full_name", "email", "is_staff")
     search_fields = ("email",)

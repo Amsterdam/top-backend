@@ -12,7 +12,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerary", name="user",),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="user",
+        ),
         migrations.AddField(
             model_name="itinerary",
             name="created_at",

@@ -11,12 +11,30 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itineraryitem", name="address",),
-        migrations.RemoveField(model_name="itineraryitem", name="adres_id",),
-        migrations.RemoveField(model_name="itineraryitem", name="postal_code_area",),
-        migrations.RemoveField(model_name="itineraryitem", name="postal_code_street",),
-        migrations.RemoveField(model_name="itineraryitem", name="stadium",),
-        migrations.RemoveField(model_name="itineraryitem", name="wng_id",),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="address",
+        ),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="adres_id",
+        ),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="postal_code_area",
+        ),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="postal_code_street",
+        ),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="stadium",
+        ),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="wng_id",
+        ),
         migrations.AddField(
             model_name="itineraryitem",
             name="case",

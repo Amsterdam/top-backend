@@ -9,7 +9,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itineraryitem", name="case_id",),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="case_id",
+        ),
         migrations.AddField(
             model_name="itineraryitem",
             name="adres_id",

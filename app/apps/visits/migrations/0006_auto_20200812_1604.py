@@ -16,6 +16,8 @@ class Migration(migrations.Migration):
             new_name="can_next_visit_go_ahead_description",
         ),
         migrations.RenameField(
-            model_name="visit", old_name="status", new_name="situation",
+            model_name="visit",
+            old_name="status",
+            new_name="situation",
         ),
     ]

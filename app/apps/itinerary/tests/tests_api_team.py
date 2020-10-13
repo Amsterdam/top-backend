@@ -73,7 +73,10 @@ class ItineraryTeamsViewsTest(APITestCase):
         client = get_authenticated_client()
 
         data = {
-            "team_members": [{"user": {"id": user_a.id}}, {"user": {"id": user_b.id}},]
+            "team_members": [
+                {"user": {"id": user_a.id}},
+                {"user": {"id": user_b.id}},
+            ]
         }
         response = client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -96,7 +99,10 @@ class ItineraryTeamsViewsTest(APITestCase):
         client = get_authenticated_client()
 
         data = {
-            "team_members": [{"user": {"id": user_a.id}}, {"user": {"id": user_b.id}},]
+            "team_members": [
+                {"user": {"id": user_a.id}},
+                {"user": {"id": user_b.id}},
+            ]
         }
         response = client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

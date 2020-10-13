@@ -12,9 +12,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(name="itinerary", options={},),
-        migrations.RemoveField(model_name="itinerary", name="date",),
-        migrations.RemoveField(model_name="itinerary", name="team",),
+        migrations.AlterModelOptions(
+            name="itinerary",
+            options={},
+        ),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="date",
+        ),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="team",
+        ),
         migrations.AddField(
             model_name="itinerary",
             name="user",

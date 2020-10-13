@@ -12,7 +12,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerary", name="team",),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="team",
+        ),
         migrations.CreateModel(
             name="ItineraryTeamMember",
             fields=[

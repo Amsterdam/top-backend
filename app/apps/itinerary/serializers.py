@@ -225,7 +225,9 @@ class ItinerarySerializer(serializers.ModelSerializer):
             range_end = postal_code_setting.get("range_end")
 
             PostalCodeSettings.objects.create(
-                itinerary=itinerary, range_start=range_start, range_end=range_end,
+                itinerary=itinerary,
+                range_start=range_start,
+                range_end=range_end,
             )
 
         return itinerary

@@ -10,7 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerarysettings", name="exclude_stadium",),
+        migrations.RemoveField(
+            model_name="itinerarysettings",
+            name="exclude_stadium",
+        ),
         migrations.AddField(
             model_name="itinerarysettings",
             name="exclude_stadia",

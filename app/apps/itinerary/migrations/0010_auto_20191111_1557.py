@@ -10,6 +10,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="itinerary", name="date", field=models.DateField(blank=True),
+            model_name="itinerary",
+            name="date",
+            field=models.DateField(blank=True),
         ),
     ]

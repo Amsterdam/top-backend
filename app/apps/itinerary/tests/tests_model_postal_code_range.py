@@ -42,7 +42,8 @@ class ItinerarySettingsModelTest(TestCase):
 
         with self.assertRaises(Exception):
             postal_code_range = PostalCodeSettings.objects.create(
-                itinerary=itinerary, range_start=FOO_MIN_RANGE,
+                itinerary=itinerary,
+                range_start=FOO_MIN_RANGE,
             )
             postal_code_range.clean()
 
@@ -55,7 +56,8 @@ class ItinerarySettingsModelTest(TestCase):
 
         with self.assertRaises(Exception):
             postal_code_range = PostalCodeSettings.objects.create(
-                itinerary=itinerary, range_end=FOO_MAX_RANGE,
+                itinerary=itinerary,
+                range_end=FOO_MAX_RANGE,
             )
             postal_code_range.clean()
 

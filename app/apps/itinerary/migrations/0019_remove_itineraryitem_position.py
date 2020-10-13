@@ -9,5 +9,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itineraryitem", name="position",),
+        migrations.RemoveField(
+            model_name="itineraryitem",
+            name="position",
+        ),
     ]

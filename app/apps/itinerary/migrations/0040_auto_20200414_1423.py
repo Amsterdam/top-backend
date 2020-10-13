@@ -10,6 +10,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="note", name="text", field=models.TextField(max_length=1024),
+            model_name="note",
+            name="text",
+            field=models.TextField(max_length=1024),
         ),
     ]

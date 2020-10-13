@@ -11,26 +11,62 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="visit", name="cooperation",),
-        migrations.RemoveField(model_name="visit", name="cooperation_likely_fraud",),
-        migrations.RemoveField(model_name="visit", name="no_cooperation",),
         migrations.RemoveField(
-            model_name="visit", name="no_cooperation_hotel_furnished",
+            model_name="visit",
+            name="cooperation",
         ),
         migrations.RemoveField(
-            model_name="visit", name="no_cooperation_likely_inhabited",
+            model_name="visit",
+            name="cooperation_likely_fraud",
         ),
         migrations.RemoveField(
-            model_name="visit", name="no_cooperation_malfunctioning_doorbell",
+            model_name="visit",
+            name="no_cooperation",
         ),
-        migrations.RemoveField(model_name="visit", name="no_cooperation_vacant",),
-        migrations.RemoveField(model_name="visit", name="no_cooperation_video_call",),
-        migrations.RemoveField(model_name="visit", name="nobody_present",),
-        migrations.RemoveField(model_name="visit", name="suggest_discontinue_case",),
-        migrations.RemoveField(model_name="visit", name="suggest_next_visit_day",),
-        migrations.RemoveField(model_name="visit", name="suggest_next_visit_evening",),
-        migrations.RemoveField(model_name="visit", name="suggest_next_visit_unknown",),
-        migrations.RemoveField(model_name="visit", name="suggest_next_visit_weekend",),
+        migrations.RemoveField(
+            model_name="visit",
+            name="no_cooperation_hotel_furnished",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="no_cooperation_likely_inhabited",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="no_cooperation_malfunctioning_doorbell",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="no_cooperation_vacant",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="no_cooperation_video_call",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="nobody_present",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="suggest_discontinue_case",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="suggest_next_visit_day",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="suggest_next_visit_evening",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="suggest_next_visit_unknown",
+        ),
+        migrations.RemoveField(
+            model_name="visit",
+            name="suggest_next_visit_weekend",
+        ),
         migrations.AddField(
             model_name="visit",
             name="observations",
@@ -84,6 +120,8 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=True),
         ),
         migrations.AlterField(
-            model_name="visit", name="description", field=models.TextField(null=True),
+            model_name="visit",
+            name="description",
+            field=models.TextField(null=True),
         ),
     ]

@@ -9,5 +9,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerary", name="week",),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="week",
+        ),
     ]

@@ -10,7 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="visit", name="suggest_visit_next_time",),
+        migrations.RemoveField(
+            model_name="visit",
+            name="suggest_visit_next_time",
+        ),
         migrations.AddField(
             model_name="visit",
             name="can_next_visit_go_ahead",

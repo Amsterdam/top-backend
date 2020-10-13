@@ -251,7 +251,10 @@ class ItineraryViewsCreateTest(APITestCase):
             url,
             {
                 "team_members": [{"user": {"id": user.id}}],
-                "settings": {"opening_date": "2020-04-24", "target_length": 8,},
+                "settings": {
+                    "opening_date": "2020-04-24",
+                    "target_length": 8,
+                },
             },
             format="json",
         )
@@ -278,7 +281,10 @@ class ItineraryViewsCreateTest(APITestCase):
             url,
             {
                 "team_members": [{"user": {"id": user.id}}],
-                "settings": {"opening_date": "2020-04-24", "target_length": 8,},
+                "settings": {
+                    "opening_date": "2020-04-24",
+                    "target_length": 8,
+                },
             },
             format="json",
         )

@@ -11,10 +11,17 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerarysettings", name="exclude_states",),
-        migrations.RemoveField(model_name="itinerarysettings", name="primary_state",),
         migrations.RemoveField(
-            model_name="itinerarysettings", name="secondary_states",
+            model_name="itinerarysettings",
+            name="exclude_states",
+        ),
+        migrations.RemoveField(
+            model_name="itinerarysettings",
+            name="primary_state",
+        ),
+        migrations.RemoveField(
+            model_name="itinerarysettings",
+            name="secondary_states",
         ),
         migrations.AddField(
             model_name="itinerarysettings",

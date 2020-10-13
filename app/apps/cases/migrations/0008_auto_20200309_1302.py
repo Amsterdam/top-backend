@@ -10,7 +10,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="project", old_name="project", new_name="name",
+            model_name="project",
+            old_name="project",
+            new_name="name",
         ),
-        migrations.RenameField(model_name="state", old_name="state", new_name="name",),
+        migrations.RenameField(
+            model_name="state",
+            old_name="state",
+            new_name="name",
+        ),
     ]

@@ -66,5 +66,7 @@ class Migration(migrations.Migration):
                 ),
             ],
         ),
-        migrations.DeleteModel(name="PostalCodeRange",),
+        migrations.DeleteModel(
+            name="PostalCodeRange",
+        ),
     ]

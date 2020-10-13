@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="postalcodesettings", name="itinerary_settings",
+            model_name="postalcodesettings",
+            name="itinerary_settings",
         ),
     ]

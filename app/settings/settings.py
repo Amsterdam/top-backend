@@ -134,9 +134,15 @@ AUTH_PASSWORD_VALIDATORS = [
             "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
         ),
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 # Custom user app
@@ -157,7 +163,9 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated",],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -244,14 +252,20 @@ OIDC_USE_NONCE = True
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler", "level": "DEBUG"},},
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "level": "DEBUG"},
+    },
     "loggers": {
         "woonfraude_model": {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": True,
         },
-        "apps": {"handlers": ["console"], "level": "INFO", "propagate": True,},
+        "apps": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
         "mozilla_django_oidc": {"handlers": ["console"], "level": "DEBUG"},
     },
 }

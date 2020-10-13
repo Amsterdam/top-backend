@@ -11,8 +11,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="itinerary", name="enforcers",),
-        migrations.RemoveField(model_name="itinerary", name="supervisors",),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="enforcers",
+        ),
+        migrations.RemoveField(
+            model_name="itinerary",
+            name="supervisors",
+        ),
         migrations.AddField(
             model_name="itinerary",
             name="team",

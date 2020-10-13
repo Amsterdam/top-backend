@@ -23,6 +23,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterUniqueTogether(
-            name="itineraryteammember", unique_together={("user", "itinerary")},
+            name="itineraryteammember",
+            unique_together={("user", "itinerary")},
         ),
     ]

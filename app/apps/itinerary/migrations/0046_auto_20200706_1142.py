@@ -14,10 +14,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="itinerarysettings", name="postal_code_range_end",
+            model_name="itinerarysettings",
+            name="postal_code_range_end",
         ),
         migrations.RemoveField(
-            model_name="itinerarysettings", name="postal_code_range_start",
+            model_name="itinerarysettings",
+            name="postal_code_range_start",
         ),
         migrations.CreateModel(
             name="PostalCodeRange",

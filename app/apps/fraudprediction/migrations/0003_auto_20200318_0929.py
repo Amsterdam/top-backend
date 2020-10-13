@@ -10,6 +10,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="fraudprediction", old_name="synch_date", new_name="sync_date",
+            model_name="fraudprediction",
+            old_name="synch_date",
+            new_name="sync_date",
         ),
     ]

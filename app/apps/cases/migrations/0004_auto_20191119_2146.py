@@ -10,6 +10,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="case", name="postal_code", field=models.CharField(max_length=8),
+            model_name="case",
+            name="postal_code",
+            field=models.CharField(max_length=8),
         ),
     ]
