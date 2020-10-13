@@ -20,5 +20,8 @@ class Migration(migrations.Migration):
             old_name="shap_values",
             new_name="fraud_prediction_shap_values",
         ),
-        migrations.RemoveField(model_name="visitmetadata", name="fraud_prediction",),
+        migrations.RemoveField(
+            model_name="visitmetadata",
+            name="fraud_prediction",
+        ),
     ]
