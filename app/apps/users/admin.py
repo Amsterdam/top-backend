@@ -10,10 +10,7 @@ class UserAdmin(UserAdmin):
             "None",
             {"fields": ("email", "password", "username", "first_name", "last_name")},
         ),
-        (
-            "None",
-            {"fields": ("team_settings",)},
-        ),
+        ("None", {"fields": ("team_settings",)},),
         (
             "Permissions",
             {

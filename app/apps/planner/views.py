@@ -11,7 +11,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from settings.const import ISSUEMELDING, PROJECTS, STADIA
 
 
@@ -87,9 +87,7 @@ class SettingsPlannerViewSet(ViewSet, CreateAPIView):
         return JsonResponse(data)
 
 
-class TeamSettingsViewSet(
-    ViewSet, GenericAPIView, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
-):
+class TeamSettingsViewSet(ModelViewSet):
     """
     A view for listing/adding/updating/removing a TeamSettings
     """
@@ -98,14 +96,10 @@ class TeamSettingsViewSet(
     serializer_class = TeamSettingsSerializer
     queryset = TeamSettings.objects.all()
 
-    def list(self, request):
-        serializer = self.serializer_class(self.queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        team_settings = get_object_or_404(self.queryset, pk=pk)
-        serializer = TeamSettingsSerializer(team_settings)
-        return Response(serializer.data)
+    # def retrieve(self, request, pk=None):
+    #     team_settings = get_object_or_404(self.queryset, pk=pk)
+    #     serializer = TeamSettingsSerializer(team_settings)
+    #     return Response(serializer.data)
 
     # TODO PlannerSettings is not defined!
     # def create(self, request):

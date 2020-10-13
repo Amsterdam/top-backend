@@ -143,8 +143,8 @@ class ItinerarySerializer(serializers.ModelSerializer):
             settings["team_settings"]["team_type"]["name"]
         ].get("stadia_choices")
         if (
-            settings.get(name, None)
-            and settings.get(name, None) in team_settings_stadia
+            settings.get(name)
+            and settings.get(name, {}).get("name") in team_settings_stadia
         ):
             stadium = settings.get(name).get("name")
             stadium = Stadium.get(name=stadium)

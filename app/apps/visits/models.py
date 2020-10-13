@@ -1,14 +1,8 @@
 from apps.cases.models import Case
 from apps.users.models import User
-from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.db.models.signals import post_save
 from django.dispatch import receiver
-from utils.queries_zaken_api import (
-    push_new_visit_to_zaken_action,
-    push_updated_visit_to_zaken_action,
-)
 
 
 class Visit(models.Model):
@@ -116,33 +110,21 @@ class Visit(models.Model):
         return ", ".join(parameters)
 
 
-@receiver(post_save, sender=Visit)
-def update_openzaken_system(sender, instance, created, **kwargs):
-    parameters = {
-        "Situatie": instance.get_observation_string(),
-        "Kenmerk(en)": instance.get_parameters(),
-    }
-    authors = []
+class VisitMetaData(models.Model):
+    """
+    Some data surrounding a visit is transient, and can change over time.
+    One example are the fraud predictions, which change over the lifetime of a case.
+    This model serves to capture and persist (meta) data at the time of a visit.
+    The data should be relevant as (legal) documentation.
+    """
 
-    if instance.itinerary_item:
-        for member in instance.itinerary_item.itinerary.team_members.all():
-            authors.append(member.user.email)
+    visit = models.ForeignKey(
+        to=Visit, on_delete=models.CASCADE, related_name="meta_data", unique=True
+    )
 
-    authors = ", ".join(authors)
+    # Persist the fraud prediction data here
+    fraud_probability = models.FloatField(null=True)
+    fraud_prediction_business_rules = models.JSONField(null=True)
+    fraud_prediction_shap_values = models.JSONField(null=True)
 
-    if created and settings.PUSH_ZAKEN:
-        push_new_visit_to_zaken_action(
-            instance,
-            settings.TIMELINE_SUBJECT_VISIT,
-            authors,
-            parameters,
-            instance.description,
-        )
-    elif settings.PUSH_ZAKEN:
-        push_updated_visit_to_zaken_action(
-            instance,
-            settings.TIMELINE_SUBJECT_VISIT,
-            authors,
-            parameters,
-            instance.description,
-        )
+    # Expand with more meta data later (for example, planner settings)
