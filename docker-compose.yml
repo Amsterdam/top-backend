@@ -32,9 +32,6 @@ services:
         - "INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN=${INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN}"
     ports:
       - "8000:8000"
-    links:
-      - database
-      - bwv_db
     environment:
       - DJANGO_SETTINGS_MODULE=settings.settings
       - DJANGO_SECRET_KEY=local
@@ -57,6 +54,9 @@ services:
       - ./app:/app
       - ./api/deploy:/deploy
     command: bash -c "/app/deploy/entrypoint.development.sh"
+    depends_on:
+      - database
+      - bwv_db
 
 networks:
   looplijsten_backend:
