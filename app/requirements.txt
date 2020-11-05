@@ -24,7 +24,7 @@ tenacity
 
 # Authentication
 mozilla-django-oidc==1.2.4
-djangorestframework-simplejwt==4.4.0
+djangorestframework-simplejwt==4.5.0
 
 # Algorithm toolbox
 geopy==2.0.0
