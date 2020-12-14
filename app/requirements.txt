@@ -4,7 +4,7 @@ psycopg2
 
 # Rest apis
 djangorestframework==3.12.1
-django-cors-headers==3.5.0
+django-cors-headers==3.6.0
 drf-spectacular==0.10.0
 
 # Logging
