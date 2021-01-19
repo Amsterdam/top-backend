@@ -2,7 +2,6 @@ import logging
 
 import requests
 from apps.health.utils import assert_bwv_health
-from constance.backends.database.models import Constance
 from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
@@ -12,9 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_decos_join_api():
-    key = settings.CONSTANCE_DECOS_JOIN_API
-    url, created = Constance.objects.get_or_create(key=key)
-    return url.value
+    return settings.DECOS_JOIN_API
 
 
 class APIServiceCheckBackend(BaseHealthCheckBackend):
