@@ -2,12 +2,19 @@ import logging
 
 import requests
 from apps.health.utils import assert_bwv_health
+from constance.backends.database.models import Constance
 from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
 from settings.celery import debug_task
 
 logger = logging.getLogger(__name__)
+
+
+def get_decos_join_api():
+    key = settings.CONSTANCE_DECOS_JOIN_API
+    url, created = Constance.objects.get_or_create(key=key)
+    return url.value
 
 
 class APIServiceCheckBackend(BaseHealthCheckBackend):
@@ -57,6 +64,16 @@ class BAGServiceCheck(APIServiceCheckBackend):
     critical_service = True
     api_url = settings.BAG_API_SEARCH_URL
     verbose_name = "BAG API Endpoint"
+
+
+class DecosServiceCheck(APIServiceCheckBackend):
+    """
+    Endpoint for checking the Decos API Endpoint
+    """
+
+    critical_service = True
+    api_url = get_decos_join_api()
+    verbose_name = "Decos API Endpoint"
 
 
 class ZakenServiceCheck(APIServiceCheckBackend):

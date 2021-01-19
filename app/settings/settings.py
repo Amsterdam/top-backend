@@ -196,11 +196,21 @@ SPECTACULAR_SETTINGS = {
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
+CONSTANCE_DECOS_JOIN_AUTH_BASE64 = "DECOS_JOIN_AUTH_BASE64"
+CONSTANCE_DECOS_JOIN_API = "DECOS_JOIN_API"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY = "BRK_AUTHENTICATION_TOKEN"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY = "BRK_AUTHENTICATION_TOKEN_EXPIRY"
 CONSTANCE_MAPS_KEY = "MAPS_KEY"
 
 CONSTANCE_CONFIG = {
+    CONSTANCE_DECOS_JOIN_AUTH_BASE64: (
+        "",
+        "Authentication token for accessing Decos Join API Key",
+    ),
+    CONSTANCE_DECOS_JOIN_API: (
+        "https://decosdvl.acc.amsterdam.nl:443/decosweb/aspx/api/v1/items/",
+        "Authentication token for accessing Decos Join API",
+    ),
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY: (
         "",
         "Authentication token for accessing BRK API",
