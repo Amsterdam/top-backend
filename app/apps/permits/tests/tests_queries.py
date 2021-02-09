@@ -8,27 +8,27 @@ class DecosJoinConfTest(TestCase):
     MOCK_CONF = (
         (
             "78F23C45E0FD43B19FF98633FE11C7D3",
-            "B_EN_B_VERGUNNING",
+            "B&B - vergunning",
         ),
         (
             "91D81A4BF70147D880A40A3D4FEA8F14",
-            "VAKANTIEVERHUURVERGUNNING",
+            "Vakantieverhuur",
         ),
         (
             "6D7A9C0DB6584E4DB149F49A568F37EF",
-            "OMZETTINGSVERGUNNING",
+            "Omzettingsvergunning",
         ),
         (
             "02C281346BE44AC59E55C6212D0EE063",
-            "SPLITTINGSVERGUNNING",
+            "Splitsingsvergunning",
         ),
         (
             "EEB05166A55F47AC9393646AD7CA02DD",
-            "ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN",
+            "Onttrekking- vorming en samenvoegingsvergunning",
         ),
         (
             "27FB47C0444341828598F2AB546B618C",
-            "LIGPLAATSVERGUNNING",
+            "Ligplaatsvergunning",
         ),
     )
     MOCK_EXPRESSION = "{date6} <= {ts_now} and {date7} >= {ts_now} and '{dfunction}'.startswith('Verleend')"

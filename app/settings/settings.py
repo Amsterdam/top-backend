@@ -344,27 +344,27 @@ DECOS_JOIN_LIGPLAATSVERGUNNING_ID = "27FB47C0444341828598F2AB546B618C"
 DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF = (
     (
         DECOS_JOIN_B_EN_B_VERGUNNING_ID,
-        "B_EN_B_VERGUNNING",
+        "B&B - vergunning",
     ),
     (
         DECOS_JOIN_VAKANTIEVERHUURVERGUNNING_ID,
-        "VAKANTIEVERHUURVERGUNNING",
+        "Vakantieverhuur",
     ),
     (
         DECOS_JOIN_OMZETTINGSVERGUNNING_ID,
-        "OMZETTINGSVERGUNNING",
+        "Omzettingsvergunning",
     ),
     (
         DECOS_JOIN_SPLITSINGSVERGUNNING_ID,
-        "SPLITTINGSVERGUNNING",
+        "Splitsingsvergunning",
     ),
     (
         DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID,
-        "ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN",
+        "Onttrekking- vorming en samenvoegingsvergunning",
     ),
     (
         DECOS_JOIN_LIGPLAATSVERGUNNING_ID,
-        "LIGPLAATSVERGUNNING",
+        "Ligplaatsvergunning",
     ),
 )
 DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION = "{date6} <= {ts_now} and {date7} >= {ts_now} and {date5} <= {ts_now} and '{dfunction}'.startswith('Verleend') or {date6} <= {ts_now} and {date5} <= {ts_now} and '{dfunction}'.startswith('Verleend')"
