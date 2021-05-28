@@ -29,7 +29,7 @@ django-timezone-field
 
 # Authentication
 git+https://github.com/petercuret/keycloak_oidc.git@master
-djangorestframework-simplejwt==4.6.0
+djangorestframework-simplejwt==4.7.1
 
 # Algorithm toolbox
 geopy==2.1.0
