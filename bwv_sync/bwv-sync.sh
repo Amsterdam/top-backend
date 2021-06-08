@@ -7,6 +7,7 @@
 
 # Let's make it easy to ourselves and prevent bash from interpreting the '*' in
 # 'select * from ...'
+echo "Starting database sync."
 set -o noglob
 set -euo pipefail
 
@@ -46,12 +47,35 @@ tables=(
   view_woningen,bwv_woningen
 )
 
+# These indexes are needed by the vakantieverhuur fraud detection model
+indexes=(
+  "import_adres__adres_id_idx on import_adres (adres_id)"
+  "bwv_personen_hist__ads_id_idx on bwv_personen_hist (ads_id, vestigingsdatum_adres, vertrekdatum_adres)"
+  "bwv_personen_hist__pen_id_idx on bwv_personen_hist (pen_id, vestigingsdatum_adres)"
+  "import_stadia__stadia_id_idx on import_stadia (stadia_id varchar_pattern_ops)"
+  "bwv_hotline_melding__wng_id_idx on bwv_hotline_melding (wng_id)"
+  "bwv_personen__id_idx on bwv_personen (id)"
+  "import_wvs__adres_id__idx on import_wvs (adres_id)"
+)
+
+
 
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "CREATE TABLE IF NOT EXISTS sync_log (start timestamp with time zone, finished timestamp with time zone);"
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "INSERT INTO sync_log (start) VALUES ('${timestamp_start}');"
 
+# drop indexes
+echo "Dropping indexes..."
+for index in "${indexes[@]}"; do
+  echo "Dropping index ${index}..."
+  ixname=$(cut -d ' ' -f 1 <<< "$index")
+  PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "DROP INDEX IF EXISTS ${ixname}"
+done
+echo "Dropping indexes done."
+
+
+# Sync tables
 export PGPASSWORD="${src_pw}"
 for src_dst in ${tables[@]}; do
   src_table=$(cut -d, -f 1 <<<"$src_dst")
@@ -64,10 +88,22 @@ for src_dst in ${tables[@]}; do
     | if $anonymize; then /usr/local/bin/pg_anonymize -c /etc/pg_anonymize.conf "$dst_table"; else cat -; fi \
     | PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "COPY $dst_table FROM STDIN"
 done
+echo "Syncing tables done."
 
+
+# (re-)create indexes
+echo "Creating indexes..."
+for index in "${indexes[@]}"; do
+   echo "Creating '${index}'..."
+   PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "CREATE INDEX IF NOT EXISTS ${index}"
+done
+echo "Creating indexes done."
+
+echo "Logging success..."
 timestamp_finished="$(TZ="Europe/Amsterdam" date "+%Y-%m-%d %H:%M:%S Europe/Amsterdam")"
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "UPDATE sync_log set finished = '${timestamp_finished}' where start = '${timestamp_start}';"
+echo "Logging success done."
 
 curl "${url}/api/v1/fraud-prediction/scoring/" \
   -X POST \
