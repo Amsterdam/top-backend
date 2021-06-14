@@ -6,7 +6,7 @@ celery==5.0.5
 # Rest apis
 djangorestframework==3.12.4
 django-cors-headers==3.7.0
-drf-spectacular==0.15.1
+drf-spectacular==0.17.1
 
 # Logging
 sentry-sdk==1.0.0
