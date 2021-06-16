@@ -62,7 +62,6 @@ def get_eligible_cases_v2(generator):
     logger.info("initial case count")
     logger.info(len(cases))
     logger.info("validate team_schedules")
-    logger.info(team_schedules)
     team_schedules = (
         dict(
             (
@@ -74,7 +73,11 @@ def get_eligible_cases_v2(generator):
                 ],
             )
             for k, v in team_schedules.items()
-            if hasattr(generator.settings, k)
+            if k
+            in [
+                "day_segments",
+                "week_segments",
+            ]
         )
         if team_schedules
         else {}
