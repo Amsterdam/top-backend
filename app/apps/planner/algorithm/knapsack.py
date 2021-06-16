@@ -59,18 +59,25 @@ def get_eligible_cases_v2(generator):
         reasons = generator.settings.day_settings.fetch_team_reasons()
         state_types = generator.settings.day_settings.fetch_team_state_types()
 
+    logger.info("initial case count")
+    logger.info(len(cases))
     logger.info("validate team_schedules")
-    team_schedules = dict(
-        (
-            k,
-            [
-                s
-                for s in getattr(generator.settings, k)
-                if s in [ss.get("id", 0) for ss in v]
-            ],
+    logger.info(team_schedules)
+    team_schedules = (
+        dict(
+            (
+                k,
+                [
+                    s
+                    for s in getattr(generator.settings, k)
+                    if s in [ss.get("id", 0) for ss in v]
+                ],
+            )
+            for k, v in team_schedules.items()
+            if hasattr(generator.settings, k)
         )
-        for k, v in team_schedules.items()
-        if hasattr(generator.settings, k)
+        if team_schedules
+        else {}
     )
     logger.info("validate reasons")
     reasons = [
@@ -85,8 +92,6 @@ def get_eligible_cases_v2(generator):
     ]
     logger.info("selected algorithm states")
     logger.info(state_types_selected)
-    logger.info("initial case count")
-    logger.info(len(cases))
     cases = filter_out_incompatible_cases(cases)
     logger.info("after filter_out_incompatible_cases")
     logger.info(len(cases))
