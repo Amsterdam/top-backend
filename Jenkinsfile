@@ -61,7 +61,7 @@ pipeline {
           def image = docker.build("${DOCKER_IMAGE_URL}:${env.COMMIT_HASH}",
             "--no-cache " +
             "--shm-size 1G " +
-            "--build-arg ONDERHUUR_MODEL_CREDS=gitlab+deploy-token-176:${ONDERHUUR_MODEL_KEY} " +
+            "--build-arg ONDERHUUR_MODEL_CREDS=gitlab_token_onderhuur_model:${ONDERHUUR_MODEL_KEY} " +
             " ./app")
           image.push()
           tag_image_as("latest")
