@@ -37,10 +37,15 @@ def get_eligible_cases_v2(generator):
         reasons = get_team_reasons()
         state_types = get_team_state_types()
     else:
+        state_types = generator.settings.day_settings.fetch_team_state_types()
+        team_schedules = generator.settings.day_settings.fetch_team_schedules()
+        reasons = generator.settings.day_settings.fetch_team_reasons()
+
         url = f"{settings.ZAKEN_API_URL}/cases/"
         queryParams = {
             "openCases": "true",
-            "team": generator.settings.day_settings.team_settings.zaken_team_name,
+            "openStatus": ",".join([str(state.get("id", 0)) for state in state_types]),
+            "theme": generator.settings.day_settings.team_settings.zaken_team_name,
             "startDate": generator.settings.opening_date.strftime("%Y-%m-%d"),
             "noPagination": "true",
         }
@@ -54,10 +59,6 @@ def get_eligible_cases_v2(generator):
         response.raise_for_status()
 
         cases = response.json()
-
-        team_schedules = generator.settings.day_settings.fetch_team_schedules()
-        reasons = generator.settings.day_settings.fetch_team_reasons()
-        state_types = generator.settings.day_settings.fetch_team_state_types()
 
     logger.info("initial case count")
     logger.info(len(cases))

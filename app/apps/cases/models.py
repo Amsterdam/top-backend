@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import requests
 from apps.fraudprediction.models import FraudPrediction
@@ -8,6 +9,14 @@ from utils.queries import get_case
 from utils.queries_zaken_api import get_headers
 
 from .mock import get_zaken_case_list
+
+CASE_404 = {
+    "deleted": True,
+    "address": {
+        "street_name": "Zaak verwijderd",
+        "number": 404,
+    },
+}
 
 
 class Case(models.Model):
@@ -33,6 +42,8 @@ class Case(models.Model):
             timeout=5,
             headers=get_headers(),
         )
+        if response.status_code == 404:
+            return CASE_404
         response.raise_for_status()
 
         return response.json()
@@ -65,7 +76,11 @@ class Case(models.Model):
 
     @property
     def data(self):
-        return self.__get_case__(self.case_id)
+        case_data = {
+            "deleted": False,
+        }
+        case_data.update(self.__get_case__(self.case_id))
+        return case_data
 
     @property
     def itinerary(self):
