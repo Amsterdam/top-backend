@@ -279,6 +279,7 @@ def prepare_bwv_case_for_aza(case):
         "lat": case.get("lat"),
         "lng": case.get("lng"),
     }
+    case["deleted"] = False
     return case
 
 

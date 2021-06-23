@@ -72,6 +72,7 @@ class CaseViewSet(ViewSet):
             )
 
             data = {
+                "deleted": False,
                 "bwv_hotline_bevinding": q.get_bwv_hotline_bevinding(wng_id),
                 "bwv_hotline_melding": q.get_bwv_hotline_melding(wng_id),
                 "bwv_personen": q.get_bwv_personen(adres_id),
@@ -88,7 +89,10 @@ class CaseViewSet(ViewSet):
                 "is_sia": case_instance.data.get("is_sia"),
             }
         else:
-            data = model_to_dict(case_instance)
+            data = {
+                "deleted": False,
+            }
+            data.update(model_to_dict(case_instance))
             data.update(case_instance.data)
             bag_id = data.get("address", {}).get("bag_id")
 

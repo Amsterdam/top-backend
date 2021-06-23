@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import requests
 from apps.fraudprediction.models import FraudPrediction
@@ -8,6 +9,14 @@ from utils.queries import get_case
 from utils.queries_zaken_api import get_headers
 
 from .mock import get_zaken_case_list
+
+CASE_404 = {
+    "deleted": True,
+    "address": {
+        "street_name": "Zaak verwijderd",
+        "number": 404,
+    },
+}
 
 
 class Case(models.Model):
@@ -33,9 +42,13 @@ class Case(models.Model):
             timeout=5,
             headers=get_headers(),
         )
+        if response.status_code == 404:
+            return CASE_404
         response.raise_for_status()
 
-        return response.json()
+        case_data = response.json()
+        case_data.update({"deleted": False})
+        return case_data
 
     def fetch_events(self):
         url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/events/"

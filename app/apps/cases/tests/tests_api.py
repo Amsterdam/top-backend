@@ -136,6 +136,7 @@ class CaseViewSetTest(APITestCase):
             "brk_data": FOO_BRK_DATA,
             "related_cases": FOO_RELATED_CASES,
             "day_settings_id": None,
+            "deleted": False,
             "is_sia": None,
         }
 
