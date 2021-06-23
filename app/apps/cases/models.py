@@ -46,7 +46,9 @@ class Case(models.Model):
             return CASE_404
         response.raise_for_status()
 
-        return response.json()
+        case_data = response.json()
+        case_data.update({"deleted": False})
+        return case_data
 
     def fetch_events(self):
         url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/events/"
@@ -76,11 +78,7 @@ class Case(models.Model):
 
     @property
     def data(self):
-        case_data = {
-            "deleted": False,
-        }
-        case_data.update(self.__get_case__(self.case_id))
-        return case_data
+        return self.__get_case__(self.case_id)
 
     @property
     def itinerary(self):
