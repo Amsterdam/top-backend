@@ -209,20 +209,20 @@ class FraudPredictAPIBased:
 
     def fraudpredict(self):
         """
-        Calculate fraudpredictions for vakantieverhuur
+        Calculate fraudpredictions
         """
         CONNECT_TIMEOUT = 10
         READ_TIMEOUT = 60
 
+        LOGGER.info(self.model_name)
         LOGGER.info(os.environ)
-        LOGGER.info(self.get_settings("HITKANS_API_BASE"))
         case_ids = self.get_case_ids_to_score()
-        LOGGER.info("vakantieverhuur task: case id count")
+        LOGGER.info("fraudpredict task: case id count")
         LOGGER.info(len(case_ids))
-        LOGGER.info("vakantieverhuur task: case ids")
+        LOGGER.info("fraudpredict task: case ids")
         LOGGER.info(case_ids)
         if settings.USE_HITKANS_MOCK_DATA:
-            LOGGER.info("vakantieverhuur task: use mock data")
+            LOGGER.info("fraudpredict task: use mock data")
             result = fraud_prediction_results()
         else:
             data = {
@@ -239,15 +239,15 @@ class FraudPredictAPIBased:
                 },
             )
             response.raise_for_status()
-            LOGGER.info("vakantieverhuur task: response status")
+            LOGGER.info("fraudpredict task: response status")
             LOGGER.info(response.status_code)
-            LOGGER.info("vakantieverhuur task: response json")
+            LOGGER.info("fraudpredict task: response json")
             LOGGER.info(response.json())
             result = response.json()
 
-        LOGGER.info("vakantieverhuur task: api_results_to_instances")
+        LOGGER.info("fraudpredict task: api_results_to_instances")
         updated_case_ids = self.api_results_to_instances(result)
-        LOGGER.info("vakantieverhuur task: updated case id's")
+        LOGGER.info("fraudpredict task: updated case id's")
         LOGGER.info(len(updated_case_ids))
 
         return updated_case_ids
