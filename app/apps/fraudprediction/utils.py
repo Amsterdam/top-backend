@@ -7,6 +7,7 @@ from apps.cases.models import Project, Stadium
 from apps.fraudprediction.models import FraudPrediction
 from apps.fraudprediction.serializers import FraudPredictionSerializer
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from settings.const import STARTING_FROM_DATE
 from utils.queries_planner import get_cases_from_bwv
 
@@ -15,18 +16,18 @@ from .mock import fraud_prediction_results
 LOGGER = logging.getLogger("celery")
 
 
-def fraudpredict_vakantieverhuur():
+def fraudpredict_vakantieverhuur(
+    fraud_prediction_model=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
+):
     """
     Calculate fraudpredictions for vakantieverhuur
     """
     CONNECT_TIMEOUT = 10
     READ_TIMEOUT = 60
 
-    model_name = settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR
-
     LOGGER.info(os.environ)
     LOGGER.info(settings.VAKANTIEVERHUUR_HITKANS_API_BASE)
-    case_ids = get_case_ids_to_score(model_name)
+    case_ids = get_case_ids_to_score(fraud_prediction_model)
     LOGGER.info("vakantieverhuur task: case id count")
     LOGGER.info(len(case_ids))
     LOGGER.info("vakantieverhuur task: case ids")
@@ -36,7 +37,7 @@ def fraudpredict_vakantieverhuur():
         result = fraud_prediction_results()
     else:
         data = {
-            "zaken_ids": get_case_ids_to_score(model_name),
+            "zaken_ids": get_case_ids_to_score(fraud_prediction_model),
             "auth_token": settings.VAKANTIEVERHUUR_HITKANS_AUTH_TOKEN,
         }
 
@@ -56,7 +57,7 @@ def fraudpredict_vakantieverhuur():
         result = response.json()
 
     LOGGER.info("vakantieverhuur task: api_results_to_instances")
-    updated_case_ids = api_results_to_instances(result, model_name)
+    updated_case_ids = api_results_to_instances(result, fraud_prediction_model)
     LOGGER.info("vakantieverhuur task: updated case id's")
     LOGGER.info(len(updated_case_ids))
 
@@ -174,3 +175,17 @@ def add_fraud_predictions(cases):
         case["fraud_prediction"] = get_fraud_prediction(case_id)
 
     return cases
+
+
+def import_from_settings(attr, *args):
+    """
+    Load an attribute from the django settings.
+    :raises:
+        ImproperlyConfigured
+    """
+    try:
+        if args:
+            return getattr(settings, attr, args[0])
+        return getattr(settings, attr)
+    except AttributeError:
+        raise ImproperlyConfigured("Setting {0} not found".format(attr))

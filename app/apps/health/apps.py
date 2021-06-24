@@ -11,6 +11,7 @@ class HealthConfig(AppConfig):
             BWVDatabaseCheck,
             CeleryExecuteTask,
             DecosJoinCheck,
+            OnderhuurHitkansServiceCheck,
             VakantieverhuurHitkansServiceCheck,
         )
 
@@ -19,3 +20,4 @@ class HealthConfig(AppConfig):
         plugin_dir.register(CeleryExecuteTask)
         plugin_dir.register(DecosJoinCheck)
         plugin_dir.register(VakantieverhuurHitkansServiceCheck)
+        plugin_dir.register(OnderhuurHitkansServiceCheck)
