@@ -2,7 +2,7 @@ import logging
 import os
 
 import requests
-from apps.fraudprediction.fraud_predict import FraudPredict
+from apps.fraudprediction.fraud_predict import FraudPredict, FraudPredictAPIBased
 from celery import shared_task
 from django.conf import settings
 
@@ -44,7 +44,10 @@ def fraudpredict_vakantieverhuur_task(self):
     try:
         logger.info("Started fraudpredict vakantieverhuur task")
 
-        result = fraudpredict_vakantieverhuur()
+        prediction_instance = FraudPredictAPIBased(
+            settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR
+        )
+        result = prediction_instance.fraudpredict()
 
         logger.info("Ended fraudpredict vakantieverhuur task")
 
