@@ -15,27 +15,6 @@ DEFAULT_RETRY_DELAY = 10
 
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def fraudpredict_onderhuur_task(self):
-    """
-    Calculate fraudpredictions per type
-    """
-
-    try:
-        logger.info("Started fraudpredict onderhuur task")
-        fraud_predict = FraudPredict(
-            model_name=settings.FRAUD_PREDICTION_MODEL_ONDERHUUR,
-            score_module_path="onderhuur_prediction_model.score",
-        )
-        fraud_predict.start()
-        logger.info("Ended fraudpredict onderhuur task")
-
-    except Exception as exception:
-        self.retry(exc=exception)
-
-    return True
-
-
-@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
 def fraudpredict_vakantieverhuur_task(self):
     """
     Calculate fraudpredictions for vakantieverhuur
@@ -50,6 +29,28 @@ def fraudpredict_vakantieverhuur_task(self):
         result = prediction_instance.fraudpredict()
 
         logger.info("Ended fraudpredict vakantieverhuur task")
+
+    except Exception as exception:
+        self.retry(exc=exception)
+
+    return result
+
+
+@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
+def fraudpredict_onderhuur_task(self):
+    """
+    Calculate fraudpredictions for onderhuur
+    """
+
+    try:
+        logger.info("Started fraudpredict onderhuur task")
+
+        prediction_instance = FraudPredictAPIBased(
+            settings.FRAUD_PREDICTION_MODEL_ONDERHUUR
+        )
+        result = prediction_instance.fraudpredict()
+
+        logger.info("Ended fraudpredict onderhuur task")
 
     except Exception as exception:
         self.retry(exc=exception)
