@@ -17,7 +17,7 @@ from settings.const import STARTING_FROM_DATE
 from utils.queries_bwv import get_bwv_personen, get_bwv_personen_hist
 from utils.queries_planner import get_cases_from_bwv
 
-from .mock import fraud_prediction_results
+from .mock import fraud_prediction_onderhuur_results, fraud_prediction_results
 from .utils import import_from_settings
 
 LOGGER = logging.getLogger(__name__)
@@ -202,11 +202,38 @@ class FraudPredict:
 
 
 class FraudPredictAPIBased:
-    def __init__(self, model_name=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR):
-        self.model_name = model_name
+    model_name = None
+    MODEL_KEYS = {
+        settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR: [
+            "prediction_woonfraude",
+            "prob_woonfraude",
+            "business_rules",
+            "shap_values",
+        ],
+        settings.FRAUD_PREDICTION_MODEL_ONDERHUUR: [
+            "snapshot",
+            "br_count",
+            "ci_count",
+            "sum_br_w",
+            "prediction",
+            "score",
+            "business_rules",
+            "shap_values",
+        ],
+    }
+
+    def __init__(self):
+        if not self.model_name:
+            raise NotImplementedError("Instance needs a fraudprediction model name")
 
     def get_settings(self, settings_key):
         return import_from_settings(f"{self.model_name.upper()}_{settings_key}")
+
+    def get_mock_data(self):
+        if self.model_name == settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR:
+            return fraud_prediction_results()
+        elif self.model_name == settings.FRAUD_PREDICTION_MODEL_ONDERHUUR:
+            return fraud_prediction_onderhuur_results()
 
     def fraudpredict(self):
         """
@@ -224,7 +251,7 @@ class FraudPredictAPIBased:
         celery_logger.info(case_ids)
         if settings.USE_HITKANS_MOCK_DATA:
             celery_logger.info("fraudpredict task: use mock data")
-            result = fraud_prediction_results()
+            result = self.get_mock_data()
         else:
             data = {
                 "zaken_ids": self.get_case_ids_to_score(),
@@ -246,6 +273,8 @@ class FraudPredictAPIBased:
             celery_logger.info(response.json())
             result = response.json()
 
+        celery_logger.info("fraudpredict task: map_results")
+        result = self.map_results(result)
         celery_logger.info("fraudpredict task: api_results_to_instances")
         updated_case_ids = self.api_results_to_instances(result)
         celery_logger.info("fraudpredict task: updated case id's")
@@ -289,28 +318,55 @@ class FraudPredictAPIBased:
             case_ids = list(set([case.get("id") for case in cases]))
         return case_ids
 
-    def api_results_to_instances(self, results):
-        for case_id, fraud_prediction in results.get(
-            "prediction_woonfraude", {}
-        ).items():
-            FraudPrediction.objects.update_or_create(
-                case_id=case_id,
-                defaults={
+    def get_model_keys(self):
+        return self.MODEL_KEYS.get(self.model_name, [])
+
+    def map_results(self, results):
+        keys = list(results.keys())
+        if not keys:
+            return {}
+        return dict(
+            (
+                case_id,
+                {
                     "fraud_prediction_model": self.model_name,
-                    "fraud_probability": results.get("prob_woonfraude", {}).get(
-                        case_id, 0
-                    ),
-                    "fraud_prediction": fraud_prediction,
+                    "fraud_probability": results.get(
+                        self.get_fraud_probability_key(), {}
+                    ).get(case_id, 0),
+                    "fraud_prediction": results.get(
+                        self.get_fraud_prediction_key(), {}
+                    ).get(case_id, False),
                     "business_rules": self.clean_dictionary(
-                        results.get("business_rules", {}).get(case_id, {})
+                        results.get(self.get_business_rules_key(), {}).get(case_id, {})
                     ),
                     "shap_values": self.clean_dictionary(
-                        results.get("shap_values", {}).get(case_id, {})
+                        results.get(self.get_shap_values_key(), {}).get(case_id, {})
                     ),
                 },
             )
+            for case_id in results.get(keys[0], {}).keys()
+            if results.get(self.get_fraud_prediction_key(), {}).get(case_id, False)
+        )
 
-        return list(results.get("prediction_woonfraude", {}).keys())
+    def get_fraud_probability_key(self):
+        raise NotImplementedError("Key for FraudPrediction field 'fraud_probability'")
+
+    def get_fraud_prediction_key(self):
+        raise NotImplementedError("Key for FraudPrediction field 'fraud_prediction'")
+
+    def get_business_rules_key(self):
+        raise NotImplementedError("Key for FraudPrediction field 'business_rules'")
+
+    def get_shap_values_key(self):
+        raise NotImplementedError("Key for FraudPrediction field 'shap_values'")
+
+    def api_results_to_instances(self, results):
+        for case_id, result in results.items():
+            FraudPrediction.objects.update_or_create(
+                case_id=case_id,
+                defaults=result,
+            )
+        return list(results.keys())
 
     def clean_dictionary(self, dictionary):
         """
@@ -325,3 +381,35 @@ class FraudPredictAPIBased:
                 dictionary[key] = 0.0
 
         return dictionary
+
+
+class FraudPredictAPIBasedOnderhuur(FraudPredictAPIBased):
+    model_name = settings.FRAUD_PREDICTION_MODEL_ONDERHUUR
+
+    def get_fraud_probability_key(self):
+        return "score"
+
+    def get_fraud_prediction_key(self):
+        return "prediction"
+
+    def get_business_rules_key(self):
+        return "business_rules"
+
+    def get_shap_values_key(self):
+        return "shap_values"
+
+
+class FraudPredictAPIBasedVakantieverhuur(FraudPredictAPIBased):
+    model_name = settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR
+
+    def get_fraud_probability_key(self):
+        return "prob_woonfraude"
+
+    def get_fraud_prediction_key(self):
+        return "prediction_woonfraude"
+
+    def get_business_rules_key(self):
+        return "business_rules"
+
+    def get_shap_values_key(self):
+        return "shap_values"
