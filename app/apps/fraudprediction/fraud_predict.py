@@ -21,6 +21,7 @@ from .mock import fraud_prediction_results
 from .utils import import_from_settings
 
 LOGGER = logging.getLogger(__name__)
+celery_logger = logging.getLogger("celery")
 
 DATABASE_CONFIG = {
     "bwv_adres": {"table_name": "import_adres"},
@@ -214,15 +215,15 @@ class FraudPredictAPIBased:
         CONNECT_TIMEOUT = 10
         READ_TIMEOUT = 60
 
-        LOGGER.info(self.model_name)
-        LOGGER.info(os.environ)
+        celery_logger.info(self.model_name)
+        celery_logger.info(os.environ)
         case_ids = self.get_case_ids_to_score()
-        LOGGER.info("fraudpredict task: case id count")
-        LOGGER.info(len(case_ids))
-        LOGGER.info("fraudpredict task: case ids")
-        LOGGER.info(case_ids)
+        celery_logger.info("fraudpredict task: case id count")
+        celery_logger.info(len(case_ids))
+        celery_logger.info("fraudpredict task: case ids")
+        celery_logger.info(case_ids)
         if settings.USE_HITKANS_MOCK_DATA:
-            LOGGER.info("fraudpredict task: use mock data")
+            celery_logger.info("fraudpredict task: use mock data")
             result = fraud_prediction_results()
         else:
             data = {
@@ -239,16 +240,16 @@ class FraudPredictAPIBased:
                 },
             )
             response.raise_for_status()
-            LOGGER.info("fraudpredict task: response status")
-            LOGGER.info(response.status_code)
-            LOGGER.info("fraudpredict task: response json")
-            LOGGER.info(response.json())
+            celery_logger.info("fraudpredict task: response status")
+            celery_logger.info(response.status_code)
+            celery_logger.info("fraudpredict task: response json")
+            celery_logger.info(response.json())
             result = response.json()
 
-        LOGGER.info("fraudpredict task: api_results_to_instances")
+        celery_logger.info("fraudpredict task: api_results_to_instances")
         updated_case_ids = self.api_results_to_instances(result)
-        LOGGER.info("fraudpredict task: updated case id's")
-        LOGGER.info(len(updated_case_ids))
+        celery_logger.info("fraudpredict task: updated case id's")
+        celery_logger.info(len(updated_case_ids))
 
         return updated_case_ids
 
