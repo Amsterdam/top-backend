@@ -4659,12 +4659,12 @@ def fraud_prediction_onderhuur_results():
 
 def fraud_prediction_results():
     return {
-        "prediction_woonfraude": {
+        "prediction": {
             "3309": True,
             "3314": True,
             "3318": False,
         },
-        "prob_woonfraude": {
+        "score": {
             "3309": 0,
             "3314": 0.2,
             "3318": 0.61,
