@@ -205,8 +205,8 @@ class FraudPredictAPIBased:
     model_name = None
     MODEL_KEYS = {
         settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR: [
-            "prediction_woonfraude",
-            "prob_woonfraude",
+            "prediction",
+            "score",
             "business_rules",
             "shap_values",
         ],
@@ -222,7 +222,9 @@ class FraudPredictAPIBased:
         ],
     }
 
-    def __init__(self):
+    def __init__(self, model_name=None):
+        if model_name:
+            self.model_name = model_name
         if not self.model_name:
             raise NotImplementedError("Instance needs a fraudprediction model name")
 
@@ -349,16 +351,16 @@ class FraudPredictAPIBased:
         )
 
     def get_fraud_probability_key(self):
-        raise NotImplementedError("Key for FraudPrediction field 'fraud_probability'")
+        return "score"
 
     def get_fraud_prediction_key(self):
-        raise NotImplementedError("Key for FraudPrediction field 'fraud_prediction'")
+        return "prediction"
 
     def get_business_rules_key(self):
-        raise NotImplementedError("Key for FraudPrediction field 'business_rules'")
+        return "business_rules"
 
     def get_shap_values_key(self):
-        raise NotImplementedError("Key for FraudPrediction field 'shap_values'")
+        return "shap_values"
 
     def api_results_to_instances(self, results):
         for case_id, result in results.items():
@@ -381,35 +383,3 @@ class FraudPredictAPIBased:
                 dictionary[key] = 0.0
 
         return dictionary
-
-
-class FraudPredictAPIBasedOnderhuur(FraudPredictAPIBased):
-    model_name = settings.FRAUD_PREDICTION_MODEL_ONDERHUUR
-
-    def get_fraud_probability_key(self):
-        return "score"
-
-    def get_fraud_prediction_key(self):
-        return "prediction"
-
-    def get_business_rules_key(self):
-        return "business_rules"
-
-    def get_shap_values_key(self):
-        return "shap_values"
-
-
-class FraudPredictAPIBasedVakantieverhuur(FraudPredictAPIBased):
-    model_name = settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR
-
-    def get_fraud_probability_key(self):
-        return "prob_woonfraude"
-
-    def get_fraud_prediction_key(self):
-        return "prediction_woonfraude"
-
-    def get_business_rules_key(self):
-        return "business_rules"
-
-    def get_shap_values_key(self):
-        return "shap_values"
