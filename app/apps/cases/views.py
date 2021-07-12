@@ -19,6 +19,7 @@ from apps.fraudprediction.utils import add_fraud_predictions, get_fraud_predicti
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
 from apps.planner.models import TeamSettings
+from apps.users.auth_apps import AZAKeyAuth
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from django.conf import settings
@@ -28,6 +29,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
+from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -46,6 +48,7 @@ logger = logging.getLogger(__name__)
 
 
 class CaseViewSet(ViewSet):
+    permission_classes = [IsInAuthorizedRealm | AZAKeyAuth]
     """
     A Viewset for showing a single Case in detail
     """
