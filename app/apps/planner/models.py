@@ -39,6 +39,10 @@ class TeamSettings(models.Model):
         blank=True,
         null=True,
     )
+    fraudprediction_pilot_enabled = models.BooleanField(
+        default=False,
+        help_text="enables fraudprediction A/B testing for this theme on AZA cases",
+    )
     default_weights = models.ForeignKey(
         to="Weights",
         blank=True,
