@@ -1,3 +1,4 @@
+import datetime
 import logging
 import multiprocessing
 
@@ -37,11 +38,16 @@ def get_eligible_cases_v2(generator):
         reasons = get_team_reasons()
         state_types = get_team_state_types()
     else:
+        logger.info("Get from AZA: state_types")
         state_types = generator.settings.day_settings.fetch_team_state_types()
+        logger.info("Get from AZA: team_schedules")
         team_schedules = generator.settings.day_settings.fetch_team_schedules()
+        logger.info("Get from AZA: reasons")
         reasons = generator.settings.day_settings.fetch_team_reasons()
+        logger.info("Get from AZA: cases")
 
         url = f"{settings.ZAKEN_API_URL}/cases/"
+
         queryParams = {
             "openCases": "true",
             "openStatus": ",".join([str(state.get("id", 0)) for state in state_types]),
@@ -49,14 +55,18 @@ def get_eligible_cases_v2(generator):
             "startDate": generator.settings.opening_date.strftime("%Y-%m-%d"),
             "noPagination": "true",
         }
-
+        logger.info("With queryParams")
+        logger.info(queryParams)
+        now = datetime.datetime.now()
         response = requests.get(
             url,
             params=queryParams,
-            timeout=5,
+            timeout=30,
             headers=get_headers(),
         )
         response.raise_for_status()
+        logger.info("Request duration")
+        logger.info(datetime.datetime.now() - now)
 
         cases = response.json()
 
