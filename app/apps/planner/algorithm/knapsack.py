@@ -46,7 +46,7 @@ def get_eligible_cases_v2(generator):
         team_schedules = generator.settings.day_settings.fetch_team_schedules(
             generator.auth_header
         )
-        ogger.info("Get from AZA: reasons")
+        logger.info("Get from AZA: reasons")
         reasons = generator.settings.day_settings.fetch_team_reasons(
             generator.auth_header
         )
