@@ -3,6 +3,7 @@ import json
 
 import requests
 from apps.fraudprediction.models import FraudPrediction
+from apps.users.utils import get_keycloak_auth_header_from_request
 from django.conf import settings
 from django.db import models
 from utils.queries import get_case
@@ -83,11 +84,11 @@ class Case(models.Model):
     def data_context(self, context):
         auth_header = None
         try:
-            auth_header = context.get("request", {}).headers.get("Authorization")
+            auth_header = get_keycloak_auth_header_from_request(
+                context.get("request", {})
+            )
         except Exception:
             pass
-        print(context.get("request", {}))
-        print(auth_header)
         return self.__get_case__(self.case_id, auth_header)
 
     @property

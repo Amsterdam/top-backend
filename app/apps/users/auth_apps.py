@@ -8,8 +8,7 @@ class AppsKeyAuth(BasePermission):
     def has_permission(self, request, view):
         try:
             assert self.SECRET_KEY, "SECRET_KEY is not set"
-            print(request.META.get("HTTP_AUTHORIZATION", None))
-            print(self.SECRET_KEY)
+
             secret_key_request = request.META.get("HTTP_AUTHORIZATION", None)
             assert secret_key_request, "Secret key cannot be retrieved from request"
 

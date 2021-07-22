@@ -17,7 +17,6 @@ class ItineraryGenerateAlgorithm:
 
     def __init__(self, settings, postal_code_settings=[], **kwargs):
         self.auth_header = kwargs.get("auth_header")
-        print(kwargs)
         self.settings = settings
         self.opening_date = settings.opening_date
         self.stadia = list(
