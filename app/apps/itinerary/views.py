@@ -50,8 +50,10 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
 
         if date:
             itineraries = itineraries.filter(created_at=date)
-
-        serializer = self.get_serializer_class()(itineraries, many=True)
+        print(self.request)
+        serializer = self.get_serializer_class()(
+            itineraries, many=True, context={"request": self.request}
+        )
 
         return serializer.data
 
@@ -121,7 +123,9 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         # Create the itinerary
         try:
             itinerary = serializer.create(request.data)
-            cases = itinerary.get_cases_from_settings()
+            cases = itinerary.get_cases_from_settings(
+                request.headers.get("Authorization")
+            )
         except Exception as e:
             raise APIException("Could not create itinerary from settings: {}".format(e))
 
@@ -134,7 +138,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             itinerary.add_case(case_id)
 
         # Serialize the itinerary again
-        serializer = ItinerarySerializer(itinerary)
+        serializer = ItinerarySerializer(itinerary, context={"request": request})
 
         return Response(serializer.data)
 

@@ -33,10 +33,28 @@ class CaseSearchSerializer(serializers.Serializer):
 class CaseSerializer(serializers.ModelSerializer):
     fraud_prediction = FraudPredictionSerializer(required=False, read_only=True)
     id = serializers.CharField(source="case_id")
+    data = serializers.SerializerMethodField(method_name="get_data")
 
     class Meta:
         model = Case
         fields = ("id", "data", "fraud_prediction")
+
+    def get_data(self, obj):
+        print("data")
+        print("self.context")
+        print(self.context)
+        data = obj.data_context(self.context)
+        print(data)
+        return obj.data_context(self.context)
+
+    def to_representation(self, instance):
+        print("to_representation")
+        print("self.context")
+        print(self.context)
+        data = super().to_representation(instance)
+        print(data)
+
+        return data
 
 
 class ProjectSerializer(serializers.ModelSerializer):

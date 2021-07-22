@@ -137,7 +137,7 @@ def get_serialized_visit(visit_id):
 
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def push_visit(self, visit_id, created=False):
+def push_visit(self, visit_id, created=False, auth_header=None):
     logger.info(f"Pushing visit {visit_id} to zaken")
 
     assert_allow_push()
@@ -153,10 +153,11 @@ def push_visit(self, visit_id, created=False):
             url,
             timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
             json=data,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         response.raise_for_status()
     except Exception as exception:
+        print(exception)
         self.retry(exc=exception)
 
     return response

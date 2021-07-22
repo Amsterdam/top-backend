@@ -1,4 +1,5 @@
 from apps.cases.models import Case
+from apps.fraudprediction.models import FraudPrediction
 from apps.users.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -56,6 +57,23 @@ class Visit(models.Model):
                 if Observation.objects.filter(value=o)
             ]
         )
+
+    def capture_visit_meta_data(self):
+        """ Captures visit data """
+        visit_meta_data = VisitMetaData.objects.get_or_create(visit=self)[0]
+
+        try:
+            fraud_prediction = self.itinerary_item.case.fraud_prediction
+        except FraudPrediction.DoesNotExist:
+            return
+
+        # Add visit data to persist it as judicial documentation
+        visit_meta_data.fraud_probability = fraud_prediction.fraud_probability
+        visit_meta_data.fraud_prediction_business_rules = (
+            fraud_prediction.business_rules
+        )
+        visit_meta_data.fraud_prediction_shap_values = fraud_prediction.shap_values
+        visit_meta_data.save()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

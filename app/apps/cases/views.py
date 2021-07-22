@@ -267,7 +267,7 @@ class CaseSearchViewSet(ViewSet):
                     url,
                     params=queryParams,
                     timeout=0.5,
-                    headers=get_headers(),
+                    headers=get_headers(request.headers.get("Authorization")),
                 )
                 response.raise_for_status()
 

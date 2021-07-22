@@ -7,6 +7,7 @@ from apps.visits.models import (
     Visit,
     VisitTeamMember,
 )
+from django.db import transaction
 from rest_framework import serializers
 
 
@@ -68,6 +69,28 @@ class CaseField(serializers.RelatedField):
 class VisitSerializer(serializers.ModelSerializer):
     team_members = VisitTeamMemberSerializer(many=True, read_only=True)
     case_id = CaseField()
+
+    def _update_aza(self, instance, created):
+        from apps.itinerary.tasks import push_visit
+
+        print("_update_aza")
+        print(self.context)
+        print(created)
+        auth_header = self.context.get("request").headers.get("Authorization")
+        task = push_visit.s(
+            visit_id=instance.id, created=created, auth_header=auth_header
+        ).delay
+        transaction.on_commit(task)
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        self._update_aza(instance, True)
+        return instance
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        self._update_aza(instance, False)
+        return instance
 
     class Meta:
         model = Visit
