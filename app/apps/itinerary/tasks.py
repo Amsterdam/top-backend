@@ -6,6 +6,7 @@ from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from celery import shared_task
 from django.conf import settings
+from sentry_sdk import capture_message
 from utils.queries import get_case, get_import_stadia
 from utils.queries_bag_api import get_bag_id
 from utils.queries_zaken_api import (
@@ -138,8 +139,8 @@ def get_serialized_visit(visit_id):
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
 def push_visit(self, visit_id, created=False, auth_header=None):
-    logger.info(f"Pushing visit {visit_id} to AZA")
-
+    # logger.info(f"Pushing visit {visit_id} to AZA")
+    capture_message(f"Pushing visit {visit_id} to AZA")
     assert_allow_push()
     url = f"{settings.ZAKEN_API_URL}/visits/"
 
