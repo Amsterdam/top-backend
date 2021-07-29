@@ -14,6 +14,7 @@ from apps.planner.serializers import (
     TeamScheduleTypesSerializer,
     TeamSettingsSerializer,
 )
+from apps.users.utils import get_keycloak_auth_header_from_request
 from constance.backends.database.models import Constance
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
@@ -67,7 +68,9 @@ class TeamSettingsViewSet(ModelViewSet):
 
         if team_settings.use_zaken_backend:
             serializer = CaseReasonSerializer(
-                team_settings.fetch_team_reasons(request.headers.get("Authorization")),
+                team_settings.fetch_team_reasons(
+                    get_keycloak_auth_header_from_request(request)
+                ),
                 many=True,
             )
             data = serializer.data
@@ -89,7 +92,9 @@ class TeamSettingsViewSet(ModelViewSet):
 
         if team_settings.use_zaken_backend:
             serializer = TeamScheduleTypesSerializer(
-                team_settings.fetch_team_schedules(request.headers.get("Authorization"))
+                team_settings.fetch_team_schedules(
+                    get_keycloak_auth_header_from_request(request)
+                )
             )
             data = serializer.data
 
@@ -111,7 +116,7 @@ class TeamSettingsViewSet(ModelViewSet):
         if team_settings.use_zaken_backend:
             serializer = CaseStateTypeSerializer(
                 team_settings.fetch_team_state_types(
-                    request.headers.get("Authorization")
+                    get_keycloak_auth_header_from_request(request)
                 ),
                 many=True,
             )

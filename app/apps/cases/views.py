@@ -20,6 +20,7 @@ from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
 from apps.planner.models import TeamSettings
 from apps.users.auth_apps import AZAKeyAuth
+from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from django.conf import settings
@@ -267,7 +268,7 @@ class CaseSearchViewSet(ViewSet):
                     url,
                     params=queryParams,
                     timeout=0.5,
-                    headers=get_headers(),
+                    headers=get_headers(get_keycloak_auth_header_from_request(request)),
                 )
                 response.raise_for_status()
 

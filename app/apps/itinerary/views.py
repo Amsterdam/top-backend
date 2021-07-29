@@ -11,6 +11,7 @@ from apps.itinerary.serializers import (
 )
 from apps.itinerary.tasks import update_external_states
 from apps.users.models import User
+from apps.users.utils import get_keycloak_auth_header_from_request
 from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -51,7 +52,9 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         if date:
             itineraries = itineraries.filter(created_at=date)
 
-        serializer = self.get_serializer_class()(itineraries, many=True)
+        serializer = self.get_serializer_class()(
+            itineraries, many=True, context={"request": self.request}
+        )
 
         return serializer.data
 
@@ -90,7 +93,8 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
 
         itinerary.clear_team_members()
         itinerary.add_team_members(user_ids)
-        update_external_states(itinerary)
+        # TODO: Do we need this
+        # update_external_states(itinerary)
 
     @action(detail=True, methods=["get", "put"])
     def team(self, request, pk):
@@ -121,7 +125,9 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         # Create the itinerary
         try:
             itinerary = serializer.create(request.data)
-            cases = itinerary.get_cases_from_settings()
+            cases = itinerary.get_cases_from_settings(
+                get_keycloak_auth_header_from_request(request)
+            )
         except Exception as e:
             raise APIException("Could not create itinerary from settings: {}".format(e))
 
@@ -134,7 +140,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             itinerary.add_case(case_id)
 
         # Serialize the itinerary again
-        serializer = ItinerarySerializer(itinerary)
+        serializer = ItinerarySerializer(itinerary, context={"request": request})
 
         return Response(serializer.data)
 

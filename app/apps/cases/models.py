@@ -3,6 +3,7 @@ import json
 
 import requests
 from apps.fraudprediction.models import FraudPrediction
+from apps.users.utils import get_keycloak_auth_header_from_request
 from django.conf import settings
 from django.db import models
 from utils.queries import get_case
@@ -34,13 +35,13 @@ class Case(models.Model):
             case_id=case_id, defaults={"is_top_bwv_case": is_top_bwv_case}
         )[0]
 
-    def fetch_case(self):
+    def fetch_case(self, auth_header=None):
         url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/"
 
         response = requests.get(
             url,
             timeout=5,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         if response.status_code == 404:
             return CASE_404
@@ -50,26 +51,26 @@ class Case(models.Model):
         case_data.update({"deleted": False})
         return case_data
 
-    def fetch_events(self):
+    def fetch_events(self, auth_header=None):
         url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/events/"
 
         response = requests.get(
             url,
             timeout=5,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         response.raise_for_status()
 
         return response.json()
 
-    def __get_case__(self, case_id):
+    def __get_case__(self, case_id, auth_header=None):
         if self.is_top_bwv_case:
             return get_case(case_id)
         if settings.USE_ZAKEN_MOCK_DATA:
             return dict((str(c.get("id")), c) for c in get_zaken_case_list()).get(
                 case_id, {}
             )
-        return self.fetch_case()
+        return self.fetch_case(auth_header)
 
     def get_location(self):
         case_data = self.__get_case__(self.case_id)
@@ -79,6 +80,16 @@ class Case(models.Model):
     @property
     def data(self):
         return self.__get_case__(self.case_id)
+
+    def data_context(self, context):
+        auth_header = None
+        try:
+            auth_header = get_keycloak_auth_header_from_request(
+                context.get("request", {})
+            )
+        except Exception:
+            pass
+        return self.__get_case__(self.case_id, auth_header)
 
     @property
     def itinerary(self):

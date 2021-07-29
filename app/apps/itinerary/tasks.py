@@ -6,6 +6,7 @@ from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from celery import shared_task
 from django.conf import settings
+from sentry_sdk import capture_message
 from utils.queries import get_case, get_import_stadia
 from utils.queries_bag_api import get_bag_id
 from utils.queries_zaken_api import (
@@ -137,14 +138,15 @@ def get_serialized_visit(visit_id):
 
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def push_visit(self, visit_id, created=False):
-    logger.info(f"Pushing visit {visit_id} to zaken")
-
+def push_visit(self, visit_id, created=False, auth_header=None):
+    # logger.info(f"Pushing visit {visit_id} to AZA")
+    capture_message(f"Pushing visit {visit_id} to AZA")
     assert_allow_push()
     url = f"{settings.ZAKEN_API_URL}/visits/"
 
     if not created:
-        logger.info("Zaken does not support updating visits anymore.")
+        logger.info("AZA does not support updating visits anymore.")
+        return f"AZA does not support updating visits anymore: visit_id: {visit_id}, created: {created}"
 
     data = get_serialized_visit(visit_id)
 
@@ -153,10 +155,10 @@ def push_visit(self, visit_id, created=False):
             url,
             timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
             json=data,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         response.raise_for_status()
     except Exception as exception:
         self.retry(exc=exception)
 
-    return response
+    return f"visit_id: {visit_id}, created: {created}"

@@ -160,7 +160,7 @@ class Itinerary(models.Model):
         generated_list = generator.sort_cases_by_distance(generated_list)
         return generated_list
 
-    def get_cases_from_settings(self):
+    def get_cases_from_settings(self, auth_header=None):
         """
         Returns a list of cases based on the settings which can be added to this itinerary
         """
@@ -176,7 +176,10 @@ class Itinerary(models.Model):
             weights = Weights()
 
         generator = self.get_itinerary_algorithm(
-            self.settings, self.postal_code_settings.all(), weights
+            self.settings,
+            self.postal_code_settings.all(),
+            weights,
+            auth_header=auth_header,
         )
 
         # Exclude cases which are already in itineraries

@@ -8,8 +8,6 @@ from apps.fraudprediction.models import FraudPrediction
 from apps.itinerary.models import Itinerary, ItineraryItem
 from apps.users.models import User
 from apps.visits.models import Visit, VisitMetaData
-from apps.visits.signals import capture_visit_meta_data, post_save_visit
-from django.db.models import signals
 from django.test import TestCase
 from pytz import UTC
 
@@ -38,23 +36,14 @@ class VisitsSignalsTests(TestCase):
 
         return visit
 
-    def test_if_signal_is_connected(self):
-        """
-        Tests if the signal to capture visit data is connected
-        """
-        registered_functions = [
-            receiver[1]() for receiver in signals.post_save.receivers
-        ]
-        self.assertIn(post_save_visit, registered_functions)
-
     def test_visit_meta_data_creation(self):
         """
-        Tests if the signal helper function (capture_visit_meta_data) creates VisitMetaData
+        Tests if the visit method capture_visit_meta_data creates VisitMetaData
         """
         self.assertEquals(VisitMetaData.objects.count(), 0)
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
-        capture_visit_meta_data(visit)
+        visit.capture_visit_meta_data()
         self.assertEquals(VisitMetaData.objects.count(), 1)
 
     def test_visit_single_meta_data(self):
@@ -63,10 +52,10 @@ class VisitsSignalsTests(TestCase):
         """
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
-        capture_visit_meta_data(visit)
+        visit.capture_visit_meta_data()
         self.assertEquals(VisitMetaData.objects.count(), 1)
 
-        capture_visit_meta_data(visit)
+        visit.capture_visit_meta_data()
         self.assertEquals(VisitMetaData.objects.count(), 1)
 
     def test_fraud_prediction_empty(self):
@@ -75,7 +64,7 @@ class VisitsSignalsTests(TestCase):
         """
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
-        capture_visit_meta_data(visit)
+        visit.capture_visit_meta_data()
         visit_meta_data = VisitMetaData.objects.all()[0]
 
         self.assertIsNone(visit_meta_data.fraud_probability)
@@ -101,7 +90,7 @@ class VisitsSignalsTests(TestCase):
             shap_values=MOCK_SHAP_VALUES,
         )
 
-        capture_visit_meta_data(visit)
+        visit.capture_visit_meta_data()
 
         # Fraud prediction data should now be captured in the meta data
         visit_meta_data = VisitMetaData.objects.all()[0]

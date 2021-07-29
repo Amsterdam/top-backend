@@ -39,11 +39,17 @@ def get_eligible_cases_v2(generator):
         state_types = get_team_state_types()
     else:
         logger.info("Get from AZA: state_types")
-        state_types = generator.settings.day_settings.fetch_team_state_types()
+        state_types = generator.settings.day_settings.fetch_team_state_types(
+            generator.auth_header
+        )
         logger.info("Get from AZA: team_schedules")
-        team_schedules = generator.settings.day_settings.fetch_team_schedules()
+        team_schedules = generator.settings.day_settings.fetch_team_schedules(
+            generator.auth_header
+        )
         logger.info("Get from AZA: reasons")
-        reasons = generator.settings.day_settings.fetch_team_reasons()
+        reasons = generator.settings.day_settings.fetch_team_reasons(
+            generator.auth_header
+        )
         logger.info("Get from AZA: cases")
 
         url = f"{settings.ZAKEN_API_URL}/cases/"
@@ -62,7 +68,7 @@ def get_eligible_cases_v2(generator):
             url,
             params=queryParams,
             timeout=30,
-            headers=get_headers(),
+            headers=get_headers(generator.auth_header),
         )
         response.raise_for_status()
         logger.info("Request duration")
@@ -131,8 +137,10 @@ def get_eligible_cases_v2(generator):
 
 
 class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
-    def __init__(self, settings, postal_code_settings=[], settings_weights=None):
-        super().__init__(settings, postal_code_settings)
+    def __init__(
+        self, settings, postal_code_settings=[], settings_weights=None, **kwargs
+    ):
+        super().__init__(settings, postal_code_settings, **kwargs)
 
         self.weights = Weights()
 
