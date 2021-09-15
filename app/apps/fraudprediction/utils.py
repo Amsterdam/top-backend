@@ -28,7 +28,7 @@ def fraudpredict_vakantieverhuur(
 
     LOGGER.info(os.environ)
     LOGGER.info(settings.VAKANTIEVERHUUR_HITKANS_API_BASE)
-    case_ids = get_case_ids_to_score(fraud_prediction_model)
+    case_ids = []
     LOGGER.info("vakantieverhuur task: case id count")
     LOGGER.info(len(case_ids))
     LOGGER.info("vakantieverhuur task: case ids")
@@ -37,8 +37,9 @@ def fraudpredict_vakantieverhuur(
         LOGGER.info("vakantieverhuur task: use mock data")
         result = fraud_prediction_results()
     else:
+        case_ids = get_case_ids_to_score(fraud_prediction_model, True)
         data = {
-            "zaken_ids": get_case_ids_to_score(fraud_prediction_model),
+            "zaken_ids": case_ids,
             "auth_token": settings.VAKANTIEVERHUUR_HITKANS_AUTH_TOKEN,
         }
 
