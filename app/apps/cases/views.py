@@ -97,7 +97,7 @@ class CaseViewSet(ViewSet):
                 "deleted": False,
             }
             data.update(model_to_dict(case_instance))
-            data.update(case_instance.data)
+            data.update(case_instance.data_context({"request": request}))
             bag_id = data.get("address", {}).get("bag_id")
 
             day_settings_id = (
