@@ -16,6 +16,7 @@ from django.utils.module_loading import import_string
 from settings.const import STARTING_FROM_DATE
 from utils.queries_bwv import get_bwv_personen, get_bwv_personen_hist
 from utils.queries_planner import get_cases_from_bwv
+from utils.queries_zaken_api import get_fraudprediction_cases_from_AZA_by_model_name
 
 from .mock import fraud_prediction_onderhuur_results, fraud_prediction_results
 from .utils import import_from_settings
@@ -246,7 +247,7 @@ class FraudPredictAPIBased:
 
         celery_logger.info(self.model_name)
         celery_logger.info(os.environ)
-        case_ids = self.get_case_ids_to_score()
+        case_ids = []
         celery_logger.info("fraudpredict task: case id count")
         celery_logger.info(len(case_ids))
         celery_logger.info("fraudpredict task: case ids")
@@ -255,8 +256,9 @@ class FraudPredictAPIBased:
             celery_logger.info("fraudpredict task: use mock data")
             result = self.get_mock_data()
         else:
+            case_ids = self.get_case_ids_to_score(True)
             data = {
-                "zaken_ids": self.get_case_ids_to_score(),
+                "zaken_ids": case_ids,
                 "auth_token": self.get_settings("HITKANS_AUTH_TOKEN"),
             }
 
@@ -282,7 +284,10 @@ class FraudPredictAPIBased:
         celery_logger.info("fraudpredict task: updated case id's")
         celery_logger.info(len(updated_case_ids))
 
-        return updated_case_ids
+        return {
+            "available_cases_count": len(case_ids),
+            "cases_updated": updated_case_ids,
+        }
 
     def get_stadia_to_score(self):
         return list(
@@ -310,7 +315,8 @@ class FraudPredictAPIBased:
         """
         case_ids = []
         if use_zaken_backend:
-            pass
+            cases = get_fraudprediction_cases_from_AZA_by_model_name(self.model_name)
+            case_ids = [case.get("id") for case in cases if case.get("id")]
         else:
             cases = get_cases_from_bwv(
                 STARTING_FROM_DATE,
