@@ -79,5 +79,5 @@ def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
                 headers=get_headers(),
             )
             response.raise_for_status()
-            return response
+            return response.json()
     return []
