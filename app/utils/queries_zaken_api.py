@@ -41,3 +41,43 @@ def stadium_bwv_to_push_state(stadium):
 def assert_allow_push():
     assert settings.ZAKEN_API_URL, "ZAKEN_API_URL is not configured in settings."
     assert settings.PUSH_ZAKEN, "Pushes disabled"
+
+
+def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
+    from apps.cases.mock import get_zaken_case_list
+    from apps.planner.models import TeamSettings
+
+    team_settings = TeamSettings.objects.filter(
+        fraud_prediction_model=model_name,
+    ).first()
+
+    if settings:
+        if settings.USE_ZAKEN_MOCK_DATA:
+            return get_zaken_case_list()
+        else:
+            logger.info("Get from AZA: state_types")
+            state_types = team_settings.fetch_team_state_types()
+
+            logger.info("Get from AZA: cases")
+
+            url = f"{settings.ZAKEN_API_URL}/cases/"
+
+            queryParams = {
+                "openCases": "true",
+                "openStatus": ",".join(
+                    [str(state.get("id", 0)) for state in state_types]
+                ),
+                "theme": team_settings.zaken_team_name,
+                "noPagination": "true",
+            }
+            logger.info("With queryParams")
+            logger.info(queryParams)
+            response = requests.get(
+                url,
+                params=queryParams,
+                timeout=30,
+                headers=get_headers(),
+            )
+            response.raise_for_status()
+            return response
+    return []

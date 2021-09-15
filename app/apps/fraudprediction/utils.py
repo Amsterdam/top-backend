@@ -10,6 +10,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from settings.const import STARTING_FROM_DATE
 from utils.queries_planner import get_cases_from_bwv
+from utils.queries_zaken_api import get_fraudprediction_cases_from_AZA_by_model_name
 
 from .mock import fraud_prediction_results
 
@@ -61,7 +62,10 @@ def fraudpredict_vakantieverhuur(
     LOGGER.info("vakantieverhuur task: updated case id's")
     LOGGER.info(len(updated_case_ids))
 
-    return updated_case_ids
+    return {
+        "available_cases_count": len(case_ids),
+        "cases_updated": updated_case_ids,
+    }
 
 
 def get_stadia_to_score(model_name):
@@ -92,7 +96,8 @@ def get_case_ids_to_score(model_name, use_zaken_backend=False):
     """
     case_ids = []
     if use_zaken_backend:
-        pass
+        cases = get_fraudprediction_cases_from_AZA_by_model_name(model_name)
+        case_ids = [case.get("id") for case in cases if case.get("id")]
     else:
         cases = get_cases_from_bwv(
             STARTING_FROM_DATE,
