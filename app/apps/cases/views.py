@@ -174,7 +174,9 @@ class CaseViewSet(ViewSet):
         """
 
         case = Case.get(case_id=pk, is_top_bwv_case=False)
-        serializer = CaseEventSerializer(case.fetch_events(), many=True)
+        serializer = CaseEventSerializer(
+            case.fetch_events(get_keycloak_auth_header_from_request(request)), many=True
+        )
 
         return Response(serializer.data)
 
