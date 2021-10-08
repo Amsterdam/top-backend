@@ -33,7 +33,7 @@ djangorestframework-simplejwt==4.6.0
 
 # Algorithm toolbox
 geopy==2.1.0
-PyJWT<3.0.0
+PyJWT<2.1.0
 
 joblib==1.0.1
 scikit-learn==0.24.2

@@ -70,23 +70,38 @@ class CaseField(serializers.RelatedField):
 class VisitSerializer(serializers.ModelSerializer):
     team_members = VisitTeamMemberSerializer(many=True, read_only=True)
     case_id = CaseField()
+    task_name_ids = None
+
+    def is_valid(self, raise_exception=False):
+        self.task_name_ids = self.initial_data.pop("task_name_ids")
+        return super().is_valid(raise_exception)
 
     def _complete_visit_and_update_aza(self, instance, created):
         from apps.itinerary.tasks import push_visit
 
+        print(self.task_name_ids)
+
         instance.capture_visit_meta_data()
         auth_header = get_keycloak_auth_header_from_request(self.context.get("request"))
         task = push_visit.s(
-            visit_id=instance.id, created=created, auth_header=auth_header
+            visit_id=instance.id,
+            created=created,
+            auth_header=auth_header,
+            task_name_ids=self.task_name_ids,
         ).delay
         transaction.on_commit(task)
 
     def create(self, validated_data):
+        # print(self.data)
+        # validated_data.pop('task_name_ids', None)
         instance = super().create(validated_data)
         self._complete_visit_and_update_aza(instance, True)
         return instance
 
     def update(self, instance, validated_data):
+        # print(self.data)
+        # print(validated_data.get("task_name_ids"))
+        # validated_data.pop('task_name_ids', None)
         instance = super().update(instance, validated_data)
         self._complete_visit_and_update_aza(instance, False)
         return instance
