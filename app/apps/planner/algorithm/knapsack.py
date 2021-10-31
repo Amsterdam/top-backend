@@ -19,6 +19,8 @@ from apps.planner.utils import (
     filter_reasons,
     filter_schedules,
     filter_state_types,
+    get_cases_with_odd_or_even_ids,
+    is_day_of_this_year_odd,
     remove_cases_from_list,
 )
 from django.conf import settings
@@ -133,6 +135,10 @@ def get_eligible_cases_v2(generator):
     logger.info("after remove_cases_from_list")
     logger.info(len(cases))
 
+    if generator.settings.day_settings.team_settings.fraudprediction_pilot_enabled:
+        cases = get_cases_with_odd_or_even_ids(cases, odd=is_day_of_this_year_odd())
+        logger.info("after get_cases_with_odd_or_even_ids")
+
     return cases
 
 
@@ -164,6 +170,9 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         distance = case.get("normalized_inverse_distance", 0)
 
         fraud_probability = case.get("fraud_prediction", {}).get("fraud_probability", 0)
+        if self.settings.day_settings.team_settings.fraudprediction_pilot_enabled:
+            fraud_probability = 0
+
         priority = case.get("schedules", [{}])[0].get("priority", {}).get("weight", 0)
 
         reason = (
@@ -215,7 +224,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
 
         # Add the distances and fraud predictions to the cases
         for index, case in enumerate(cases):
-            case_id = case.get("id")
+            case_id = str(case.get("id"))
             case["distance"] = distances[index]
             case["normalized_inverse_distance"] = (
                 (max_distance - case["distance"]) / max_distance if max_distance else 0
@@ -286,7 +295,9 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
                 case_id=self.start_case_id,
                 is_top_bwv_case=not self.settings.day_settings.team_settings.use_zaken_backend,
             ).__get_case__(self.start_case_id)
-            case["fraud_prediction"] = fraud_predictions.get(self.start_case_id, None)
+            case["fraud_prediction"] = fraud_predictions.get(
+                str(self.start_case_id), None
+            )
 
             suggestions = super().generate(case)
             suggestions = remove_cases_from_list(suggestions, [case])
@@ -306,11 +317,11 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
             self.settings.day_settings.team_settings, "top_cases_count"
         ) and getattr(self.settings.day_settings.team_settings, "top_cases_count"):
             for c in cases:
-                c["fraud_prediction"] = fraud_predictions.get(c.get("id"), {})
+                c["fraud_prediction"] = fraud_predictions.get(str(c.get("id")), {})
                 c["score"] = self.get_score(c)
             topped_cases = sorted(cases, key=lambda case: case["score"], reverse=True)
             logger.info("Algorithm: use top_cases_count")
-            logger.info([c.get("score") for c in topped_cases][:50])
+            logger.info([c.get("fraud_prediction") for c in topped_cases][:50])
             topped_cases = topped_cases[
                 : self.settings.day_settings.team_settings.top_cases_count
             ]

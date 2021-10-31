@@ -48,6 +48,13 @@ class Case(models.Model):
         response.raise_for_status()
 
         case_data = response.json()
+        if self.day_settings:
+            case_data["current_states"] = [
+                state
+                for state in case_data["current_states"]
+                if str(state.get("status"))
+                in [str(st) for st in self.day_settings.state_types]
+            ]
         case_data.update({"deleted": False})
         return case_data
 
@@ -72,8 +79,8 @@ class Case(models.Model):
             )
         return self.fetch_case(auth_header)
 
-    def get_location(self):
-        case_data = self.__get_case__(self.case_id)
+    def get_location(self, auth_header=None):
+        case_data = self.__get_case__(self.case_id, auth_header)
         address = case_data.get("address")
         return {"lat": address.get("lat"), "lng": address.get("lng")}
 

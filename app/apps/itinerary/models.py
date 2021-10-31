@@ -111,7 +111,7 @@ class Itinerary(models.Model):
         for team_member in team_members:
             team_member.delete()
 
-    def get_center(self):
+    def get_center(self, auth_header=None):
         """
         Returns the center coordinates of the itinerary
         """
@@ -120,7 +120,7 @@ class Itinerary(models.Model):
         if not cases:
             return self.get_city_center()
 
-        locations = [case.get_location() for case in cases]
+        locations = [case.get_location(auth_header) for case in cases]
 
         locs = [
             [location.get("lng"), location.get("lat")]
@@ -141,13 +141,13 @@ class Itinerary(models.Model):
             "lng": settings.CITY_CENTRAL_LOCATION_LNG,
         }
 
-    def get_suggestions(self):
+    def get_suggestions(self, auth_header=None):
         """
         Returns a list of suggested cases which can be added to this itinerary
         """
         # Initialise using this itinerary's settings
         generator = self.get_suggestion_algorithm(
-            self.settings, self.postal_code_settings.all()
+            self.settings, self.postal_code_settings.all(), auth_header=auth_header
         )
 
         # Exclude the cases which are already in itineraries
@@ -155,7 +155,7 @@ class Itinerary(models.Model):
         generator.exclude(cases)
 
         # Generate suggestions based on this itineraries' center
-        center = self.get_center()
+        center = self.get_center(auth_header)
         generated_list = generator.generate({"address": center})
         generated_list = generator.sort_cases_by_distance(generated_list)
         return generated_list

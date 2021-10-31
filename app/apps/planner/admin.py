@@ -34,7 +34,7 @@ class DaySettingsInline(admin.TabularInline):
 
 @admin.register(TeamSettings)
 class TeamSettingsAdmin(admin.ModelAdmin):
-    list_display = ("name", "use_zaken_backend")
+    list_display = ("name", "use_zaken_backend", "fraudprediction_pilot_enabled")
 
     fieldsets = (
         (
@@ -44,6 +44,7 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                     "name",
                     "use_zaken_backend",
                     "zaken_team_name",
+                    "fraudprediction_pilot_enabled",
                     "fraud_prediction_model",
                     "show_issuemelding",
                 )

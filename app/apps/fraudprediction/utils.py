@@ -164,7 +164,7 @@ def get_fraud_predictions():
 
     for fraud_prediction in fraud_predictions:
         fraud_prediction_dictionary[
-            fraud_prediction.case_id
+            str(fraud_prediction.case_id)
         ] = FraudPredictionSerializer(fraud_prediction).data
 
     return fraud_prediction_dictionary
