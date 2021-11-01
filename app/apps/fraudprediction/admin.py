@@ -20,14 +20,14 @@ class FraudPredictionAdmin(admin.ModelAdmin):
 
     search_fields = ("case_id",)
 
-    fields = (
-        "case_id",
-        "fraud_prediction_model",
-        "fraud_probability",
-        "fraud_prediction",
-        "business_rules",
-        "shap_values",
-        "sync_date",
-    )
+    # fields = (
+    #     "case_id",
+    #     "fraud_prediction_model",
+    #     "fraud_probability",
+    #     "fraud_prediction",
+    #     "business_rules",
+    #     "shap_values",
+    #     "sync_date",
+    # )
 
-    readonly_fields = fields
+    # readonly_fields = fields
