@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from geopy.distance import distance
 
 
@@ -165,3 +167,14 @@ def filter_state_types(cases, state_types):
             [c.get("status", 0) for c in case.get("current_states", [])]
         ).intersection(set(state_types))
     ]
+
+
+# AZA
+def is_day_of_this_year_odd():
+    day_of_year = datetime.now().timetuple().tm_yday
+    return (day_of_year % 2) == 1
+
+
+# AZA
+def get_cases_with_odd_or_even_ids(cases, odd=False):
+    return [c for c in cases if (int(c.get("id") % 2) == (1 if odd else 0))]

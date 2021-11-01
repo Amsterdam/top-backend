@@ -269,7 +269,7 @@ class CaseSearchViewSet(ViewSet):
                 response = requests.get(
                     url,
                     params=queryParams,
-                    timeout=0.5,
+                    timeout=30,
                     headers=get_headers(get_keycloak_auth_header_from_request(request)),
                 )
                 response.raise_for_status()
