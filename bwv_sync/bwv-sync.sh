@@ -19,7 +19,6 @@ dst_host="${BWV_DB_HOST}"
 dst_db="${BWV_DB_NAME}"
 dst_user="${BWV_DB_USER}"
 dst_pw="${BWV_DB_PASSWORD}"
-fraud_prediction_secret_key="${FRAUD_PREDICTION_SECRET_KEY}"
 logfile="/tmp/bwv-sync.log"
 timestamp_start="$(TZ="Europe/Amsterdam" date "+%Y-%m-%d %H:%M:%S Europe/Amsterdam")"
 
@@ -104,8 +103,3 @@ timestamp_finished="$(TZ="Europe/Amsterdam" date "+%Y-%m-%d %H:%M:%S Europe/Amst
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "UPDATE sync_log set finished = '${timestamp_finished}' where start = '${timestamp_start}';"
 echo "Logging success done."
-
-curl "${url}/api/v1/fraud-prediction/scoring/" \
-  -X POST \
-  -H "Accept: application/json" \
-  -H "Authorization: ${fraud_prediction_secret_key}"

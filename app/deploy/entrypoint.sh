@@ -10,9 +10,6 @@ yes yes | python manage.py migrate --noinput
 
 chmod -R 777 /static
 
-# modify permission so scoring files can be cached
-chmod -R 700 /fraud_prediction_cache
-
 # echo Create root user
 # python manage.py shell -c "from apps.users.models import User; User.objects.create_superuser('admin@admin.com', 'admin')"
 

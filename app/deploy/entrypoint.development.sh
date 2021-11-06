@@ -18,9 +18,6 @@ yes yes | python manage.py migrate --noinput
 
 chmod -R 777 /static
 
-# modify permission so scoring files can be cached
-chmod -R 700 /fraud_prediction_cache
-
 celery -A settings worker -l INFO -D --purge
 celery -A settings beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler --detach
 
