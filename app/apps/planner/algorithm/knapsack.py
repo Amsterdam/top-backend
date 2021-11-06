@@ -170,7 +170,10 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         distance = case.get("normalized_inverse_distance", 0)
 
         fraud_probability = case.get("fraud_prediction", {}).get("fraud_probability", 0)
-        if self.settings.day_settings.team_settings.fraudprediction_pilot_enabled:
+        if (
+            self.settings.day_settings.team_settings.fraudprediction_pilot_enabled
+            and is_day_of_this_year_odd()
+        ):
             fraud_probability = 0
 
         priority = case.get("schedules", [{}])[0].get("priority", {}).get("weight", 0)
@@ -321,7 +324,7 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
                 c["score"] = self.get_score(c)
             topped_cases = sorted(cases, key=lambda case: case["score"], reverse=True)
             logger.info("Algorithm: use top_cases_count")
-            logger.info([c.get("fraud_prediction") for c in topped_cases][:50])
+            logger.info([c.get("id") for c in topped_cases][:50])
             topped_cases = topped_cases[
                 : self.settings.day_settings.team_settings.top_cases_count
             ]
