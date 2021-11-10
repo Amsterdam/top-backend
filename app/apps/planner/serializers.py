@@ -281,7 +281,9 @@ class DaySettingsSerializer(serializers.ModelSerializer):
 
 
 class NewDaySettingsSerializer(DaySettingsSerializer):
-    team_settings = TeamSettingsRelatedField(queryset=TeamSettings.objects.all())
+    team_settings = TeamSettingsRelatedField(
+        queryset=TeamSettings.objects.filter(enabled=True)
+    )
 
     class Meta:
         model = DaySettings

@@ -48,6 +48,7 @@ def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
     from apps.planner.models import TeamSettings
 
     team_settings = TeamSettings.objects.filter(
+        enabled=True,
         fraud_prediction_model=model_name,
     ).first()
 
