@@ -286,7 +286,9 @@ class FraudPredictAPIBased:
 
         return {
             "available_cases_count": len(case_ids),
-            "cases_updated": updated_case_ids,
+            "available_cases": case_ids,
+            "updated_cases_count": len(updated_case_ids),
+            "updated_cases": updated_case_ids,
         }
 
     def get_stadia_to_score(self):
