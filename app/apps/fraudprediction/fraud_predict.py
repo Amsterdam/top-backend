@@ -364,7 +364,6 @@ class FraudPredictAPIBased:
                 },
             )
             for case_id in results.get(keys[0], {}).keys()
-            if results.get(self.get_fraud_prediction_key(), {}).get(case_id, False)
         )
 
     def get_fraud_probability_key(self):
