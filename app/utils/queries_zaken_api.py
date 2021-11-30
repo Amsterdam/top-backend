@@ -58,6 +58,7 @@ def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
         else:
             logger.info("Get from AZA: state_types")
             state_types = team_settings.fetch_team_state_types()
+            logger.info(state_types)
 
             logger.info("Get from AZA: cases")
 
