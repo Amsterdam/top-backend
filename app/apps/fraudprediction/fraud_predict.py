@@ -278,15 +278,24 @@ class FraudPredictAPIBased:
             result = response.json()
 
         celery_logger.info("fraudpredict task: map_results")
-        result = self.map_results(result)
+        mapped_result = self.map_results(result)
         celery_logger.info("fraudpredict task: api_results_to_instances")
-        updated_case_ids = self.api_results_to_instances(result)
+        updated_case_ids = self.api_results_to_instances(mapped_result)
         celery_logger.info("fraudpredict task: updated case id's")
         celery_logger.info(len(updated_case_ids))
+
+        result_keys = list(result.keys())
+        result_case_ids = list(result.get(result_keys[0], {}).keys())
+
+        mapped_result_case_ids = list(mapped_result.keys())
 
         return {
             "available_cases_count": len(case_ids),
             "available_cases": case_ids,
+            "result_count": len(result_case_ids),
+            "result": result,
+            "mapped_result_count": len(mapped_result_case_ids),
+            "mapped_result": mapped_result,
             "updated_cases_count": len(updated_case_ids),
             "updated_cases": updated_case_ids,
         }
