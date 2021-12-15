@@ -65,21 +65,19 @@ def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
             url = f"{settings.ZAKEN_API_URL}/cases/"
 
             queryParams = {
-                "openCases": "true",
-                "openStatus": ",".join(
-                    [str(state.get("id", 0)) for state in state_types]
-                ),
+                "open_cases": "true",
+                "state_types": [str(state.get("id", 0)) for state in state_types],
                 "theme": team_settings.zaken_team_name,
-                "noPagination": "true",
+                "page_size": 1000,
             }
             logger.info("With queryParams")
             logger.info(queryParams)
             response = requests.get(
                 url,
                 params=queryParams,
-                timeout=30,
+                timeout=60,
                 headers=get_headers(),
             )
             response.raise_for_status()
-            return response.json()
+            return response.json().get("results")
     return []
