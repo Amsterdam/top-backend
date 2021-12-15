@@ -57,11 +57,11 @@ def get_eligible_cases_v2(generator):
         url = f"{settings.ZAKEN_API_URL}/cases/"
 
         queryParams = {
-            "openCases": "true",
-            "openStatus": ",".join([str(state.get("id", 0)) for state in state_types]),
+            "open_cases": "true",
+            "state_types": [str(state.get("id", 0)) for state in state_types],
             "theme": generator.settings.day_settings.team_settings.zaken_team_name,
-            "startDate": generator.settings.opening_date.strftime("%Y-%m-%d"),
-            "noPagination": "true",
+            "from_start_date": generator.settings.opening_date.strftime("%Y-%m-%d"),
+            "page_size": 1000,
         }
         logger.info("With queryParams")
         logger.info(queryParams)
@@ -69,14 +69,14 @@ def get_eligible_cases_v2(generator):
         response = requests.get(
             url,
             params=queryParams,
-            timeout=30,
+            timeout=60,
             headers=get_headers(generator.auth_header),
         )
         response.raise_for_status()
         logger.info("Request duration")
         logger.info(datetime.datetime.now() - now)
 
-        cases = response.json()
+        cases = response.json().get("results")
 
     logger.info("initial case count")
     logger.info(len(cases))
