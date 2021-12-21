@@ -149,8 +149,7 @@ def push_visit(self, visit_id, created=False, auth_header=None, task_name_ids=[]
         return f"AZA does not support updating visits anymore: visit_id: {visit_id}, created: {created}"
 
     data = get_serialized_visit(visit_id)
-    data.update({"task": task_name_ids[0] if task_name_ids else None})
-    print(data)
+
     try:
         response = requests.post(
             url,
