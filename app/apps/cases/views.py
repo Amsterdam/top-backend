@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from itertools import chain
 
 import requests
 from apps.cases.models import Project
@@ -18,7 +19,7 @@ from apps.cases.swagger_parameters import case_search_parameters, unplanned_para
 from apps.fraudprediction.utils import add_fraud_predictions, get_fraud_prediction
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
-from apps.planner.models import TeamSettings
+from apps.planner.models import DaySettings, TeamSettings
 from apps.users.auth_apps import AZAKeyAuth
 from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import Visit
@@ -262,10 +263,27 @@ class CaseSearchViewSet(ViewSet):
             if settings.USE_ZAKEN_MOCK_DATA:
                 result = get_zaken_case_list()
             else:
-                url = f"{settings.ZAKEN_API_URL}/cases/search/"
+                param_translate = {
+                    "streetName": "street_name",
+                    "streetNumber": "number",
+                    "suffix": "suffix",
+                    "postalCode": "postal_code",
+                }
+                url = f"{settings.ZAKEN_API_URL}/cases/"
                 queryParams = {}
                 queryParams.update(request.GET)
-
+                state_types = DaySettings.objects.filter(
+                    team_settings__enabled=True
+                ).values_list("state_types", flat=True)
+                state_types = list(chain(*state_types))
+                queryParams = dict(
+                    (param_translate.get(k, k), v) for k, v in queryParams.items()
+                )
+                queryParams.update(
+                    {
+                        "open_cases": True,
+                    }
+                )
                 response = requests.get(
                     url,
                     params=queryParams,
