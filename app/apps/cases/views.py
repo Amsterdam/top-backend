@@ -272,10 +272,10 @@ class CaseSearchViewSet(ViewSet):
                 url = f"{settings.ZAKEN_API_URL}/cases/"
                 queryParams = {}
                 queryParams.update(request.GET)
-                state_types = DaySettings.objects.filter(
-                    team_settings__enabled=True
-                ).values_list("state_types", flat=True)
-                state_types = list(chain(*state_types))
+                # state_types = DaySettings.objects.filter(
+                #     team_settings__enabled=True
+                # ).values_list("state_types", flat=True)
+                # state_types = list(chain(*state_types))
                 queryParams = dict(
                     (param_translate.get(k, k), v) for k, v in queryParams.items()
                 )
