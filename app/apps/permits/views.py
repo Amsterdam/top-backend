@@ -2,6 +2,7 @@ import json
 import logging
 from datetime import datetime
 
+import requests
 from apps.permits.api_queries_decos_join import DecosJoinRequest
 from apps.permits.forms import SearchForm
 from apps.permits.serializers import DecosSerializer
@@ -64,6 +65,25 @@ class DecosViewSet(ViewSet):
         if response.ok:
             return Response(response)
         return False
+
+
+class PermitViewSet(ViewSet):
+    lookup_field = "bag_id"
+
+    @action(detail=True, url_name="permits details", url_path="permits")
+    def get_permit(self, request, bag_id):
+        url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits/"
+
+        response = requests.get(
+            url,
+            timeout=10,
+            headers={
+                "Authorization": request.headers.get("Authorization"),
+            },
+        )
+        response.raise_for_status()
+
+        return Response(response.json())
 
 
 class DecosAPISearch(UserPassesTestMixin, FormView):
