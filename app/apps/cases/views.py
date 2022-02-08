@@ -5,7 +5,6 @@ from itertools import chain
 import requests
 from apps.cases.models import Project
 from apps.cases.serializers import (
-    CaseEventSerializer,
     CaseSearchSerializer,
     DecosJoinFolderFieldsResponseSerializer,
     DecosJoinObjectFieldsResponseSerializer,
@@ -32,6 +31,7 @@ from django.utils.decorators import method_decorator
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
+from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -166,7 +166,7 @@ class CaseViewSet(ViewSet):
 
     @extend_schema(
         description="Lists all events for this case",
-        responses={200: CaseEventSerializer()},
+        responses={200: serializers.ListSerializer(child=serializers.Serializer())},
     )
     @action(detail=True, methods=["get"], name="events")
     def events(self, request, pk):
@@ -175,11 +175,10 @@ class CaseViewSet(ViewSet):
         """
 
         case = Case.get(case_id=pk, is_top_bwv_case=False)
-        serializer = CaseEventSerializer(
-            case.fetch_events(get_keycloak_auth_header_from_request(request)), many=True
-        )
 
-        return Response(serializer.data)
+        data = case.fetch_events(get_keycloak_auth_header_from_request(request))
+
+        return Response(data)
 
 
 class CaseSearchViewSet(ViewSet):
