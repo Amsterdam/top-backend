@@ -1,6 +1,11 @@
+import logging
 from datetime import datetime
 
+from dateutil import parser
+from django.utils import timezone
 from geopy.distance import distance
+
+logger = logging.getLogger(__name__)
 
 
 # BWV
@@ -148,6 +153,15 @@ def filter_schedules(cases, team_schedules):
                 )
             ):
                 valid = False
+
+        visit_from_datetime = case.get("schedules", [{}])[0].get("visit_from_datetime")
+        if visit_from_datetime:
+            try:
+                visit_from_datetime = parser.parse(visit_from_datetime)
+                if timezone.now() < (visit_from_datetime):
+                    valid = False
+            except Exception as e:
+                logger.error(f"visit_from_datetime e: {str(e)}")
         return valid
 
     return [c for c in cases if case_in_schedule(c)]
