@@ -153,8 +153,11 @@ def filter_schedules(cases, team_schedules):
                 )
             ):
                 valid = False
-
-        visit_from_datetime = case.get("schedules", [{}])[0].get("visit_from_datetime")
+        visit_from_datetime = (
+            case.get("schedules")[0].get("visit_from_datetime")
+            if case.get("schedules")
+            else None
+        )
         if visit_from_datetime:
             try:
                 visit_from_datetime = parser.parse(visit_from_datetime)
