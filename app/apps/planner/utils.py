@@ -176,17 +176,6 @@ def filter_reasons(cases, reasons):
 
 
 # AZA
-def filter_state_types(cases, state_types):
-    return [
-        case
-        for case in cases
-        if set(
-            [c.get("status", 0) for c in case.get("current_states", [])]
-        ).intersection(set(state_types))
-    ]
-
-
-# AZA
 def is_day_of_this_year_odd():
     day_of_year = datetime.now().timetuple().tm_yday
     return (day_of_year % 2) == 1

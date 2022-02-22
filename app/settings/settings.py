@@ -473,3 +473,15 @@ SPECTACULAR_DEFAULTS = {
         "drf_spectacular.hooks.postprocess_schema_enums",
     ]
 }
+
+# Default state types defined in AZA by fixtures
+AZA_CASE_STATE_TYPES = [
+    {
+        "id": 235,
+        "name": "Huisbezoek",
+    },
+    {
+        "id": 236,
+        "name": "Hercontrole",
+    },
+]

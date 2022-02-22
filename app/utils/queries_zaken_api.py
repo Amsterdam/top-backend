@@ -57,7 +57,7 @@ def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
             return get_zaken_case_list()
         else:
             logger.info("Get from AZA: state_types")
-            state_types = team_settings.fetch_team_state_types()
+            state_types = settings.AZA_CASE_STATE_TYPES
             logger.info(state_types)
 
             logger.info("Get from AZA: cases")

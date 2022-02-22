@@ -115,9 +115,7 @@ class TeamSettingsViewSet(ModelViewSet):
 
         if team_settings.use_zaken_backend:
             serializer = CaseStateTypeSerializer(
-                team_settings.fetch_team_state_types(
-                    get_keycloak_auth_header_from_request(request)
-                ),
+                settings.AZA_CASE_STATE_TYPES,
                 many=True,
             )
             data = serializer.data
