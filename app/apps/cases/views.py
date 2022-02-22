@@ -271,22 +271,21 @@ class CaseSearchViewSet(ViewSet):
                 url = f"{settings.ZAKEN_API_URL}/cases/"
                 queryParams = {}
                 queryParams.update(request.GET)
-                # state_types = DaySettings.objects.filter(
-                #     team_settings__enabled=True
-                # ).values_list("state_types", flat=True)
-                # state_types = list(chain(*state_types))
+
                 queryParams = dict(
                     (param_translate.get(k, k), v) for k, v in queryParams.items()
                 )
                 queryParams.update(
                     {
                         "open_cases": True,
+                        "state_types__name": ["Huisbezoek", "Hercontrole"],
+                        "page_size": 1000,
                     }
                 )
                 response = requests.get(
                     url,
                     params=queryParams,
-                    timeout=30,
+                    timeout=60,
                     headers=get_headers(get_keycloak_auth_header_from_request(request)),
                 )
                 response.raise_for_status()

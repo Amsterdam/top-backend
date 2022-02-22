@@ -58,7 +58,11 @@ def get_eligible_cases_v2(generator):
 
         queryParams = {
             "open_cases": "true",
-            "state_types": [state.get("id", 0) for state in state_types],
+            "state_types__name": [
+                state.get("name", 0)
+                for state in state_types
+                if state.get("id", 0) in generator.settings.state_types
+            ],
             "theme": generator.settings.day_settings.team_settings.zaken_team_name,
             "from_start_date": generator.settings.opening_date.strftime("%Y-%m-%d"),
             "page_size": 1000,
