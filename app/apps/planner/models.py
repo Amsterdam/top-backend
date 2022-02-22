@@ -132,21 +132,6 @@ class TeamSettings(models.Model):
 
         return response.json().get("results", [])
 
-    def fetch_team_state_types(self, auth_header=None):
-        if settings.USE_ZAKEN_MOCK_DATA:
-            return get_team_state_types()
-
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/state-types/?role=toezichthouder"
-
-        response = requests.get(
-            url,
-            timeout=5,
-            headers=get_headers(auth_header),
-        )
-        response.raise_for_status()
-
-        return response.json().get("results", [])
-
     class Meta:
         verbose_name_plural = "Team settings"
         ordering = ["name"]
@@ -290,18 +275,6 @@ class DaySettings(models.Model):
 
     def fetch_team_reasons(self, auth_header=None):
         url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/reasons/"
-
-        response = requests.get(
-            url,
-            timeout=5,
-            headers=get_headers(auth_header),
-        )
-        response.raise_for_status()
-
-        return response.json().get("results", [])
-
-    def fetch_team_state_types(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/state-types/?role=toezichthouder"
 
         response = requests.get(
             url,
