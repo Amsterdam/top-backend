@@ -229,6 +229,22 @@ class CaseSearchViewSet(ViewSet):
 
         return cases
 
+    def _clean_cases(self, cases):
+        cases = [
+            {
+                **c,
+                **{
+                    "current_states": [
+                        s
+                        for s in c.get("current_states", [])
+                        if s.get("status_name") in ["Huisbezoek", "Hercontrole"]
+                    ]
+                },
+            }
+            for c in cases
+        ]
+        return cases
+
     @extend_schema(
         parameters=case_search_parameters, description="Search query parameters"
     )
@@ -297,6 +313,7 @@ class CaseSearchViewSet(ViewSet):
 
             cases = self.__add_fraud_prediction__(result)
             cases = self.__add_teams__(cases, datetime.now())
+            cases = self._clean_cases(cases)
             return JsonResponse({"cases": cases})
 
 
