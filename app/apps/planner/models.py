@@ -102,6 +102,13 @@ class TeamSettings(models.Model):
         default=0,
     )
 
+    def get_cases_query_params(self):
+        return {
+            "open_cases": "true",
+            "theme": self.zaken_team_name,
+            "page_size": 1000,
+        }
+
     def fetch_team_schedules(self, auth_header=None):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_schedules()
@@ -260,6 +267,49 @@ class DaySettings(models.Model):
         related_name="exclude_stadia_day_settings_list",
     )
     sia_presedence = models.BooleanField(default=False)
+
+    def get_postal_code_ranges(self):
+        postal_code_ranges_presets = [
+            pcr
+            for pcrp in self.postal_code_ranges_presets.all()
+            for pcr in pcrp.postal_code_ranges.all().values()
+        ]
+        postal_code_settings = (
+            postal_code_ranges_presets
+            if postal_code_ranges_presets
+            else self.postal_code_ranges
+        )
+        return postal_code_settings
+
+    def get_cases_query_params(self):
+        cases_query_params = self.team_settings.get_cases_query_params()
+        postal_code_range = [
+            f"{pr.get('range_start')}-{pr.get('range_end')}"
+            for pr in self.get_postal_code_ranges()
+        ]
+        cases_query_params.update(
+            {
+                "state_types": self.state_types,
+                "reason": self.reasons,
+                "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
+                "postal_code_range": postal_code_range,
+                "schedule_day_segment": self.day_segments,
+                "schedule_week_segment": self.week_segments,
+            }
+        )
+        return cases_query_params
+
+    def fetch_cases_count(self, auth_header=None):
+        url = f"{settings.ZAKEN_API_URL}/cases/count/"
+        response = requests.get(
+            url,
+            timeout=10,
+            params=self.get_cases_query_params(),
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json()
 
     def fetch_team_schedules(self, auth_header=None):
         url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/schedule-types/"

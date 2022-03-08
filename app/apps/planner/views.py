@@ -7,6 +7,7 @@ from apps.planner.models import DaySettings, PostalCodeRangeSet, TeamSettings
 from apps.planner.serializers import (
     CaseReasonSerializer,
     CaseStateTypeSerializer,
+    DaySettingsDetailSerializer,
     DaySettingsSerializer,
     NewDaySettingsSerializer,
     PlannerSettingsSerializer,
@@ -148,7 +149,9 @@ class DaySettingsViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == "POST":
             return NewDaySettingsSerializer
-        return DaySettingsSerializer
+        if self.action == "list":
+            return DaySettingsSerializer
+        return DaySettingsDetailSerializer
 
 
 @user_passes_test(lambda u: u.is_superuser)

@@ -5,12 +5,14 @@ from apps.planner.models import (
     PostalCodeRangeSet,
     TeamSettings,
 )
+from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.serializers import (
     ObservationSerializer,
     SituationSerializer,
     SuggestNextVisitSerializer,
 )
 from django.conf import settings
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from rest_framework.relations import PKOnlyObject
 
@@ -278,6 +280,44 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             and stadium != data.get("primary_stadium", [])
         ]
         return data
+
+
+class DaySettingsDetailSerializer(DaySettingsSerializer):
+    cases_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DaySettings
+        fields = (
+            "id",
+            "name",
+            "week_day",
+            "week_days",
+            "opening_date",
+            "postal_code_ranges",
+            "postal_code_ranges_presets",
+            "length_of_list",
+            "day_segments",
+            "week_segments",
+            "priorities",
+            "reasons",
+            "state_types",
+            "projects",
+            "primary_stadium",
+            "secondary_stadia",
+            "exclude_stadia",
+            "team_settings",
+            "sia_presedence",
+            "used_today_count",
+            "max_use_limit",
+            "cases_count",
+        )
+
+    @extend_schema_field(serializers.IntegerField)
+    def get_cases_count(self, obj):
+        request = self.context.get("request")
+        return obj.fetch_cases_count(
+            get_keycloak_auth_header_from_request(request)
+        ).get("count", 0)
 
 
 class NewDaySettingsSerializer(DaySettingsSerializer):
