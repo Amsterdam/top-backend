@@ -35,22 +35,7 @@ def get_eligible_cases_v2(generator):
     logger.info("v2 __get_eligible_cases__")
     if settings.USE_ZAKEN_MOCK_DATA:
         cases = get_zaken_case_list()
-        # team_schedules = get_team_schedules()
-        # reasons = get_team_reasons()
-        # state_types = get_team_state_types()
     else:
-        # logger.info("Get from AZA: state_types")
-        # state_types = generator.settings.day_settings.fetch_team_state_types(
-        #     generator.auth_header
-        # )
-        # logger.info("Get from AZA: team_schedules")
-        # team_schedules = generator.settings.day_settings.fetch_team_schedules(
-        #     generator.auth_header
-        # )
-        # logger.info("Get from AZA: reasons")
-        # reasons = generator.settings.day_settings.fetch_team_reasons(
-        #     generator.auth_header
-        # )
         logger.info("Get from AZA: cases")
 
         url = f"{settings.ZAKEN_API_URL}/cases/"
@@ -73,52 +58,6 @@ def get_eligible_cases_v2(generator):
 
     logger.info("initial case count")
     logger.info(len(cases))
-    # logger.info("validate team_schedules")
-    # team_schedules = (
-    #     dict(
-    #         (
-    #             k,
-    #             [
-    #                 s
-    #                 for s in getattr(generator.settings, k)
-    #                 if s in [ss.get("id", 0) for ss in v]
-    #             ],
-    #         )
-    #         for k, v in team_schedules.items()
-    #         if k
-    #         in [
-    #             "day_segments",
-    #             "week_segments",
-    #         ]
-    #     )
-    #     if team_schedules
-    #     else {}
-    # )
-    # logger.info("validate reasons")
-    # reasons = [
-    #     r
-    #     for r in generator.settings.reasons
-    #     if r in [reason.get("id", 0) for reason in reasons]
-    # ]
-    # logger.info("validate state_types")
-    # state_types = [state.get("id", 0) for state in state_types]
-    # state_types_selected = [
-    #     st for st in generator.settings.state_types if st in state_types
-    # ]
-    # logger.info("selected algorithm states")
-    # logger.info(state_types_selected)
-    # cases = filter_out_incompatible_cases(cases)
-    # logger.info("after filter_out_incompatible_cases")
-    # logger.info(len(cases))
-    # cases = filter_schedules(cases, team_schedules)
-    # logger.info("after filter_schedules")
-    # logger.info(len(cases))
-    # cases = filter_state_types(cases, state_types)
-    # logger.info("after filter_state_types")
-    # logger.info(len(cases))
-    # cases = filter_cases_with_postal_code(cases, generator.postal_code_ranges)
-    # logger.info("after filter_cases_with_postal_code")
-    # logger.info(len(cases))
     cases = [
         c
         for c in cases

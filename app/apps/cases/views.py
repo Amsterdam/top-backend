@@ -36,7 +36,7 @@ from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet, ViewSet
 from utils import queries as q
 from utils import queries_bag_api as bag_api
 from utils import queries_brk_api as brk_api
@@ -166,7 +166,7 @@ class CaseViewSet(ViewSet):
 
     @extend_schema(
         description="Lists all events for this case",
-        responses={200: serializers.ListSerializer(child=serializers.Serializer())},
+        responses={200: serializers.ListSerializer(child=serializers.DictField())},
     )
     @action(detail=True, methods=["get"], name="events")
     def events(self, request, pk):

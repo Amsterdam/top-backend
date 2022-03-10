@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from settings.const import POSTAL_CODE_RANGES, WEEK_DAYS_CHOICES
 from utils.queries_zaken_api import get_headers
 
@@ -103,10 +104,14 @@ class TeamSettings(models.Model):
     )
 
     def get_cases_query_params(self):
+        today = datetime.datetime.combine(
+            timezone.now().date(), datetime.datetime.min.time()
+        )
         return {
             "open_cases": "true",
             "theme": self.zaken_team_name,
             "page_size": 1000,
+            "schedule_visit_from": today,
         }
 
     def fetch_team_schedules(self, auth_header=None):
@@ -290,7 +295,6 @@ class DaySettings(models.Model):
         cases_query_params.update(
             {
                 "state_types": self.state_types,
-                "reason": self.reasons,
                 "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
                 "postal_code_range": postal_code_range,
                 "schedule_day_segment": self.day_segments,

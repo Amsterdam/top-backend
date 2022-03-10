@@ -292,7 +292,6 @@ class ItinerarySettings(models.Model):
                 "state_types": self.state_types,
                 "schedule_day_segment": self.day_segments,
                 "schedule_week_segment": self.week_segments,
-                "reason": self.reasons,
                 "postal_code_range": postal_code_range,
                 "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
             }
