@@ -113,6 +113,18 @@ class TeamSettings(models.Model):
             "page_size": 1000,
             "schedule_visit_from": today,
         }
+        
+    def fetch_projects(self, auth_header=None):
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/case-projects/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json()
 
     def fetch_team_schedules(self, auth_header=None):
         if settings.USE_ZAKEN_MOCK_DATA:
@@ -243,6 +255,16 @@ class DaySettings(models.Model):
         null=True,
     )
     state_types = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    project_ids = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    housing_corporations = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
         null=True,

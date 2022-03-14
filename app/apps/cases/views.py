@@ -18,7 +18,6 @@ from apps.cases.swagger_parameters import case_search_parameters, unplanned_para
 from apps.fraudprediction.utils import add_fraud_predictions, get_fraud_prediction
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
-from apps.planner.models import DaySettings, TeamSettings
 from apps.users.auth_apps import AZAKeyAuth
 from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import Visit
@@ -27,14 +26,11 @@ from django.conf import settings
 from django.forms.models import model_to_dict
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework import serializers
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet, ViewSet
 from utils import queries as q

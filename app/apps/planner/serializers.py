@@ -193,6 +193,12 @@ class CaseReasonSerializer(serializers.Serializer):
     team = serializers.IntegerField(read_only=True)
 
 
+class CaseProjectSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    team = serializers.IntegerField(read_only=True)
+
+
 class CaseStateTypeSerializer(CaseReasonSerializer):
     pass
 
@@ -237,6 +243,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "priorities",
             "reasons",
             "state_types",
+            "project_ids",
             "projects",
             "primary_stadium",
             "secondary_stadia",
@@ -303,6 +310,8 @@ class NewDaySettingsSerializer(DaySettingsSerializer):
             "priorities",
             "reasons",
             "state_types",
+            "project_ids",
+            "housing_corporations",
             "projects",
             "primary_stadium",
             "secondary_stadia",

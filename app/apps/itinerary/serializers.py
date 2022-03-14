@@ -64,6 +64,8 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
             "priorities",
             "reasons",
             "state_types",
+            "project_ids",
+            "housing_corporations",
             # BWV data below
             "projects",
             "primary_stadium",
@@ -167,6 +169,8 @@ class ItinerarySerializer(serializers.ModelSerializer):
             day_segments=day_settings.day_segments,
             week_segments=day_settings.week_segments,
             priorities=day_settings.priorities,
+            project_ids=day_settings.project_ids,
+            housing_corporations=day_settings.housing_corporations,
             reasons=day_settings.reasons,
             state_types=day_settings.state_types,
         )

@@ -1,3 +1,4 @@
+from apps.addresses import router as addresses_router
 from apps.cases import router as case_router
 from apps.fraudprediction import router as fraudprediction_router
 from apps.health.views import health_bwv, health_default
@@ -27,6 +28,7 @@ v1_urls = (
     + fraudprediction_router.router.urls
     + case_router.router.urls
     + permits_router.router.urls
+    + addresses_router.router.urls
     + planner_router.router.urls
     + users_router.router.urls
     + visits_router.router.urls

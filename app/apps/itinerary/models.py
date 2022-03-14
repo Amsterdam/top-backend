@@ -259,6 +259,16 @@ class ItinerarySettings(models.Model):
         blank=True,
         null=True,
     )
+    project_ids = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    housing_corporations = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
 
     # BWV Fields
     projects = models.ManyToManyField(to=Project, blank=False, related_name="settings")
