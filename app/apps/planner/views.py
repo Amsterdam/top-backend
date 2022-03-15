@@ -5,6 +5,7 @@ import sys
 from apps.itinerary.models import Itinerary
 from apps.planner.models import DaySettings, PostalCodeRangeSet, TeamSettings
 from apps.planner.serializers import (
+    CaseProjectSerializer,
     CaseReasonSerializer,
     CaseStateTypeSerializer,
     DaySettingsSerializer,
@@ -116,6 +117,30 @@ class TeamSettingsViewSet(ModelViewSet):
         if team_settings.use_zaken_backend:
             serializer = CaseStateTypeSerializer(
                 settings.AZA_CASE_STATE_TYPES,
+                many=True,
+            )
+            data = serializer.data
+
+        return Response(data)
+
+    @extend_schema(
+        description="Gets the projects associated with the requested team",
+        responses={status.HTTP_200_OK: CaseProjectSerializer(many=True)},
+    )
+    @action(
+        detail=True,
+        url_path="case-projects",
+        methods=["get"],
+    )
+    def projects(self, request, pk):
+        team_settings = self.get_object()
+        data = []
+
+        if team_settings.use_zaken_backend:
+            serializer = CaseProjectSerializer(
+                team_settings.fetch_projects(
+                    get_keycloak_auth_header_from_request(request)
+                ),
                 many=True,
             )
             data = serializer.data

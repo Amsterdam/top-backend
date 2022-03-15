@@ -17,7 +17,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import serializers
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -59,8 +59,6 @@ class DecosViewSet(ViewSet):
     @extend_schema(description="test connection with decos")
     @action(detail=False, url_name="test decos connection", url_path="test-connect")
     def get_test_decos_connect(self, request):
-        import requests
-
         response = requests.get(
             "https://decosdvl.acc.amsterdam.nl/decosweb/aspx/api/v1/"
         )
@@ -68,30 +66,6 @@ class DecosViewSet(ViewSet):
         if response.ok:
             return Response(response)
         return False
-
-
-class PermitViewSet(ViewSet):
-    lookup_field = "bag_id"
-
-    @extend_schema(
-        parameters=[bag_id],
-        description="Get decos data based on bag id",
-        responses={200: serializers.Serializer()},
-    )
-    @action(detail=True, url_name="permits details", url_path="permits")
-    def get_permit(self, request, bag_id):
-        url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits/"
-
-        response = requests.get(
-            url,
-            timeout=10,
-            headers={
-                "Authorization": request.headers.get("Authorization"),
-            },
-        )
-        response.raise_for_status()
-
-        return Response(response.json())
 
 
 class DecosAPISearch(UserPassesTestMixin, FormView):

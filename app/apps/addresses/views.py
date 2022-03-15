@@ -1,0 +1,86 @@
+import json
+import logging
+from datetime import datetime
+
+import requests
+from apps.permits.api_queries_decos_join import DecosJoinRequest
+from apps.permits.forms import SearchForm
+from apps.permits.serializers import DecosSerializer
+from apps.users.utils import get_keycloak_auth_header_from_request
+from constance.backends.database.models import Constance
+from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import Http404
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import FormView
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
+from utils.queries_zaken_api import get_headers
+
+from .serializers import HousingCorporationSerializer
+
+bag_id = OpenApiParameter(
+    name="bag_id",
+    type=OpenApiTypes.STR,
+    location=OpenApiParameter.QUERY,
+    required=True,
+    description="Verblijfsobjectidentificatie",
+)
+
+
+def fetch_housing_corporations(self, auth_header=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/housing-corporations/"
+
+    response = requests.get(
+        url,
+        timeout=5,
+        headers=get_headers(auth_header),
+    )
+    response.raise_for_status()
+
+    return response.json().get("results", [])
+
+
+class AddressViewSet(ViewSet):
+    lookup_field = "bag_id"
+
+    @action(detail=True, url_name="permits details", url_path="permits")
+    def get_permit(self, request, bag_id):
+        url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits/"
+
+        response = requests.get(
+            url,
+            timeout=10,
+            headers={
+                "Authorization": request.headers.get("Authorization"),
+            },
+        )
+        response.raise_for_status()
+
+        return Response(response.json())
+
+    @extend_schema(
+        description="Gets the projects associated with the requested team",
+        responses={status.HTTP_200_OK: HousingCorporationSerializer(many=True)},
+    )
+    @action(
+        detail=False,
+        url_path="housing-corporations",
+        methods=["get"],
+    )
+    def housing_corporations(self, request):
+        data = []
+
+        serializer = HousingCorporationSerializer(
+            fetch_housing_corporations(get_keycloak_auth_header_from_request(request)),
+            many=True,
+        )
+        data = serializer.data
+
+        return Response(data)
