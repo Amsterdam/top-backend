@@ -321,6 +321,7 @@ class DaySettings(models.Model):
                 "postal_code_range": postal_code_range,
                 "schedule_day_segment": self.day_segments,
                 "schedule_week_segment": self.week_segments,
+                "project": self.project_ids,
             }
         )
         return cases_query_params

@@ -26,6 +26,7 @@ class DaySettingsInline(admin.TabularInline):
                     "week_days",
                     "max_use_limit",
                     "start_time",
+                    "project_ids",
                 )
             },
         ),
