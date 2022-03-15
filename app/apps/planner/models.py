@@ -113,9 +113,9 @@ class TeamSettings(models.Model):
             "page_size": 1000,
             "schedule_visit_from": today,
         }
-        
+
     def fetch_projects(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/case-projects/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/case-projects/"
 
         response = requests.get(
             url,
@@ -124,7 +124,7 @@ class TeamSettings(models.Model):
         )
         response.raise_for_status()
 
-        return response.json()
+        return response.json().get("results", [])
 
     def fetch_team_schedules(self, auth_header=None):
         if settings.USE_ZAKEN_MOCK_DATA:
