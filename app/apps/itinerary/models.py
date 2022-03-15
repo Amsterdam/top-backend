@@ -304,6 +304,7 @@ class ItinerarySettings(models.Model):
                 "schedule_week_segment": self.week_segments,
                 "postal_code_range": postal_code_range,
                 "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
+                "project": self.project_ids,
             }
         )
         return cases_query_params
