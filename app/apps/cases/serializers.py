@@ -1,5 +1,6 @@
 from apps.cases.models import Case, Project, Stadium, StadiumLabel
 from apps.fraudprediction.serializers import FraudPredictionSerializer
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 
@@ -30,6 +31,7 @@ class CaseSerializer(serializers.ModelSerializer):
         model = Case
         fields = ("id", "data", "fraud_prediction")
 
+    @extend_schema_field(serializers.DictField())
     def get_data(self, obj):
         return obj.data_context(self.context)
 

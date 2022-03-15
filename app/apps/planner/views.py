@@ -23,7 +23,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest, JsonRespo
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, GenericAPIView
@@ -149,6 +149,20 @@ class DaySettingsViewSet(ModelViewSet):
         if self.request.method == "POST":
             return NewDaySettingsSerializer
         return DaySettingsSerializer
+
+    @extend_schema(
+        description="Gets the cases count based on these day settings",
+        responses={status.HTTP_200_OK: serializers.DictField()},
+    )
+    @action(
+        detail=True,
+        url_path="case-count",
+        methods=["get"],
+    )
+    def case_count(self, request, pk):
+        obj = self.get_object()
+        data = obj.fetch_cases_count(get_keycloak_auth_header_from_request(request))
+        return Response(data)
 
 
 @user_passes_test(lambda u: u.is_superuser)

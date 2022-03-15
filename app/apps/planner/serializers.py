@@ -5,12 +5,14 @@ from apps.planner.models import (
     PostalCodeRangeSet,
     TeamSettings,
 )
+from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.serializers import (
     ObservationSerializer,
     SituationSerializer,
     SuggestNextVisitSerializer,
 )
 from django.conf import settings
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from rest_framework.relations import PKOnlyObject
 

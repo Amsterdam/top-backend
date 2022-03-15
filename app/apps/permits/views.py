@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 
 import requests
+from apps.cases.models import Case
 from apps.permits.api_queries_decos_join import DecosJoinRequest
 from apps.permits.forms import SearchForm
 from apps.permits.serializers import DecosSerializer
@@ -16,9 +17,11 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet, ViewSet
 
 bag_id = OpenApiParameter(
     name="bag_id",
@@ -70,6 +73,11 @@ class DecosViewSet(ViewSet):
 class PermitViewSet(ViewSet):
     lookup_field = "bag_id"
 
+    @extend_schema(
+        parameters=[bag_id],
+        description="Get decos data based on bag id",
+        responses={200: serializers.Serializer()},
+    )
     @action(detail=True, url_name="permits details", url_path="permits")
     def get_permit(self, request, bag_id):
         url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits/"

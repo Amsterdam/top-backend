@@ -281,6 +281,23 @@ class ItinerarySettings(models.Model):
 
     sia_presedence = models.BooleanField(default=False)
 
+    def get_cases_query_params(self):
+        cases_query_params = self.day_settings.get_cases_query_params()
+        postal_code_range = [
+            f"{pr.get('range_start')}-{pr.get('range_end')}"
+            for pr in self.postal_code_ranges
+        ]
+        cases_query_params.update(
+            {
+                "state_types": self.state_types,
+                "schedule_day_segment": self.day_segments,
+                "schedule_week_segment": self.week_segments,
+                "postal_code_range": postal_code_range,
+                "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
+            }
+        )
+        return cases_query_params
+
     def __str__(self):
         return self.itinerary.__str__()
 

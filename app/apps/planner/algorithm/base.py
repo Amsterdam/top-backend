@@ -28,6 +28,7 @@ class ItineraryGenerateAlgorithm:
         self.postal_code_ranges = [
             vars(postal_code_setting) for postal_code_setting in postal_code_settings
         ]
+        self.settings.postal_code_ranges = self.postal_code_ranges
 
         try:
             self.primary_stadium = settings.primary_stadium.name
