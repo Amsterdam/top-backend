@@ -108,28 +108,22 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         ):
             fraud_probability = 0
 
-        priority = case.get("schedules", [{}])[0].get("priority", {}).get("weight", 0)
-
-        reason = (
-            case.get("reason", {}).get("id", 0) in self.settings.reasons
-            if self.settings.reasons
-            else []
-        )
-        state_types = set(
-            [case.get("status") for case in case.get("current_states", [])]
-        ).intersection(
-            set(self.settings.state_types if self.settings.state_types else [])
-        )
         stadium = case.get("stadium")
         has_primary_stadium = stadium == self.primary_stadium
         has_secondary_stadium = stadium in self.secondary_stadia
         has_issuemelding_stadium = stadium == ISSUEMELDING
 
+        # The following attributes are explicitly disabled and
+        # can be completely removed during the upcoming BWV refactor:
+        priority = 0
+        reason = False
+        state_types = False
+
         score = self.weights.score(
             distance,
             fraud_probability,
-            bool(reason),
-            bool(state_types),
+            reason,
+            state_types,
             priority,
             has_primary_stadium,
             has_secondary_stadium,
