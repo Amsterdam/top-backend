@@ -322,6 +322,7 @@ class DaySettings(models.Model):
                 "schedule_day_segment": self.day_segments,
                 "schedule_week_segment": self.week_segments,
                 "project": self.project_ids,
+                "priority": self.priorities,
             }
         )
         return cases_query_params
