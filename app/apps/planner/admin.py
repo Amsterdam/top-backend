@@ -17,7 +17,8 @@ class DaySettingsInline(admin.TabularInline):
             {
                 "fields": (
                     "name",
-                    "sia_presedence",
+                    "housing_corporations",
+                    "housing_corporation_combiteam",
                     "day_segments",
                     "week_segments",
                     "priorities",
@@ -27,6 +28,7 @@ class DaySettingsInline(admin.TabularInline):
                     "max_use_limit",
                     "start_time",
                     "project_ids",
+                    "sia_presedence",
                 )
             },
         ),
