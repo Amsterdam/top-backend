@@ -301,7 +301,7 @@ class ItinerarySettings(models.Model):
         if self.day_segments.team_settings.zaken_team_name == "6":
             cases_query_params.update(
                 {
-                    "housing_corporations": self.housing_corporations,
+                    "housing_corporation": self.housing_corporations,
                     "schedule_housing_corporation_combiteam": self.housing_corporation_combiteam,
                 }
             )
