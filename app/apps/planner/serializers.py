@@ -226,6 +226,14 @@ class DaySettingsSerializer(serializers.ModelSerializer):
         many=True, queryset=Stadium.objects.all(), required=False
     )
     used_today_count = serializers.IntegerField(read_only=True)
+    case_count = serializers.SerializerMethodField()
+
+    @extend_schema_field(serializers.DictField())
+    def get_case_count(self, obj):
+        request = self.context.get("request")
+        if bool(request.GET.get("case-count")):
+            return obj.fetch_cases_count(get_keycloak_auth_header_from_request(request))
+        return {"count": 0}
 
     class Meta:
         model = DaySettings
@@ -252,6 +260,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "sia_presedence",
             "used_today_count",
             "max_use_limit",
+            "case_count",
         )
 
     def validate(self, data):
