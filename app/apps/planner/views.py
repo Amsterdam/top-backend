@@ -23,7 +23,8 @@ from django.core.management import call_command
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -148,6 +149,11 @@ class TeamSettingsViewSet(ModelViewSet):
         return Response(data)
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter("case-count", OpenApiTypes.DATE, OpenApiParameter.QUERY),
+    ]
+)
 class DaySettingsViewSet(ModelViewSet):
     """
     A view for listing/adding/updating/removing a DaySettings
