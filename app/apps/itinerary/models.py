@@ -269,6 +269,7 @@ class ItinerarySettings(models.Model):
         blank=True,
         null=True,
     )
+    housing_corporation_combiteam = models.BooleanField(default=False)
 
     # BWV Fields
     projects = models.ManyToManyField(to=Project, blank=False, related_name="settings")
@@ -297,6 +298,13 @@ class ItinerarySettings(models.Model):
             f"{pr.get('range_start')}-{pr.get('range_end')}"
             for pr in self.postal_code_ranges
         ]
+        if self.day_segments.team_settings.zaken_team_name == "6":
+            cases_query_params.update(
+                {
+                    "housing_corporations": self.housing_corporations,
+                    "schedule_housing_corporation_combiteam": self.housing_corporation_combiteam,
+                }
+            )
         cases_query_params.update(
             {
                 "state_types": self.state_types,
