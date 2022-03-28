@@ -298,7 +298,7 @@ class ItinerarySettings(models.Model):
             f"{pr.get('range_start')}-{pr.get('range_end')}"
             for pr in self.postal_code_ranges
         ]
-        if self.day_segments.team_settings.zaken_team_name == "6":
+        if self.day_settings.team_settings.zaken_team_name == "6":
             cases_query_params.update(
                 {
                     "housing_corporation": self.housing_corporations,
@@ -312,6 +312,7 @@ class ItinerarySettings(models.Model):
                 "schedule_week_segment": self.week_segments,
                 "postal_code_range": postal_code_range,
                 "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
+                "reason": self.reasons,
                 "project": self.project_ids,
                 "priority": self.priorities,
             }
