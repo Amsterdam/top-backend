@@ -34,7 +34,7 @@ bag_id = OpenApiParameter(
 )
 
 
-def fetch_housing_corporations(self, auth_header=None):
+def fetch_housing_corporations(auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/housing-corporations/"
 
     response = requests.get(
