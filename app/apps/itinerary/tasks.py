@@ -138,18 +138,16 @@ def get_serialized_visit(visit_id):
 
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def push_visit(self, visit_id, created=False, auth_header=None, task_name_ids=[]):
+def push_visit(self, visit_id, completed=False, auth_header=None, task_name_ids=[]):
     # logger.info(f"Pushing visit {visit_id} to AZA")
+    print("push_visit")
     capture_message(f"Pushing visit {visit_id} to AZA")
-    assert_allow_push()
+    # assert_allow_push()
     url = f"{settings.ZAKEN_API_URL}/visits/"
 
-    if not created:
-        logger.info("AZA does not support updating visits anymore.")
-        return f"AZA does not support updating visits anymore: visit_id: {visit_id}, created: {created}"
-
     data = get_serialized_visit(visit_id)
-
+    data["completed"] = completed
+    print(data)
     try:
         response = requests.post(
             url,
@@ -161,4 +159,4 @@ def push_visit(self, visit_id, created=False, auth_header=None, task_name_ids=[]
     except Exception as exception:
         self.retry(exc=exception)
 
-    return f"visit_id: {visit_id}, created: {created}"
+    return f"visit_id: {visit_id}, completed: {completed}"
