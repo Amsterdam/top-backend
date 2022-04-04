@@ -232,7 +232,7 @@ sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegratio
 OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
 OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
-OIDC_AUTHORIZED_GROUPS = ("wonen_top",)
+OIDC_AUTHORIZED_GROUPS = ("wonen_top", "wonen_zaak")
 OIDC_AUTHENTICATION_CALLBACK_URL = "v1:oidc-authenticate"
 
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv(
