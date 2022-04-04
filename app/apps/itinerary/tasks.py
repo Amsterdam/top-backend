@@ -133,12 +133,13 @@ def get_serialized_visit(visit_id):
     # Set the case id
     case = data.pop("case_id")
     data["case"] = case["case_id"]
+    data["top_visit_id"] = visit_id
 
     return data
 
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def push_visit(self, visit_id, completed=False, auth_header=None, task_name_ids=[]):
+def push_visit(self, visit_id, auth_header=None, task_name_ids=[]):
     # logger.info(f"Pushing visit {visit_id} to AZA")
     print("push_visit")
     capture_message(f"Pushing visit {visit_id} to AZA")
@@ -146,7 +147,6 @@ def push_visit(self, visit_id, completed=False, auth_header=None, task_name_ids=
     url = f"{settings.ZAKEN_API_URL}/visits/"
 
     data = get_serialized_visit(visit_id)
-    data["completed"] = completed
     print(data)
     try:
         response = requests.post(
@@ -159,4 +159,4 @@ def push_visit(self, visit_id, completed=False, auth_header=None, task_name_ids=
     except Exception as exception:
         self.retry(exc=exception)
 
-    return f"visit_id: {visit_id}, completed: {completed}"
+    return f"visit_id: {visit_id}"

@@ -40,6 +40,7 @@ class Visit(models.Model):
 
     # personal notes to help make report at the office/as reminders for TH.
     personal_notes = models.TextField(blank=True, null=True, default=None)
+    completed = models.BooleanField(default=False)
 
     def get_observation_string(self):
         return (

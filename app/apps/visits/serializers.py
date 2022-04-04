@@ -71,13 +71,12 @@ class CaseField(serializers.RelatedField):
 
 class VisitSerializer(serializers.ModelSerializer):
     team_members = VisitTeamMemberSerializer(many=True, read_only=True)
-    completed = serializers.BooleanField(default=False)
     case_id = CaseField()
 
     def is_valid(self, raise_exception=False):
         return super().is_valid(raise_exception)
 
-    def _complete_visit_and_update_aza(self, instance, completed):
+    def _complete_visit_and_update_aza(self, instance):
         from apps.itinerary.tasks import push_visit
 
         print("_complete_visit_and_update_aza")
@@ -86,21 +85,18 @@ class VisitSerializer(serializers.ModelSerializer):
         auth_header = get_keycloak_auth_header_from_request(self.context.get("request"))
         task = push_visit.s(
             visit_id=instance.id,
-            completed=completed,
             auth_header=auth_header,
         ).delay
         transaction.on_commit(task)
 
     def create(self, validated_data):
-        completed = validated_data.pop("completed", None)
         instance = super().create(validated_data)
-        self._complete_visit_and_update_aza(instance, completed)
+        self._complete_visit_and_update_aza(instance)
         return instance
 
     def update(self, instance, validated_data):
-        completed = validated_data.pop("completed", None)
         instance = super().update(instance, validated_data)
-        self._complete_visit_and_update_aza(instance, completed)
+        self._complete_visit_and_update_aza(instance)
         return instance
 
     class Meta:
