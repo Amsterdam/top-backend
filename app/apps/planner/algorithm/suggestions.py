@@ -9,7 +9,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class ItineraryGenerateSuggestions(ItineraryGenerateAlgorithm):
-    """ Generates a list of suggestion based on a given location """
+    """Generates a list of suggestion based on a given location"""
 
     def generate(self, location):
 

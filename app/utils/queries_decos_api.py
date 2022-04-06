@@ -132,7 +132,7 @@ class DecosJoinRequest:
         return False
 
     def get_checkmarks_by_bag_id(self, bag_id):
-        """ Get simple view of the important permits"""
+        """Get simple view of the important permits"""
         # TODO Make sure the response goes through a serializer so this doesn't break on KeyError
         response = {
             "has_b_and_b_permit": "UNKNOWN",

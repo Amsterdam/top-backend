@@ -108,7 +108,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
 
     @action(detail=True, methods=["get"])
     def suggestions(self, request, pk):
-        """ Returns a list of suggestions for the given itinerary """
+        """Returns a list of suggestions for the given itinerary"""
         itinerary = self.get_object()
         cases = itinerary.get_suggestions(
             get_keycloak_auth_header_from_request(request)

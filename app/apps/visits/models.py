@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 
 class Visit(models.Model):
-    """ Captures data of a visit """
+    """Captures data of a visit"""
 
     situation = models.CharField(max_length=50, null=True, blank=True)
     observations = ArrayField(models.CharField(max_length=50), blank=True, null=True)
@@ -59,7 +59,7 @@ class Visit(models.Model):
         )
 
     def capture_visit_meta_data(self):
-        """ Captures visit data """
+        """Captures visit data"""
         visit_meta_data = VisitMetaData.objects.get_or_create(visit=self)[0]
 
         try:
@@ -86,7 +86,7 @@ class Visit(models.Model):
 
 
 class VisitTeamMember(models.Model):
-    """ Member of an Visit Team """
+    """Member of an Visit Team"""
 
     class Meta:
         unique_together = ["user", "visit"]

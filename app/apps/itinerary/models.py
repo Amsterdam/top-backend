@@ -22,7 +22,7 @@ from utils.queries_planner import get_cases_from_bwv
 
 
 class Itinerary(models.Model):
-    """ Itinerary for visiting cases """
+    """Itinerary for visiting cases"""
 
     created_at = models.DateField(auto_now_add=True)
 
@@ -324,7 +324,7 @@ class ItinerarySettings(models.Model):
 
 
 class PostalCodeSettings(models.Model):
-    """ A postal code settings for an itinerary """
+    """A postal code settings for an itinerary"""
 
     itinerary = models.ForeignKey(
         Itinerary,
@@ -370,7 +370,7 @@ class PostalCodeSettings(models.Model):
 
 
 class ItineraryTeamMember(models.Model):
-    """ Member of an Itinerary Team """
+    """Member of an Itinerary Team"""
 
     class Meta:
         unique_together = ["user", "itinerary"]
@@ -393,7 +393,7 @@ class ItineraryTeamMember(models.Model):
 
 
 class ItineraryItem(models.Model):
-    """ Single Itinerary item """
+    """Single Itinerary item"""
 
     itinerary = models.ForeignKey(
         Itinerary, on_delete=models.CASCADE, null=False, related_name="items"
@@ -470,7 +470,7 @@ class ItineraryItem(models.Model):
 
 
 class Note(models.Model):
-    """ A note for an Itinerary Item """
+    """A note for an Itinerary Item"""
 
     itinerary_item = models.ForeignKey(
         ItineraryItem, on_delete=models.CASCADE, null=False, related_name="notes"
