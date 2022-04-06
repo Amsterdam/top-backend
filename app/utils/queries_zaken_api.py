@@ -28,7 +28,7 @@ def date_to_string(date):
 
 
 def stadium_bwv_to_push_state(stadium):
-    """ Transforms a stadium to be compatible with zaken-backend """
+    """Transforms a stadium to be compatible with zaken-backend"""
     return {
         "name": stadium.get("sta_oms"),
         "start_date": date_to_string(stadium.get("begindatum")),

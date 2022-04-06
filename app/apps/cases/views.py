@@ -114,7 +114,7 @@ class CaseViewSet(ViewSet):
     @extend_schema(parameters=unplanned_parameters, description="Unplanned Cases")
     @action(detail=False, methods=["get"], name="unplanned")
     def unplanned(self, request):
-        """ Returns a list of unplanned cases, based on the given date and stadium """
+        """Returns a list of unplanned cases, based on the given date and stadium"""
         serializer = UnplannedCasesSerializer(data=request.GET)
         is_valid = serializer.is_valid()
 

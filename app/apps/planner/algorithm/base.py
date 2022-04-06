@@ -13,7 +13,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class ItineraryGenerateAlgorithm:
-    """ An abstract class which forms the basis of itinerary generating algorithms """
+    """An abstract class which forms the basis of itinerary generating algorithms"""
 
     def __init__(self, settings, postal_code_settings=[], **kwargs):
         self.auth_header = kwargs.get("auth_header")
