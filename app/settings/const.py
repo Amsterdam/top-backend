@@ -22,6 +22,7 @@ EXCLUDE_STADIA = (
 
 POSTAL_CODE_RANGES = [
     {"range_start": 1000, "range_end": 1109},
+    {"range_start": 1380, "range_end": 1384},
 ]
 
 API_EXCEPTION_SEVERITY_ERROR = "ERROR"
