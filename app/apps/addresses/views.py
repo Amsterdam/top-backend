@@ -106,4 +106,4 @@ class AddressViewSet(ViewSet):
         data, status_code = fetch_residents(
             bag_id, get_keycloak_auth_header_from_request(request)
         )
-        return Response(data, status=status_code)
+        return Response(data, status=403)
