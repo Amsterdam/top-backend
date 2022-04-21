@@ -311,7 +311,7 @@ class ItinerarySettings(models.Model):
                 "schedule_day_segment": self.day_segments,
                 "schedule_week_segment": self.week_segments,
                 "postal_code_range": postal_code_range,
-                "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
+                "schedule_from_date_added": self.opening_date.strftime("%Y-%m-%d"),
                 "reason": self.reasons,
                 "project": self.project_ids,
                 "priority": self.priorities,

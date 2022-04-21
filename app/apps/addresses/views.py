@@ -103,6 +103,8 @@ class AddressViewSet(ViewSet):
         url_path="residents",
     )
     def residents_by_bag_id(self, request, bag_id):
+        # temp
+        return Response({"message": "Je hebt geen rechten voor MKS"}, status=403)
         data, status_code = fetch_residents(
             bag_id, get_keycloak_auth_header_from_request(request)
         )
