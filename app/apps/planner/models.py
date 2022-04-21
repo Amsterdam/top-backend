@@ -325,7 +325,7 @@ class DaySettings(models.Model):
         cases_query_params.update(
             {
                 "state_types": self.state_types,
-                "from_start_date": self.opening_date.strftime("%Y-%m-%d"),
+                "schedule_from_date_added": self.opening_date.strftime("%Y-%m-%d"),
                 "postal_code_range": postal_code_range,
                 "schedule_day_segment": self.day_segments,
                 "schedule_week_segment": self.week_segments,
