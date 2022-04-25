@@ -1,0 +1,40 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/app"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: drf-spectacular
+    versions:
+    - 0.13.1
+    - 0.13.2
+    - 0.14.0
+    - 0.15.0
+    - 0.15.1
+  - dependency-name: django-cors-headers
+    versions:
+    - 3.7.0
+  - dependency-name: requests
+    versions:
+    - 2.25.1
+  - dependency-name: django
+    versions:
+    - 3.1.5
+    - 3.1.6
+    - 3.1.7
+  - dependency-name: djangorestframework
+    versions:
+    - 3.12.2
+    - 3.12.3
+  - dependency-name: sentry-sdk
+    versions:
+    - 0.19.5
+    - 0.20.0
+    - 0.20.1
+    - 0.20.2
+    - 0.20.3
+  - dependency-name: joblib
+    versions:
+    - 1.0.0
