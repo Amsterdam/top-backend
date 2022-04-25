@@ -36,6 +36,6 @@ geopy==2.1.0
 PyJWT<2.1.0
 
 joblib==1.0.1
-scikit-learn==0.24.2
+scikit-learn==1.0.2
 numpy==1.21.1
 shap==0.39.0
