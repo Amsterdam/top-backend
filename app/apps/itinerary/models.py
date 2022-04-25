@@ -211,7 +211,7 @@ class ItinerarySettings(models.Model):
         to="planner.DaySettings",
         null=True,
         blank=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="itinerary_day_settings",
     )
 
