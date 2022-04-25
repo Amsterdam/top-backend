@@ -32,7 +32,6 @@ pipeline {
     BWV_SYNC_DOCKER_IMAGE = "fixxx/looplijsten-bwv-sync"
     APP = "looplijsten-api"
     DOCKER_IMAGE_URL = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten"
-    ONDERHUUR_MODEL_KEY = credentials('gitlab_token_onderhuur_model')
   }
 
   stages {
@@ -61,7 +60,6 @@ pipeline {
           def image = docker.build("${DOCKER_IMAGE_URL}:${env.COMMIT_HASH}",
             "--no-cache " +
             "--shm-size 1G " +
-            "--build-arg ONDERHUUR_MODEL_CREDS=gitlab_token_onderhuur_model:${ONDERHUUR_MODEL_KEY} " +
             " ./app")
           image.push()
           tag_image_as("latest")

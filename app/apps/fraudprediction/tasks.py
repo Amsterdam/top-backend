@@ -1,13 +1,8 @@
 import logging
-import os
 
-import requests
-from apps.fraudprediction.fraud_predict import FraudPredict, FraudPredictAPIBased
+from apps.fraudprediction.fraud_predict import FraudPredictAPIBased
 from celery import shared_task
 from django.conf import settings
-
-from .mock import fraud_prediction_results
-from .utils import fraudpredict_vakantieverhuur
 
 logger = logging.getLogger("celery")
 
@@ -24,7 +19,8 @@ def fraudpredict_vakantieverhuur_task(self):
         logger.info("Started fraudpredict vakantieverhuur task")
 
         prediction_instance = FraudPredictAPIBased(
-            settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR
+            model_name=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
+            use_zaken_backend=True,
         )
         result = prediction_instance.fraudpredict()
 
@@ -46,7 +42,8 @@ def fraudpredict_onderhuur_task(self):
         logger.info("Started fraudpredict onderhuur task")
 
         prediction_instance = FraudPredictAPIBased(
-            settings.FRAUD_PREDICTION_MODEL_ONDERHUUR
+            model_name=settings.FRAUD_PREDICTION_MODEL_ONDERHUUR,
+            use_zaken_backend=False,
         )
         result = prediction_instance.fraudpredict()
 

@@ -1,6 +1,5 @@
 from apps.addresses import router as addresses_router
 from apps.cases import router as case_router
-from apps.fraudprediction import router as fraudprediction_router
 from apps.health.views import health_bwv, health_default
 from apps.itinerary import router as itinerary_router
 from apps.permits import router as permits_router
@@ -25,7 +24,6 @@ admin.site.index_title = "Wonen looplijsten"
 
 v1_urls = (
     itinerary_router.router.urls
-    + fraudprediction_router.router.urls
     + case_router.router.urls
     + permits_router.router.urls
     + addresses_router.router.urls
