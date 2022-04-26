@@ -37,10 +37,15 @@ class Case(models.Model):
 
     def fetch_case(self, auth_header=None):
         url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/"
-
+        queryParams = {
+            "open_cases": True,
+            "state_types": [t.get("id", 0) for t in settings.AZA_CASE_STATE_TYPES],
+            "page_size": 1000,
+        }
         response = requests.get(
             url,
             timeout=5,
+            params=queryParams,
             headers=get_headers(auth_header),
         )
         if response.status_code == 404:
