@@ -21,7 +21,7 @@ django-constance[database]==2.8.0
 # Other
 requests==2.27.1
 django-filter==21.1
-tenacity==7.0.0
+tenacity==8.0.1
 django-health-check==3.16.5
 django-celery-beat==2.2.1
 django-celery-results==2.2.0
