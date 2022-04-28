@@ -73,7 +73,7 @@ class FraudPredictAPIBased:
             celery_logger.info("fraudpredict task: use mock data")
             result = self.get_mock_data()
         else:
-            case_ids = self.get_case_ids_to_score(True)
+            case_ids = self.get_case_ids_to_score()
             data = {
                 "zaken_ids": case_ids,
                 "auth_token": self.get_settings("HITKANS_AUTH_TOKEN"),
