@@ -6,6 +6,8 @@ from apps.fraudprediction.models import FraudPrediction
 from apps.users.utils import get_keycloak_auth_header_from_request
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
+from rest_framework import status
 from utils.queries import get_case
 from utils.queries_zaken_api import get_headers
 
@@ -36,10 +38,11 @@ class Case(models.Model):
         )[0]
 
     def fetch_case(self, auth_header=None):
+        from apps.itinerary.models import Itinerary
+
         url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/"
         queryParams = {
             "open_cases": True,
-            "state_types": [t.get("id", 0) for t in settings.AZA_CASE_STATE_TYPES],
             "page_size": 1000,
         }
         response = requests.get(
@@ -53,13 +56,26 @@ class Case(models.Model):
         response.raise_for_status()
 
         case_data = response.json()
-        if self.day_settings:
-            case_data["current_states"] = [
-                state
-                for state in case_data["current_states"]
-                if str(state.get("status"))
-                in [str(st) for st in self.day_settings.state_types]
-            ]
+
+        used_cases_ids = [
+            case.case_id for case in Itinerary.get_cases_for_date(timezone.now().date())
+        ]
+        current_states_ids = [
+            str(state.get("status")) for state in case_data["current_states"]
+        ]
+        state_types_ids = [str(cst.get("id")) for cst in settings.AZA_CASE_STATE_TYPES]
+        current_state_types_ids = [
+            id for id in state_types_ids if id in current_states_ids
+        ]
+
+        if str(case_data["id"]) not in used_cases_ids and not current_state_types_ids:
+            return CASE_404
+
+        case_data["current_states"] = [
+            state
+            for state in case_data["current_states"]
+            if str(state.get("status")) in state_types_ids
+        ]
         case_data.update({"deleted": False})
         return case_data
 
