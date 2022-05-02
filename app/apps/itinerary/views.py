@@ -9,7 +9,6 @@ from apps.itinerary.serializers import (
     ItineraryTeamMemberSerializer,
     NoteCrudSerializer,
 )
-from apps.itinerary.tasks import update_external_states
 from apps.users.models import User
 from apps.users.utils import get_keycloak_auth_header_from_request
 from django.db import transaction
@@ -93,8 +92,6 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
 
         itinerary.clear_team_members()
         itinerary.add_team_members(user_ids)
-        # TODO: Do we need this
-        # update_external_states(itinerary)
 
     @action(detail=True, methods=["get", "put"])
     def team(self, request, pk):

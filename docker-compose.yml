@@ -34,9 +34,6 @@ services:
       - top_and_zaak_backend_bridge
     build:
       context: ./app
-      args:
-        - "ONDERHUUR_MODEL_CREDS=${ONDERHUUR_MODEL_CREDS}"
-        - "ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN=${ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN}"
     ports:
       - "8000:8000"
     env_file:
