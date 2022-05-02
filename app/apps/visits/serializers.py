@@ -1,5 +1,3 @@
-from email.policy import default
-
 from apps.cases.models import Case
 from apps.users.serializers import UserSerializer
 from apps.users.utils import get_keycloak_auth_header_from_request
@@ -74,6 +72,7 @@ class CaseField(serializers.RelatedField):
 class VisitSerializer(serializers.ModelSerializer):
     team_members = VisitTeamMemberSerializer(many=True, read_only=True)
     case_id = CaseField()
+    completed = serializers.BooleanField(default=False)
 
     def is_valid(self, raise_exception=False):
         return super().is_valid(raise_exception)
