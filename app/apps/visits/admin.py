@@ -10,7 +10,7 @@ from django.contrib import admin
 
 @admin.register(Visit)
 class VisitAdmin(admin.ModelAdmin):
-    list_display = ("author", "start_time", "case_id")
+    list_display = ("id", "author", "start_time", "case_id")
 
 
 @admin.register(VisitMetaData)
