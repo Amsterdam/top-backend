@@ -1,15 +1,18 @@
+import datetime
 import logging
 
+import requests
+from apps.cases.mock import get_zaken_case_list
 from apps.planner.utils import (
-    filter_cases,
-    filter_cases_with_missing_coordinates,
-    filter_cases_with_postal_code,
-    filter_out_cases,
+    calculate_geo_distances,
+    get_cases_with_odd_or_even_ids,
+    is_day_of_this_year_odd,
     remove_cases_from_list,
 )
-from utils.queries_planner import get_cases_from_bwv
+from django.conf import settings
+from utils.queries_zaken_api import get_headers
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ItineraryGenerateAlgorithm:
@@ -56,56 +59,46 @@ class ItineraryGenerateAlgorithm:
         return self.stadia
 
     def __get_eligible_cases__(self):
-        """
-        Returns a list of eligible cases using the settings object
-        """
-        cases = get_cases_from_bwv(self.opening_date, self.projects, self.stadia)
-        LOGGER.info("Total list of cases: {}".format(len(cases)))
+        logger.info("v2 __get_eligible_cases__")
+        if settings.USE_ZAKEN_MOCK_DATA:
+            cases = get_zaken_case_list()
+        else:
+            logger.info("Get from AZA: cases")
 
-        filter_stadia = self.__get_filter_stadia__()
+            url = f"{settings.ZAKEN_API_URL}/cases/"
 
-        LOGGER.info("Filter stadia: {}".format(str(filter_stadia)))
-        LOGGER.info("Exclude stadia: {}".format(str(self.exclude_stadia)))
-        LOGGER.info("Projects: {}".format(str(self.projects)))
-        LOGGER.info("Opening date: {}".format(str(self.opening_date)))
-
-        filtered_cases = filter_cases(cases, filter_stadia)
-        LOGGER.info(
-            "Total cases after filtering stadia: {}".format(len(filtered_cases))
-        )
-
-        filtered_cases = filter_out_cases(filtered_cases, self.exclude_stadia)
-        LOGGER.info(
-            "Total cases after excluding stadia: {}".format(len(filtered_cases))
-        )
-
-        filtered_cases = filter_cases_with_missing_coordinates(filtered_cases)
-        LOGGER.info(
-            "Total cases after filtering on missing coordinates: {}".format(
-                len(filtered_cases)
+            queryParams = self.settings.get_cases_query_params()
+            logger.info("With queryParams")
+            logger.info(queryParams)
+            now = datetime.datetime.now()
+            response = requests.get(
+                url,
+                params=queryParams,
+                timeout=60,
+                headers=get_headers(self.auth_header),
             )
-        )
+            response.raise_for_status()
+            logger.info("Request duration")
+            logger.info(datetime.datetime.now() - now)
 
-        filtered_cases = filter_cases_with_postal_code(
-            filtered_cases, self.postal_code_ranges
-        )
-        LOGGER.info(
-            "Total cases after filtering on postal codes: {}".format(
-                len(filtered_cases)
-            )
-        )
+            cases = response.json().get("results")
 
-        exclude_cases = [{"id": case.case_id} for case in self.exclude_cases]
-        filtered_cases = remove_cases_from_list(filtered_cases, exclude_cases)
-        LOGGER.info(
-            "Total cases after removing exclude cases: {}".format(len(filtered_cases))
-        )
+        logger.info("initial case count")
+        logger.info(len(cases))
+        cases = [
+            c
+            for c in cases
+            if str(c.get("id"))
+            not in [str(case.get("id")) for case in self.exclude_cases]
+        ]
+        logger.info("after remove_cases_from_list")
+        logger.info(len(cases))
 
-        if not filtered_cases:
-            LOGGER.warning("No eligible cases found")
-            return []
+        if self.settings.day_settings.team_settings.fraudprediction_pilot_enabled:
+            cases = get_cases_with_odd_or_even_ids(cases, odd=is_day_of_this_year_odd())
+            logger.info("after get_cases_with_odd_or_even_ids")
 
-        return filtered_cases
+        return cases
 
     def exclude(self, cases):
         """

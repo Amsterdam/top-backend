@@ -8,35 +8,7 @@ from geopy.distance import distance
 logger = logging.getLogger(__name__)
 
 
-# BWV
-def filter_out_cases(cases, stadia=[]):
-    """
-    Returns a list of cases without the given stadia
-    """
-    if len(stadia) == 0:
-        return cases
-
-    def has_stadium(case):
-        return case["stadium"] not in stadia
-
-    return list(filter(lambda case: has_stadium(case), cases))
-
-
-# BWV
-def filter_cases(cases, stadia):
-    """
-    Returns a list of cases with the given stadia
-    """
-    if len(stadia) == 0:
-        return cases
-
-    def has_stadium(case):
-        return case["stadium"] in stadia
-
-    return list(filter(lambda case: has_stadium(case), cases))
-
-
-# AZA and BWV
+# AZA
 def remove_cases_from_list(cases, cases_to_remove):
     """
     Returns a new list without the 'cases_to_remove' items
@@ -51,7 +23,7 @@ def remove_cases_from_list(cases, cases_to_remove):
     return new_list
 
 
-# AZA and BWV
+# AZA
 def get_case_coordinates(cases):
     """
     Maps the cases to an array of coordinates
@@ -69,7 +41,7 @@ def get_case_coordinates(cases):
     return coordinates
 
 
-# AZA and BWV
+# AZA
 def calculate_geo_distances(center, cases):
     """
     Returns a set of distances in KM from the given center
@@ -82,20 +54,7 @@ def calculate_geo_distances(center, cases):
     return distances
 
 
-# BWV
-def filter_cases_with_missing_coordinates(cases):
-    """
-    Cases with polluted data (missing coordinates) are removed
-    """
-
-    def has_coordinates(case):
-        address = case.get("address", {})
-        return address.get("lat", None) and address.get("lng", None)
-
-    return list(filter(lambda case: has_coordinates(case), cases))
-
-
-# AZA and BWV
+# AZA
 def filter_cases_with_postal_code(cases, ranges=[]):
     """
     Returns a list of cases for which the postal code falls within the given start and end range

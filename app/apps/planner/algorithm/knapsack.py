@@ -1,77 +1,20 @@
-import datetime
 import logging
 import multiprocessing
 
-import requests
-from apps.cases.mock import get_zaken_case_list
 from apps.cases.models import Case
 from apps.fraudprediction.utils import get_fraud_predictions
-from apps.planner.algorithm.base import (
-    ItineraryGenerateAlgorithm,
-    filter_cases_with_postal_code,
-)
-from apps.planner.const import MAX_SUGGESTIONS_COUNT, SCORING_WEIGHTS
-from apps.planner.mock import get_team_reasons, get_team_schedules, get_team_state_types
+from apps.planner.algorithm.base import ItineraryGenerateAlgorithm
+from apps.planner.const import MAX_SUGGESTIONS_COUNT
 from apps.planner.models import Weights
 from apps.planner.utils import (
     calculate_geo_distances,
-    filter_out_incompatible_cases,
-    filter_reasons,
-    filter_schedules,
-    get_cases_with_odd_or_even_ids,
     is_day_of_this_year_odd,
     remove_cases_from_list,
 )
-from django.conf import settings
 from joblib import Parallel, delayed
 from settings.const import ISSUEMELDING
-from utils.queries import get_case
-from utils.queries_zaken_api import get_headers
 
 logger = logging.getLogger(__name__)
-
-
-def get_eligible_cases_v2(generator):
-    logger.info("v2 __get_eligible_cases__")
-    if settings.USE_ZAKEN_MOCK_DATA:
-        cases = get_zaken_case_list()
-    else:
-        logger.info("Get from AZA: cases")
-
-        url = f"{settings.ZAKEN_API_URL}/cases/"
-
-        queryParams = generator.settings.get_cases_query_params()
-        logger.info("With queryParams")
-        logger.info(queryParams)
-        now = datetime.datetime.now()
-        response = requests.get(
-            url,
-            params=queryParams,
-            timeout=60,
-            headers=get_headers(generator.auth_header),
-        )
-        response.raise_for_status()
-        logger.info("Request duration")
-        logger.info(datetime.datetime.now() - now)
-
-        cases = response.json().get("results")
-
-    logger.info("initial case count")
-    logger.info(len(cases))
-    cases = [
-        c
-        for c in cases
-        if str(c.get("id"))
-        not in [str(case.get("id")) for case in generator.exclude_cases]
-    ]
-    logger.info("after remove_cases_from_list")
-    logger.info(len(cases))
-
-    if generator.settings.day_settings.team_settings.fraudprediction_pilot_enabled:
-        cases = get_cases_with_odd_or_even_ids(cases, odd=is_day_of_this_year_odd())
-        logger.info("after get_cases_with_odd_or_even_ids")
-
-    return cases
 
 
 class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
@@ -165,15 +108,6 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         sorted_cases = sorted(cases, key=lambda case: case["score"], reverse=True)
 
         return sorted_cases[:MAX_SUGGESTIONS_COUNT]
-
-
-class ItineraryKnapsackSuggestionsV1(ItineraryKnapsackSuggestions):
-    pass
-
-
-class ItineraryKnapsackSuggestionsV2(ItineraryKnapsackSuggestions):
-    def __get_eligible_cases__(self):
-        return get_eligible_cases_v2(self)
 
 
 class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
@@ -270,12 +204,3 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         best_list = sorted(best_list, key=lambda case: case["distance"])
 
         return best_list
-
-
-class ItineraryKnapsackListV1(ItineraryKnapsackList):
-    pass
-
-
-class ItineraryKnapsackListV2(ItineraryKnapsackList):
-    def __get_eligible_cases__(self):
-        return get_eligible_cases_v2(self)
