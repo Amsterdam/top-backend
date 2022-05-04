@@ -2,10 +2,7 @@
 Tests for the health views
 """
 from apps.planner.utils import (
-    filter_cases,
-    filter_cases_with_missing_coordinates,
     filter_cases_with_postal_code,
-    filter_out_cases,
     get_case_coordinates,
     remove_cases_from_list,
 )
@@ -17,42 +14,6 @@ TWEEDE_CONTROLE = "2de Controle"
 
 
 class UtilsTests(TestCase):
-    def test_filter_cases(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST}
-        case_b = {"stadium": ISSUEMELDING}
-        case_c = {"stadium": TWEEDE_CONTROLE}
-
-        cases = [case_a, case_b, case_c]
-        result = filter_cases(cases, [ONDERZOEK_BUITENDIENST, ISSUEMELDING])
-        expected = [case_a, case_b]
-
-        self.assertEquals(result, expected)
-
-    def test_filter_cases_empty(self):
-        result = filter_cases([], [ONDERZOEK_BUITENDIENST, ISSUEMELDING])
-        self.assertEquals(result, [])
-
-    def test_filter_cases_no_stadia(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST}
-        case_b = {"stadium": ISSUEMELDING}
-        case_c = {"stadium": TWEEDE_CONTROLE}
-
-        cases = [case_a, case_b, case_c]
-        result = filter_cases(cases, [])
-
-        self.assertEquals(result, cases)
-
-    def test_filter_cases_one_stadium(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST}
-        case_b = {"stadium": ISSUEMELDING}
-        case_c = {"stadium": TWEEDE_CONTROLE}
-
-        cases = [case_a, case_b, case_c]
-        result = filter_cases(cases, [TWEEDE_CONTROLE])
-        expected = [case_c]
-
-        self.assertEquals(result, expected)
-
     def test_remove_cases_from_list(self):
         case_a = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-a"}
         case_b = {"stadium": ISSUEMELDING, "id": "foo-b"}
@@ -111,61 +72,6 @@ class UtilsTests(TestCase):
         expected = [[0, 1], [2, 3], [4, 5]]
 
         self.assertEquals(case_coordinates, expected)
-
-    def test_filter_cases_with_missing_coordinates(self):
-        """
-        Should filter out cases with missing coordinates
-        """
-        valid_case = {"stadium": ISSUEMELDING, "address": {"lat": 12, "lng": -69}}
-        cases = [
-            {"stadium": ONDERZOEK_BUITENDIENST},
-            {"stadium": ISSUEMELDING, "address": {"lat": 12}},
-            {"stadium": ONDERZOEK_BUITENDIENST, "address": {"lng": -69}},
-            {"stadium": ISSUEMELDING, "address": {"lat": 12}},
-            {"stadium": ISSUEMELDING, "address": {"lat": None, "lng": -69}},
-            {"stadium": ONDERZOEK_BUITENDIENST, "address": {"lat": 12, "lng": None}},
-            {"stadium": ONDERZOEK_BUITENDIENST, "address": {"lat": None, "lng": None}},
-            valid_case,
-        ]
-
-        filtered_cases = filter_cases_with_missing_coordinates(cases)
-        self.assertEquals(filtered_cases, [valid_case])
-
-    def test_filter_out_cases(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST}
-        case_b = {"stadium": ISSUEMELDING}
-        case_c = {"stadium": TWEEDE_CONTROLE}
-
-        cases = [case_a, case_b, case_c]
-        result = filter_out_cases(cases, [ONDERZOEK_BUITENDIENST, ISSUEMELDING])
-        expected = [case_c]
-
-        self.assertEquals(result, expected)
-
-    def test_filter_out_cases_empty(self):
-        result = filter_out_cases([], [ONDERZOEK_BUITENDIENST, ISSUEMELDING])
-        self.assertEquals(result, [])
-
-    def test_filter_out_cases_no_stadia(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST}
-        case_b = {"stadium": ISSUEMELDING}
-        case_c = {"stadium": TWEEDE_CONTROLE}
-
-        cases = [case_a, case_b, case_c]
-        result = filter_out_cases(cases, [])
-
-        self.assertEquals(result, cases)
-
-    def test_filter_out_cases_one_stadium(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST}
-        case_b = {"stadium": ISSUEMELDING}
-        case_c = {"stadium": TWEEDE_CONTROLE}
-
-        cases = [case_a, case_b, case_c]
-        result = filter_out_cases(cases, [TWEEDE_CONTROLE])
-        expected = [case_a, case_b]
-
-        self.assertEquals(result, expected)
 
     def test_filter_cases_with_postal_code_empty_list(self):
         """

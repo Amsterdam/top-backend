@@ -1,12 +1,9 @@
 import logging
 
 from apps.cases.models import Case, Project, Stadium
-from apps.planner.algorithm.clustering import ItineraryGenerateCluster
 from apps.planner.algorithm.knapsack import (
-    ItineraryKnapsackListV1,
-    ItineraryKnapsackListV2,
-    ItineraryKnapsackSuggestionsV1,
-    ItineraryKnapsackSuggestionsV2,
+    ItineraryKnapsackList,
+    ItineraryKnapsackSuggestions,
 )
 from apps.planner.models import Weights
 from apps.planner.utils import remove_cases_from_list
@@ -28,15 +25,11 @@ class Itinerary(models.Model):
 
     @property
     def get_itinerary_algorithm(self):
-        if not self.settings.day_settings.team_settings.use_zaken_backend:
-            return ItineraryKnapsackListV1
-        return ItineraryKnapsackListV2
+        return ItineraryKnapsackList
 
     @property
     def get_suggestion_algorithm(self):
-        if not self.settings.day_settings.team_settings.use_zaken_backend:
-            return ItineraryKnapsackSuggestionsV1
-        return ItineraryKnapsackSuggestionsV2
+        return ItineraryKnapsackSuggestions
 
     def add_case(self, case_id, position=None):
         """
