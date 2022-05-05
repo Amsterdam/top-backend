@@ -156,7 +156,6 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         if self.start_case_id:
             case = Case.get(
                 case_id=self.start_case_id,
-                is_top_bwv_case=not self.settings.day_settings.team_settings.use_zaken_backend,
             ).__get_case__(self.start_case_id)
             case["fraud_prediction"] = fraud_predictions.get(
                 str(self.start_case_id), None

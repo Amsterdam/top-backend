@@ -25,10 +25,3 @@ def do_query(query, args=None):
     except Exception as e:
         logger.error("BWV Database Query failed: {} {}".format(str(e), query))
         return []
-
-
-def return_first_or_empty(executed_query):
-    if len(executed_query) > 0:
-        return executed_query[0]
-    else:
-        return {}

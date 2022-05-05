@@ -145,67 +145,6 @@ class ItineraryModelTest(TestCase):
         with self.assertRaises(ValidationError):
             Itinerary.get_cases_for_date("fooo")
 
-    @freeze_time("2019-12-25")
-    @patch("apps.itinerary.models.get_cases_from_bwv")
-    def test_get_unplanned_cases(self, mock_get_cases_from_bwv, mock):
-        """
-        Should return cases which are in itineraries for the given date
-        """
-        FOO_CASE_ID_A = "FOO_CASE_ID_A"
-        FOO_CASE_ID_B = "FOO_CASE_ID_B"
-        FOO_CASE_ID_C = "FOO_CASE_ID_C"
-        FOO_CASE_ID_D = "FOO_CASE_ID_D"
-
-        itinerary = Itinerary.objects.create()
-        itinerary.add_case(FOO_CASE_ID_A)
-        itinerary.add_case(FOO_CASE_ID_B)
-
-        itinerary = Itinerary.objects.create()
-        itinerary.add_case(FOO_CASE_ID_C)
-
-        all_cases = [
-            {"id": FOO_CASE_ID_A},
-            {"id": FOO_CASE_ID_B},
-            {"id": FOO_CASE_ID_C},
-            {"id": FOO_CASE_ID_D},
-        ]
-        # Mock the results from the BWV query
-        mock_get_cases_from_bwv.return_value = all_cases
-
-        cases = Itinerary.get_unplanned_cases("2019-12-25", "FOO_STADIUM", [])
-        # Should only return the unplanned FOO_CASE_ID_D
-        self.assertEquals(cases, [{"id": FOO_CASE_ID_D}])
-
-    @freeze_time("2019-12-25")
-    @patch("apps.itinerary.models.get_cases_from_bwv")
-    def test_get_unplanned_cases_empty(self, mock_get_cases_from_bwv, mock):
-        """
-        Should return all cases for another date
-        """
-        FOO_CASE_ID_A = "FOO_CASE_ID_A"
-        FOO_CASE_ID_B = "FOO_CASE_ID_B"
-        FOO_CASE_ID_C = "FOO_CASE_ID_C"
-        FOO_CASE_ID_D = "FOO_CASE_ID_D"
-
-        itinerary = Itinerary.objects.create()
-        itinerary.add_case(FOO_CASE_ID_A)
-        itinerary.add_case(FOO_CASE_ID_B)
-
-        itinerary = Itinerary.objects.create()
-        itinerary.add_case(FOO_CASE_ID_C)
-
-        all_cases = [
-            {"id": FOO_CASE_ID_A},
-            {"id": FOO_CASE_ID_B},
-            {"id": FOO_CASE_ID_C},
-            {"id": FOO_CASE_ID_D},
-        ]
-        # Mock the results from the BWV query
-        mock_get_cases_from_bwv.return_value = all_cases
-
-        cases = Itinerary.get_unplanned_cases("2018-01-01", "FOO_STADIUM", [])
-        self.assertEquals(cases, all_cases)
-
     def test_add_team_members(self, mock):
         """
         Adds team members to the given itinerary

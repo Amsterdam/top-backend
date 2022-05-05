@@ -9,7 +9,6 @@ from utils.queries_bag_api import (
     do_bag_search,
     do_bag_search_address,
     do_bag_search_id,
-    get_bag_data,
     get_bag_search_query,
 )
 
@@ -139,28 +138,6 @@ class DoBagSearchIdTest(TestCase):
         mock_requests_get.assert_called_with(
             settings.BAG_API_SEARCH_URL, params={"q": "Foo ID"}, timeout=0.5
         )
-
-
-class GetBagDataTest(TestCase):
-    @patch("utils.queries_bag_api.do_bag_search")
-    @patch("utils.queries_bag_api.get_import_adres")
-    @patch("requests.get")
-    def test_get_bag_data(
-        self, mock_requests_get, mock_get_import_adres, mock_do_bag_search
-    ):
-        """
-        Does a GET requests using the URI retrieved from a BAG search
-        """
-
-        FOO_BAG_URI = "http://FOO_BAG_URI.com/"
-
-        mock_do_bag_search.return_value = {
-            "results": [{"_links": {"self": {"href": FOO_BAG_URI}}}]
-        }
-
-        get_bag_data("FOO ID")
-
-        mock_requests_get.assert_called_with(FOO_BAG_URI, timeout=0.5)
 
 
 class DoBagSearchTest(TestCase):

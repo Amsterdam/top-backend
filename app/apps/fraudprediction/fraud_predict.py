@@ -6,8 +6,6 @@ import requests
 from apps.cases.models import Project, Stadium
 from apps.fraudprediction.models import FraudPrediction
 from django.conf import settings
-from settings.const import STARTING_FROM_DATE
-from utils.queries_planner import get_cases_from_bwv
 from utils.queries_zaken_api import get_fraudprediction_cases_from_AZA_by_model_name
 
 from .mock import fraud_prediction_onderhuur_results, fraud_prediction_results
@@ -142,16 +140,8 @@ class FraudPredictAPIBased:
         Returns a list of case ids which are eligible for scoring
         """
         case_ids = []
-        if self.use_zaken_backend:
-            cases = get_fraudprediction_cases_from_AZA_by_model_name(self.model_name)
-            case_ids = [case.get("id") for case in cases if case.get("id")]
-        else:
-            cases = get_cases_from_bwv(
-                STARTING_FROM_DATE,
-                self.get_projects_to_score(),
-                self.get_stadia_to_score(),
-            )
-            case_ids = list(set([case.get("id") for case in cases]))
+        cases = get_fraudprediction_cases_from_AZA_by_model_name(self.model_name)
+        case_ids = [case.get("id") for case in cases if case.get("id")]
         return case_ids
 
     def get_model_keys(self):

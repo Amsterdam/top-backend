@@ -85,12 +85,9 @@ class ItineraryGenerateAlgorithm:
 
         logger.info("initial case count")
         logger.info(len(cases))
-        cases = [
-            c
-            for c in cases
-            if str(c.get("id"))
-            not in [str(case.get("id")) for case in self.exclude_cases]
-        ]
+
+        exclude_cases = [{"id": case.case_id} for case in self.exclude_cases]
+        cases = remove_cases_from_list(cases, exclude_cases)
         logger.info("after remove_cases_from_list")
         logger.info(len(cases))
 

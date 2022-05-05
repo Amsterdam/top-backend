@@ -6,7 +6,6 @@ from apps.permits import router as permits_router
 from apps.permits.views import DecosAPISearch
 from apps.planner import router as planner_router
 from apps.planner.views import dumpdata as planner_dumpdata
-from apps.planner.views_sandbox import AlgorithmListView, AlgorithmView, BWVTablesView
 from apps.users import router as users_router
 from apps.users.views import IsAuthorizedView, ObtainAuthTokenOIDC
 from apps.visits import router as visits_router
@@ -44,11 +43,7 @@ urlpatterns = [
     # Admin environment
     path("admin/planner/dumpdata", planner_dumpdata, name="planner-dumpdata"),
     path("admin/decos-api-search/", DecosAPISearch.as_view(), name="decos_api_search"),
-    path("admin/bwv-structure", BWVTablesView.as_view(), name="bwv-structure"),
     path("admin/", admin.site.urls),
-    # Algorithm sandbox environment
-    path("algorithm/", AlgorithmListView.as_view(), name="algorithm-list"),
-    path("algorithm/<int:pk>", AlgorithmView.as_view(), name="algorithm-detail"),
     # Health check urls
     path("looplijsten/health", health_default, name="health-default"),
     path("looplijsten/health_bwv", health_bwv, name="health-bwv"),
