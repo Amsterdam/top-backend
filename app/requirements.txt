@@ -37,5 +37,5 @@ PyJWT<2.4.0
 
 joblib==1.0.1
 scikit-learn==1.0.2
-numpy==1.21.1
+numpy==1.22.4
 shap==0.39.0
