@@ -63,15 +63,6 @@ class StadiumLabelSerializer(serializers.ModelSerializer):
         )
 
 
-class UnplannedCasesSerializer(serializers.Serializer):
-    """
-    Serializer used to validate coming in from the unplanned-cases view
-    """
-
-    date = serializers.DateField(required=True)
-    stadium = serializers.CharField(required=True)
-
-
 class PermitCheckmarkSerializer(serializers.Serializer):
     has_b_and_b_permit = serializers.ChoiceField(choices=("True", "False", "UNKNOWN"))
     has_vacation_rental_permit = serializers.ChoiceField(

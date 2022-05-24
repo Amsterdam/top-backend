@@ -79,7 +79,6 @@ class CaseViewSetTest(APITestCase):
         self.assertEqual(response.json()[1]["id"], visit_1.id)
 
 
-# TODO: tests for search with streetName
 class CaseSearchViewSetTest(APITestCase):
     """
     Tests for the API endpoint for searching cases
@@ -100,69 +99,3 @@ class CaseSearchViewSetTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class UnplannedCasesTest(APITestCase):
-    """
-    Tests for the API endpoint for retrieving unplanned cases
-    """
-
-    def test_unauthenticated_request(self):
-        """
-        An unauthenticated request should not be possible
-        """
-
-        url = reverse("v1:case-unplanned")
-        client = get_unauthenticated_client()
-        response = client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_without_date(self):
-        """
-        An authenticated request should fail if no date is given
-        """
-        url = reverse("v1:case-unplanned")
-        client = get_authenticated_client()
-
-        response = client.get(url, {})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_without_stadium(self):
-        """
-        An authenticated request should fail if no stadium is given
-        """
-        url = reverse("v1:case-unplanned")
-        client = get_authenticated_client()
-
-        response = client.get(url, {"date": "2020-04-05"})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_with_wrong_date_format(self):
-        """
-        An authenticated request should fail if unknown stadium is given
-        """
-        url = reverse("v1:case-unplanned")
-        client = get_authenticated_client()
-
-        response = client.get(url, {"date": "FOO", "stadium": ISSUEMELDING})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_with_correct_parameters(self):
-        """
-        An authenticated request should succeed with the right parameters
-        """
-        url = reverse("v1:case-unplanned")
-        client = get_authenticated_client()
-
-        response = client.get(url, {"date": "2020-04-05", "stadium": ISSUEMELDING})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_with_empty_list(self):
-        """
-        Should return an empty list if no cases are found
-        """
-        url = reverse("v1:case-unplanned")
-        client = get_authenticated_client()
-
-        response = client.get(url, {"date": "2020-04-05", "stadium": ISSUEMELDING})
-        self.assertEqual(response.json(), {"cases": []})

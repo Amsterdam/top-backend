@@ -1,30 +1,19 @@
 import logging
 from datetime import datetime
-from itertools import chain
 
 import requests
-from apps.cases.models import Project
-from apps.cases.serializers import (
-    CaseSearchSerializer,
-    DecosJoinFolderFieldsResponseSerializer,
-    DecosJoinObjectFieldsResponseSerializer,
-    DecosPermitSerializer,
-    PermitCheckmarkSerializer,
-    UnplannedCasesSerializer,
-    get_decos_join_mock_folder_fields,
-    get_decos_join_mock_object_fields,
-)
-from apps.cases.swagger_parameters import case_search_parameters, unplanned_parameters
-from apps.fraudprediction.utils import add_fraud_predictions, get_fraud_prediction
+from apps.cases.serializers import DecosPermitSerializer, PermitCheckmarkSerializer
+from apps.cases.swagger_parameters import case_search_parameters
+from apps.fraudprediction.utils import get_fraud_prediction
 from apps.itinerary.models import Itinerary
-from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
+from apps.itinerary.serializers import ItineraryTeamMemberSerializer
 from apps.users.auth_apps import AZAKeyAuth
 from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from django.conf import settings
 from django.forms.models import model_to_dict
-from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -32,13 +21,13 @@ from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ModelViewSet, ViewSet
+from rest_framework.viewsets import ViewSet
 from utils import queries_bag_api as bag_api
 from utils import queries_brk_api as brk_api
 from utils.queries_decos_api import DecosJoinRequest
 from utils.queries_zaken_api import get_headers
 
-from .mock import get_zaken_case_list, get_zaken_case_search_result_list
+from .mock import get_zaken_case_list
 from .models import Case
 
 logger = logging.getLogger(__name__)
