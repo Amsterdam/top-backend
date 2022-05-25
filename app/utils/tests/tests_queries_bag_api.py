@@ -130,7 +130,7 @@ class DoBagSearchIdTest(TestCase):
         Does a get request to the BAG API using a BAG ID
         """
 
-        address = {"landelijk_bag": "Foo ID"}
+        address = {"bag_id": "Foo ID"}
 
         do_bag_search_id(address)
 
