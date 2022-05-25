@@ -134,10 +134,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
     def __get_start_case__(self, case_id, team_settings):
         """Returns a Case object"""
         if case_id:
-            return Case.get(
-                case_id,
-                team_settings.use_zaken_backend,
-            )
+            return Case.get(case_id)
         return None
 
     def create(self, validated_data):

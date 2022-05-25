@@ -6,7 +6,6 @@ from apps.planner.algorithm.knapsack import (
     ItineraryKnapsackSuggestions,
 )
 from apps.planner.models import Weights
-from apps.planner.utils import remove_cases_from_list
 from apps.users.models import User
 from django.conf import settings
 from django.contrib.admin.utils import flatten
@@ -15,7 +14,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from settings.const import STARTING_FROM_DATE
-from utils.queries_planner import get_cases_from_bwv
 
 
 class Itinerary(models.Model):
@@ -36,18 +34,7 @@ class Itinerary(models.Model):
         Adds a case to the itinerary
         """
 
-        is_top_bwv_case = True
-        try:
-            is_top_bwv_case = bool(
-                not self.settings.day_settings.team_settings.use_zaken_backend
-            )
-        except Exception:
-            pass
-
-        if is_top_bwv_case is not (str(case_id).find("_") >= 0):
-            raise ValueError("This case can not be used for this itinerary")
-
-        case = Case.get(case_id=case_id, is_top_bwv_case=is_top_bwv_case)
+        case = Case.get(case_id=case_id)
         used_cases = Itinerary.get_cases_for_date(self.created_at)
 
         if case in used_cases:
@@ -73,17 +60,6 @@ class Itinerary(models.Model):
         itineraries = Itinerary.objects.filter(created_at=date)
         itineraries = [itinerary.get_cases() for itinerary in itineraries]
         cases = flatten(itineraries)
-
-        return cases
-
-    def get_unplanned_cases(date, stadium, projects):
-        """
-        Returns a list of unplanned cases which
-        """
-        planned_cases = Itinerary.get_cases_for_date(date)
-        exclude_cases = [{"id": case.case_id} for case in planned_cases]
-        all_cases = get_cases_from_bwv(STARTING_FROM_DATE, projects, [stadium])
-        cases = remove_cases_from_list(all_cases, exclude_cases)
 
         return cases
 

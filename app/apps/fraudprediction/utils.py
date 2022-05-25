@@ -1,18 +1,9 @@
 import logging
-import math
-import os
 
-import requests
-from apps.cases.models import Project, Stadium
 from apps.fraudprediction.models import FraudPrediction
 from apps.fraudprediction.serializers import FraudPredictionSerializer
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from settings.const import STARTING_FROM_DATE
-from utils.queries_planner import get_cases_from_bwv
-from utils.queries_zaken_api import get_fraudprediction_cases_from_AZA_by_model_name
-
-from .mock import fraud_prediction_results
 
 LOGGER = logging.getLogger("celery")
 

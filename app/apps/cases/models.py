@@ -7,8 +7,6 @@ from apps.users.utils import get_keycloak_auth_header_from_request
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from rest_framework import status
-from utils.queries import get_case
 from utils.queries_zaken_api import get_headers
 
 from .mock import get_zaken_case_list
@@ -32,9 +30,9 @@ class Case(models.Model):
     case_id = models.CharField(max_length=255, null=True, blank=False)
     is_top_bwv_case = models.BooleanField(default=True)
 
-    def get(case_id, is_top_bwv_case=True):
+    def get(case_id):
         return Case.objects.get_or_create(
-            case_id=case_id, defaults={"is_top_bwv_case": is_top_bwv_case}
+            case_id=case_id,
         )[0]
 
     def fetch_case(self, auth_header=None):
@@ -92,8 +90,6 @@ class Case(models.Model):
         return response.json()
 
     def __get_case__(self, case_id, auth_header=None):
-        if self.is_top_bwv_case:
-            return get_case(case_id)
         if settings.USE_ZAKEN_MOCK_DATA:
             return dict((str(c.get("id")), c) for c in get_zaken_case_list()).get(
                 case_id, {}

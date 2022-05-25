@@ -1,12 +1,8 @@
 # TODO: Tests for this
 import logging
-from datetime import datetime
 
 import requests
 from django.conf import settings
-from tenacity import after_log, retry, stop_after_attempt, wait_random
-from utils.queries import get_case, get_import_stadia
-from utils.queries_bag_api import get_bag_id
 
 logger = logging.getLogger(__name__)
 

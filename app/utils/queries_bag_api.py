@@ -3,7 +3,6 @@ import logging
 import requests
 from django.conf import settings
 from tenacity import after_log, retry, stop_after_attempt
-from utils.queries import get_import_adres
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +43,7 @@ def get_bag_search_query(address):
 @retry(stop=stop_after_attempt(3), after=after_log(logger, logging.ERROR))
 def do_bag_search_address(address):
     """
-    Search BAG using a BWV address
+    Search BAG using a address
     """
     query = get_bag_search_query(address)
     address_search = requests.get(
@@ -56,10 +55,10 @@ def do_bag_search_address(address):
 @retry(stop=stop_after_attempt(3), after=after_log(logger, logging.ERROR))
 def do_bag_search_id(address):
     """
-    Search BAG using a BWV 'landelijk BAG ID'
+    Search BAG using a AZA 'bag_id'
     """
 
-    id = address.get("bag_id", address.get("landelijk_bag"))
+    id = address.get("bag_id")
     address_search = requests.get(
         settings.BAG_API_SEARCH_URL, params={"q": id}, timeout=0.5
     )
@@ -74,8 +73,7 @@ def get_address_bag_data(address_uri):
 
 def do_bag_search(address):
     """
-    Search BAG. Uses a BAG id, or an address from BWV. Both contain inconsistencies in BWV.
-    Here they are used together to get the best results.
+    Search BAG. Uses a BAG id, or an address from AZA.
     """
 
     # First search using an addresss
@@ -86,26 +84,6 @@ def do_bag_search(address):
         address_search = do_bag_search_id(address)
 
     return address_search
-
-
-def get_bag_data(wng_id):
-    address = get_import_adres(wng_id)
-    try:
-        address_search = do_bag_search(address)
-        # Do a request using the the objects href
-        address_uri = address_search["results"][0]["_links"]["self"]["href"]
-        return get_address_bag_data(address_uri)
-
-    except Exception as e:
-        logger.error("Requesting BAG data failed: {}".format(str(e)))
-
-        error_objects = {
-            "error": str(e),
-            "wng_id": wng_id,
-            "api_url": settings.BAG_API_SEARCH_URL,
-            "address": address,
-        }
-        return error_objects
 
 
 def get_bag_data_by_bag_id(address):

@@ -1,5 +1,9 @@
+import requests_mock
+from apps.cases.mock import get_zaken_case_list
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItineraryItem
+from django.conf import settings
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -15,6 +19,10 @@ class ItineraryItemViewsCreateTest(APITestCase):
     Tests for the API endpoint for creating Itinerary Items
     """
 
+    CASE_ID = "3309"
+    zaak = get_zaken_case_list()[0]
+    ZAKEN_API_URL = "https://aza.nl"
+
     def test_unauthenticated_post(self):
         """
         An unauthenticated request should not be possible
@@ -25,16 +33,21 @@ class ItineraryItemViewsCreateTest(APITestCase):
         response = client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_authenticated_create(self):
+    @override_settings(ZAKEN_API_URL=ZAKEN_API_URL)
+    @requests_mock.Mocker()
+    def test_authenticated_create(self, m):
         """
         An authenticated post should create an Itinerary Item
         """
+        m.get(
+            f"{settings.ZAKEN_API_URL}/cases/{self.CASE_ID}/?open_cases=True&page_size=1000",
+            json=self.zaak,
+            status_code=200,
+        )
         itinerary = Itinerary.objects.create()
         self.assertEquals([], list(itinerary.items.all()))
 
-        CASE_ID = "FOO_CASE_ID"
-
-        data = {"itinerary": itinerary.id, "id": CASE_ID}
+        data = {"itinerary": itinerary.id, "id": self.CASE_ID}
 
         url = reverse("v1:itinerary-item-list")
         client = get_authenticated_client()
@@ -43,21 +56,28 @@ class ItineraryItemViewsCreateTest(APITestCase):
 
         itinerary_items = list(itinerary.items.all())
         self.assertEqual(1, len(itinerary_items))
-        self.assertEqual(CASE_ID, itinerary_items[0].case.case_id)
+        self.assertEqual(self.CASE_ID, itinerary_items[0].case.case_id)
 
-    def test_authenticated_create_with_position(self):
+    @override_settings(ZAKEN_API_URL=ZAKEN_API_URL)
+    @requests_mock.Mocker()
+    def test_authenticated_create_with_position(self, m):
         """
         An authenticated post should create an Itinerary Item
         """
+        m.get(
+            f"{settings.ZAKEN_API_URL}/cases/{self.CASE_ID}/?open_cases=True&page_size=1000",
+            json=self.zaak,
+            status_code=200,
+        )
         itinerary = Itinerary.objects.create()
         self.assertEquals([], list(itinerary.items.all()))
 
-        CASE_ID = "FOO_CASE_ID"
         POSITION = 1.234567
 
-        data = {"itinerary": itinerary.id, "id": CASE_ID, "position": POSITION}
+        data = {"itinerary": itinerary.id, "id": self.CASE_ID, "position": POSITION}
 
         url = reverse("v1:itinerary-item-list")
+
         client = get_authenticated_client()
         response = client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

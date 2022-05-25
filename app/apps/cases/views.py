@@ -1,30 +1,19 @@
 import logging
 from datetime import datetime
-from itertools import chain
 
 import requests
-from apps.cases.models import Project
-from apps.cases.serializers import (
-    CaseSearchSerializer,
-    DecosJoinFolderFieldsResponseSerializer,
-    DecosJoinObjectFieldsResponseSerializer,
-    DecosPermitSerializer,
-    PermitCheckmarkSerializer,
-    UnplannedCasesSerializer,
-    get_decos_join_mock_folder_fields,
-    get_decos_join_mock_object_fields,
-)
-from apps.cases.swagger_parameters import case_search_parameters, unplanned_parameters
-from apps.fraudprediction.utils import add_fraud_predictions, get_fraud_prediction
+from apps.cases.serializers import DecosPermitSerializer, PermitCheckmarkSerializer
+from apps.cases.swagger_parameters import case_search_parameters
+from apps.fraudprediction.utils import get_fraud_prediction
 from apps.itinerary.models import Itinerary
-from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerializer
+from apps.itinerary.serializers import ItineraryTeamMemberSerializer
 from apps.users.auth_apps import AZAKeyAuth
 from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from django.conf import settings
 from django.forms.models import model_to_dict
-from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -32,14 +21,13 @@ from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ModelViewSet, ViewSet
-from utils import queries as q
+from rest_framework.viewsets import ViewSet
 from utils import queries_bag_api as bag_api
 from utils import queries_brk_api as brk_api
 from utils.queries_decos_api import DecosJoinRequest
 from utils.queries_zaken_api import get_headers
 
-from .mock import get_zaken_case_list, get_zaken_case_search_result_list
+from .mock import get_zaken_case_list
 from .models import Case
 
 logger = logging.getLogger(__name__)
@@ -53,94 +41,28 @@ class CaseViewSet(ViewSet):
 
     def retrieve(self, request, pk):
         case_id = pk
-        case_instance = Case.get(case_id, bool(str(case_id).find("_") >= 0))
+        case_instance = Case.get(case_id)
 
-        if case_instance.is_top_bwv_case:
-            related_case_ids = q.get_related_case_ids(case_id)
+        data = {
+            "deleted": False,
+        }
+        data.update(model_to_dict(case_instance))
+        data.update(case_instance.data_context({"request": request}))
+        bag_id = data.get("address", {}).get("bag_id")
 
-            wng_id = related_case_ids.get("wng_id", None)
-            adres_id = related_case_ids.get("adres_id", None)
-
-            if not wng_id or not adres_id:
-                return HttpResponseNotFound("Case not found")
-
-            # Get the bag_data first in order to retrieve the 'verblijfsobjectidentificatie' id
-            bag_data = bag_api.get_bag_data(wng_id)
-            bag_id = bag_data.get("verblijfsobjectidentificatie")
-
-            day_settings_id = (
-                case_instance.day_settings.id if case_instance.day_settings else None
-            )
-
-            data = {
-                "deleted": False,
-                "bwv_hotline_bevinding": q.get_bwv_hotline_bevinding(wng_id),
-                "bwv_hotline_melding": q.get_bwv_hotline_melding(wng_id),
-                "bwv_personen": q.get_bwv_personen(adres_id),
-                "address": q.get_import_adres(wng_id),
-                "import_stadia": q.get_import_stadia(case_id),
-                "bwv_tmp": q.get_bwv_tmp(case_id, adres_id),
-                "statements": q.get_statements(case_id),
-                "vakantie_verhuur": q.get_rental_information(wng_id),
-                "bag_data": bag_data,
+        day_settings_id = (
+            case_instance.day_settings.id if case_instance.day_settings else None
+        )
+        data.update(
+            {
+                "bag_data": bag_api.get_bag_data_by_bag_id(data.get("address")),
                 "brk_data": brk_api.get_brk_data(bag_id),
-                "related_cases": q.get_related_cases(adres_id),
                 "fraud_prediction": get_fraud_prediction(case_id),
                 "day_settings_id": day_settings_id,
-                "is_sia": case_instance.data.get("is_sia"),
             }
-        else:
-            data = {
-                "deleted": False,
-            }
-            data.update(model_to_dict(case_instance))
-            data.update(case_instance.data_context({"request": request}))
-            bag_id = data.get("address", {}).get("bag_id")
-
-            day_settings_id = (
-                case_instance.day_settings.id if case_instance.day_settings else None
-            )
-            data.update(
-                {
-                    "bag_data": bag_api.get_bag_data_by_bag_id(data.get("address")),
-                    "brk_data": brk_api.get_brk_data(bag_id),
-                    "fraud_prediction": get_fraud_prediction(case_id),
-                    "day_settings_id": day_settings_id,
-                }
-            )
-
-        return JsonResponse(data)
-
-    @extend_schema(parameters=unplanned_parameters, description="Unplanned Cases")
-    @action(detail=False, methods=["get"], name="unplanned")
-    def unplanned(self, request):
-        """Returns a list of unplanned cases, based on the given date and stadium"""
-        serializer = UnplannedCasesSerializer(data=request.GET)
-        is_valid = serializer.is_valid()
-
-        if not is_valid:
-            return JsonResponse(
-                {"message": "Could not validate data", "errors": serializer.errors},
-                status=HttpResponseBadRequest.status_code,
-            )
-
-        date = request.GET.get("date")
-        stadium = request.GET.get("stadium")
-        itinerary = Itinerary.objects.filter(id=request.GET.get("itinerary_id"))
-        projects = (
-            list(
-                itinerary.first()
-                .settings.day_settings.team_settings.project_choices.all()
-                .values_list("name", flat=True)
-            )
-            if itinerary
-            else list(Project.objects.all().values_list("name", flat=True))
         )
 
-        unplanned_cases = Itinerary.get_unplanned_cases(date, stadium, projects)
-        cases = add_fraud_predictions(unplanned_cases)
-
-        return JsonResponse({"cases": cases})
+        return JsonResponse(data)
 
     @extend_schema(
         description="Lists all visits for this case",
@@ -170,7 +92,7 @@ class CaseViewSet(ViewSet):
         Lists all events for this case
         """
 
-        case = Case.get(case_id=pk, is_top_bwv_case=False)
+        case = Case.get(case_id=pk)
 
         data = case.fetch_events(get_keycloak_auth_header_from_request(request))
 
@@ -250,65 +172,43 @@ class CaseSearchViewSet(ViewSet):
         Returns a list of cases found with the given parameters
         """
 
-        if request.version == "v1":
-            # TODO: Replace query parameter strings with constants
-            postal_code = request.GET.get("postalCode", None)
-            street_name = request.GET.get("streetName", "")
-            street_number = request.GET.get("streetNumber", None)
-            suffix = request.GET.get("suffix", "")
-
-            if postal_code is None and street_name == "":
-                return HttpResponseBadRequest(
-                    "Missing postal code or street name is required"
-                )
-            elif not street_number:
-                return HttpResponseBadRequest("Missing street number is required")
-            else:
-                cases = q.get_search_results(
-                    postal_code, street_number, suffix, street_name
-                )
-                cases = self.__add_fraud_prediction__(cases)
-                cases = self.__add_teams__(cases, datetime.now())
-
-                return JsonResponse({"cases": cases})
+        if settings.USE_ZAKEN_MOCK_DATA:
+            result = get_zaken_case_list()
         else:
-            if settings.USE_ZAKEN_MOCK_DATA:
-                result = get_zaken_case_list()
-            else:
-                param_translate = {
-                    "streetName": "street_name",
-                    "streetNumber": "number",
-                    "suffix": "suffix",
-                    "postalCode": "postal_code",
+            param_translate = {
+                "streetName": "street_name",
+                "streetNumber": "number",
+                "suffix": "suffix",
+                "postalCode": "postal_code",
+            }
+            url = f"{settings.ZAKEN_API_URL}/cases/"
+            queryParams = {}
+            queryParams.update(request.GET)
+
+            queryParams = dict(
+                (param_translate.get(k, k), v) for k, v in queryParams.items()
+            )
+            queryParams.update(
+                {
+                    "open_cases": True,
+                    "state_types": [
+                        t.get("id", 0) for t in settings.AZA_CASE_STATE_TYPES
+                    ],
+                    "page_size": 1000,
                 }
-                url = f"{settings.ZAKEN_API_URL}/cases/"
-                queryParams = {}
-                queryParams.update(request.GET)
+            )
+            response = requests.get(
+                url,
+                params=queryParams,
+                timeout=60,
+                headers=get_headers(get_keycloak_auth_header_from_request(request)),
+            )
+            response.raise_for_status()
 
-                queryParams = dict(
-                    (param_translate.get(k, k), v) for k, v in queryParams.items()
-                )
-                queryParams.update(
-                    {
-                        "open_cases": True,
-                        "state_types": [
-                            t.get("id", 0) for t in settings.AZA_CASE_STATE_TYPES
-                        ],
-                        "page_size": 1000,
-                    }
-                )
-                response = requests.get(
-                    url,
-                    params=queryParams,
-                    timeout=60,
-                    headers=get_headers(get_keycloak_auth_header_from_request(request)),
-                )
-                response.raise_for_status()
-
-                result = response.json().get("results", [])
+            result = response.json().get("results", [])
 
             for case in result:
-                Case.get(case_id=case.get("id"), is_top_bwv_case=False)
+                Case.get(case_id=case.get("id"))
 
             cases = self.__add_fraud_prediction__(result)
             cases = self.__add_teams__(cases, datetime.now())
