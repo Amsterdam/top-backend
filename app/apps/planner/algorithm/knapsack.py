@@ -12,7 +12,6 @@ from apps.planner.utils import (
     remove_cases_from_list,
 )
 from joblib import Parallel, delayed
-from settings.const import ISSUEMELDING
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +28,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             self.weights = Weights(
                 distance=settings_weights.distance,
                 fraud_probability=settings_weights.fraud_probability,
-                reason=settings_weights.reason,
-                state_types=settings_weights.state_types,
                 priority=settings_weights.priority,
-                primary_stadium=settings_weights.primary_stadium,
-                secondary_stadium=settings_weights.secondary_stadium,
-                issuemelding=settings_weights.issuemelding,
-                is_sia=settings_weights.is_sia,
             )
 
     def get_score(self, case):
@@ -51,27 +44,12 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         ):
             fraud_probability = 0
 
-        stadium = case.get("stadium")
-        has_primary_stadium = stadium == self.primary_stadium
-        has_secondary_stadium = stadium in self.secondary_stadia
-        has_issuemelding_stadium = stadium == ISSUEMELDING
-
-        # The following attributes are explicitly disabled and
-        # can be completely removed during the upcoming BWV refactor:
         priority = 0
-        reason = False
-        state_types = False
 
         score = self.weights.score(
             distance,
             fraud_probability,
-            reason,
-            state_types,
             priority,
-            has_primary_stadium,
-            has_secondary_stadium,
-            has_issuemelding_stadium,
-            bool(case.get("is_sia") == "J"),
         )
 
         return score

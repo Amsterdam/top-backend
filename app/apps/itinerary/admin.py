@@ -21,12 +21,7 @@ class ItinerarySettingsInline(admin.StackedInline):
         "opening_date",
         "day_settings",
         "target_length",
-        "projects",
-        "primary_stadium",
-        "secondary_stadia",
-        "exclude_stadia",
         "start_case",
-        "sia_presedence",
     )
     model = ItinerarySettings
 

@@ -14,7 +14,6 @@ from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APITestCase
-from settings.const import ISSUEMELDING
 
 from app.utils.unittest_helpers import (
     get_authenticated_client,

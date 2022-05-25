@@ -3,7 +3,6 @@ import logging
 import os
 
 import requests
-from apps.cases.models import Project, Stadium
 from apps.fraudprediction.models import FraudPrediction
 from django.conf import settings
 from utils.queries_zaken_api import get_fraudprediction_cases_from_AZA_by_model_name
@@ -114,26 +113,6 @@ class FraudPredictAPIBased:
             "updated_cases_count": len(updated_case_ids),
             "updated_cases": updated_case_ids,
         }
-
-    def get_stadia_to_score(self):
-        return list(
-            dict.fromkeys(
-                Stadium.objects.filter(
-                    team_settings_list__fraud_prediction_model=self.model_name,
-                    team_settings_list__use_zaken_backend=False,
-                ).values_list("name", flat=True)
-            )
-        )
-
-    def get_projects_to_score(self):
-        return list(
-            dict.fromkeys(
-                Project.objects.filter(
-                    team_settings_list__fraud_prediction_model=self.model_name,
-                    team_settings_list__use_zaken_backend=False,
-                ).values_list("name", flat=True)
-            )
-        )
 
     def get_case_ids_to_score(self):
         """

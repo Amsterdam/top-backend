@@ -1,4 +1,3 @@
-from apps.cases.serializers import Project, Stadium, StadiumLabelSerializer
 from apps.planner.models import (
     DaySettings,
     PostalCodeRange,
@@ -92,7 +91,7 @@ class PlannerPostalCodeSettingsSerializer(serializers.Serializer):
 
 class PlannerSettingsSerializer(serializers.Serializer):
     opening_date = serializers.DateField(required=True)
-    projects = serializers.ListField(required=True)
+    # projects = serializers.ListField(required=True)
     postal_codes = PlannerPostalCodeSettingsSerializer(required=False, many=True)
     days = PlannerWeekSettingsSerializer(required=True)
 
@@ -135,7 +134,6 @@ class StringRelatedToIdField(serializers.PrimaryKeyRelatedField):
 
 
 class TeamSettingsCompactSerializer(serializers.ModelSerializer):
-    marked_stadia = StadiumLabelSerializer(read_only=True, many=True)
     situation_choices = serializers.ListField(read_only=True)
     observation_choices = ObservationSerializer(read_only=True, many=True)
     suggest_next_visit_choices = SuggestNextVisitSerializer(read_only=True, many=True)
@@ -152,10 +150,6 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
             "situation_choices",
             "suggest_next_visit_choices",
             "fraud_prediction_model",
-            "marked_stadia",
-            "show_issuemelding",
-            "show_vakantieverhuur",
-            "show_vakantieverhuur",
         )
 
 
@@ -209,18 +203,6 @@ class TeamSettingsRelatedField(serializers.RelatedField):
 
 class DaySettingsSerializer(serializers.ModelSerializer):
     team_settings = TeamSettingsCompactSerializer(read_only=True)
-    projects = StringRelatedToIdField(
-        many=True, queryset=Project.objects.all(), required=False
-    )
-    primary_stadium = StringRelatedToIdField(
-        queryset=Stadium.objects.all(), allow_null=True, required=False
-    )
-    secondary_stadia = StringRelatedToIdField(
-        many=True, queryset=Stadium.objects.all(), required=False
-    )
-    exclude_stadia = StringRelatedToIdField(
-        many=True, queryset=Stadium.objects.all(), required=False
-    )
     used_today_count = serializers.IntegerField(read_only=True)
     case_count = serializers.SerializerMethodField()
 
@@ -250,50 +232,11 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "project_ids",
             "housing_corporations",
             "housing_corporation_combiteam",
-            "projects",
-            "primary_stadium",
-            "secondary_stadia",
-            "exclude_stadia",
             "team_settings",
-            "sia_presedence",
             "used_today_count",
             "max_use_limit",
             "case_count",
         )
-
-    def validate(self, data):
-        data = super().validate(data)
-        team_settings = (
-            self.instance.team_settings if self.instance else data.get("team_settings")
-        )
-
-        # clean projects based on real team settings choices
-        data["projects"] = [
-            project
-            for project in data.get("projects", [])
-            if project in team_settings.project_choices.all()
-        ]
-
-        # clean all stdium options based on real team settings choices
-        data["primary_stadium"] = (
-            data.get("primary_stadium")
-            if data.get("primary_stadium") in team_settings.stadia_choices.all()
-            else None
-        )
-
-        data["secondary_stadia"] = [
-            stadium
-            for stadium in data.get("secondary_stadia", [])
-            if stadium in team_settings.stadia_choices.all()
-        ]
-        data["exclude_stadia"] = [
-            stadium
-            for stadium in data.get("exclude_stadia", [])
-            if stadium in team_settings.stadia_choices.all()
-            and stadium not in data.get("secondary_stadia", [])
-            and stadium != data.get("primary_stadium", [])
-        ]
-        return data
 
 
 class NewDaySettingsSerializer(DaySettingsSerializer):
@@ -320,12 +263,7 @@ class NewDaySettingsSerializer(DaySettingsSerializer):
             "project_ids",
             "housing_corporations",
             "housing_corporation_combiteam",
-            "projects",
-            "primary_stadium",
-            "secondary_stadia",
-            "exclude_stadia",
             "team_settings",
-            "sia_presedence",
             "used_today_count",
             "max_use_limit",
         )
@@ -336,9 +274,6 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
     situation_choices = serializers.ListField(read_only=True)
     observation_choices = ObservationSerializer(read_only=True, many=True)
     suggest_next_visit_choices = SuggestNextVisitSerializer(read_only=True, many=True)
-    project_choices = serializers.StringRelatedField(read_only=True, many=True)
-    stadia_choices = serializers.StringRelatedField(read_only=True, many=True)
-    marked_stadia = StadiumLabelSerializer(read_only=True, many=True)
     day_settings_list = DaySettingsCompactSerializer(read_only=True, many=True)
 
     class Meta:
@@ -352,9 +287,6 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
             "observation_choices",
             "situation_choices",
             "suggest_next_visit_choices",
-            "project_choices",
-            "stadia_choices",
-            "marked_stadia",
             "day_settings_list",
             "fraud_prediction_model",
         )

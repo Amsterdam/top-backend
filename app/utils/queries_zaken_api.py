@@ -23,17 +23,6 @@ def date_to_string(date):
     return None
 
 
-def stadium_bwv_to_push_state(stadium):
-    """Transforms a stadium to be compatible with zaken-backend"""
-    return {
-        "name": stadium.get("sta_oms"),
-        "start_date": date_to_string(stadium.get("begindatum")),
-        "end_date": date_to_string(stadium.get("einddatum", None)),
-        "gauge_date": date_to_string(stadium.get("peildatum", None)),
-        "invoice_identification": stadium.get("invordering_identificatie"),
-    }
-
-
 def assert_allow_push():
     assert settings.ZAKEN_API_URL, "ZAKEN_API_URL is not configured in settings."
     assert settings.PUSH_ZAKEN, "Pushes disabled"

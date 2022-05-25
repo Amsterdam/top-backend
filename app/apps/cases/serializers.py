@@ -1,4 +1,4 @@
-from apps.cases.models import Case, Project, Stadium, StadiumLabel
+from apps.cases.models import Case
 from apps.fraudprediction.serializers import FraudPredictionSerializer
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
@@ -34,33 +34,6 @@ class CaseSerializer(serializers.ModelSerializer):
     @extend_schema_field(serializers.DictField())
     def get_data(self, obj):
         return obj.data_context(self.context)
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(required=True)
-
-    class Meta:
-        model = Project
-        fields = ("name",)
-
-
-class StadiumSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(required=True)
-
-    class Meta:
-        model = Stadium
-        fields = ("name",)
-
-
-class StadiumLabelSerializer(serializers.ModelSerializer):
-    stadium = serializers.StringRelatedField()
-
-    class Meta:
-        model = StadiumLabel
-        fields = (
-            "stadium",
-            "label",
-        )
 
 
 class PermitCheckmarkSerializer(serializers.Serializer):

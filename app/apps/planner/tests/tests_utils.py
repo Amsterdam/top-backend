@@ -7,19 +7,15 @@ from apps.planner.utils import (
     remove_cases_from_list,
 )
 from django.test import TestCase
-from settings.const import ISSUEMELDING
-
-ONDERZOEK_BUITENDIENST = "Onderzoek buitendienst"
-TWEEDE_CONTROLE = "2de Controle"
 
 
 class UtilsTests(TestCase):
     def test_remove_cases_from_list(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-a"}
-        case_b = {"stadium": ISSUEMELDING, "id": "foo-b"}
-        case_c = {"stadium": TWEEDE_CONTROLE, "id": "foo-c"}
-        case_d = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-d"}
-        case_e = {"stadium": ISSUEMELDING, "id": "foo-e"}
+        case_a = {"id": "foo-a"}
+        case_b = {"id": "foo-b"}
+        case_c = {"id": "foo-c"}
+        case_d = {"id": "foo-d"}
+        case_e = {"id": "foo-e"}
 
         cases = [case_a, case_b, case_c, case_d, case_e]
         cases_to_remove = [case_b, case_e]
@@ -33,12 +29,12 @@ class UtilsTests(TestCase):
         """
         Wil still succeed if items from the cases_to_remove don't exist in the cases list
         """
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-a"}
-        case_b = {"stadium": ISSUEMELDING, "id": "foo-b"}
-        case_c = {"stadium": TWEEDE_CONTROLE, "id": "foo-c"}
-        case_d = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-d"}
-        case_e = {"stadium": ISSUEMELDING, "id": "foo-e"}
-        case_not_in_list = {"stadium": ISSUEMELDING, "id": "foo-f"}
+        case_a = {"id": "foo-a"}
+        case_b = {"id": "foo-b"}
+        case_c = {"id": "foo-c"}
+        case_d = {"id": "foo-d"}
+        case_e = {"id": "foo-e"}
+        case_not_in_list = {"id": "foo-f"}
 
         cases = [case_a, case_b, case_c, case_d, case_e]
         cases_to_remove = [case_a, case_b, case_not_in_list]
@@ -54,17 +50,14 @@ class UtilsTests(TestCase):
                 "lat": 0,
                 "lng": 1,
             },
-            "stadium": ONDERZOEK_BUITENDIENST,
             "id": "foo-a",
         }
         case_b = {
             "address": {"lat": 2, "lng": 3},
-            "stadium": ISSUEMELDING,
             "id": "foo-b",
         }
         case_c = {
             "address": {"lat": 4, "lng": 5},
-            "stadium": TWEEDE_CONTROLE,
             "id": "foo-c",
         }
         cases = [case_a, case_b, case_c]

@@ -1,10 +1,5 @@
-from apps.cases.models import Case, Project, Stadium
-from apps.cases.serializers import (
-    CaseSerializer,
-    CaseSimpleSerializer,
-    ProjectSerializer,
-    StadiumSerializer,
-)
+from apps.cases.models import Case
+from apps.cases.serializers import CaseSerializer, CaseSimpleSerializer
 from apps.itinerary.models import (
     Itinerary,
     ItineraryItem,
@@ -46,12 +41,6 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
     day_settings = DaySettingsSerializer()
     start_case = CaseSimpleSerializer(required=False)
 
-    # BWV data below
-    projects = ProjectSerializer(many=True)
-    primary_stadium = StadiumSerializer()
-    secondary_stadia = StadiumSerializer(many=True)
-    exclude_stadia = StadiumSerializer(many=True)
-
     class Meta:
         model = ItinerarySettings
         fields = (
@@ -66,11 +55,6 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
             "state_types",
             "project_ids",
             "housing_corporations",
-            # BWV data below
-            "projects",
-            "primary_stadium",
-            "secondary_stadia",
-            "exclude_stadia",
         )
 
 
@@ -155,14 +139,12 @@ class ItinerarySerializer(serializers.ModelSerializer):
         )
 
         # First create the settings
-        itinerary_settings = ItinerarySettings.objects.create(
+        ItinerarySettings.objects.create(
             opening_date=opening_date,
             itinerary=itinerary,
-            primary_stadium=day_settings.primary_stadium,
             target_length=target_length,
             start_case=start_case,
             day_settings=day_settings,
-            sia_presedence=day_settings.sia_presedence,
             day_segments=day_settings.day_segments,
             week_segments=day_settings.week_segments,
             priorities=day_settings.priorities,
@@ -172,11 +154,6 @@ class ItinerarySerializer(serializers.ModelSerializer):
             reasons=day_settings.reasons,
             state_types=day_settings.state_types,
         )
-
-        # Next, add the many-to-many relations of the itinerary_Settings
-        itinerary_settings.projects.set(day_settings.projects.all())
-        itinerary_settings.secondary_stadia.set(day_settings.secondary_stadia.all())
-        itinerary_settings.exclude_stadia.set(day_settings.exclude_stadia.all())
 
         # Get the postal code ranges from the settings
         postal_code_ranges_presets = [

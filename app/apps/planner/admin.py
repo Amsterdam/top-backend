@@ -28,7 +28,6 @@ class DaySettingsInline(admin.TabularInline):
                     "max_use_limit",
                     "start_time",
                     "project_ids",
-                    "sia_presedence",
                 )
             },
         ),
@@ -55,22 +54,14 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                     "zaken_team_name",
                     "fraudprediction_pilot_enabled",
                     "fraud_prediction_model",
-                    "show_issuemelding",
                 )
-            },
-        ),
-        (
-            "Projects & stadia options",
-            {
-                "classes": ("collapse",),
-                "fields": ("project_choices", "stadia_choices"),
             },
         ),
         (
             "Algoritm options",
             {
                 "classes": ("collapse",),
-                "fields": ("default_weights", "is_sia_weights", "top_cases_count"),
+                "fields": ("default_weights", "top_cases_count"),
             },
         ),
         (
@@ -78,13 +69,6 @@ class TeamSettingsAdmin(admin.ModelAdmin):
             {
                 "classes": ("collapse",),
                 "fields": ("observation_choices", "suggest_next_visit_choices"),
-            },
-        ),
-        (
-            "Visual options",
-            {
-                "classes": ("collapse",),
-                "fields": ("marked_stadia", "show_vakantieverhuur"),
             },
         ),
     )
@@ -108,22 +92,10 @@ class WeightsAdmin(admin.ModelAdmin):
         "name",
         "distance",
         "fraud_probability",
-        "reason",
-        "state_types",
         "priority",
-        "primary_stadium",
-        "secondary_stadium",
-        "issuemelding",
-        "is_sia",
     )
     list_editable = (
         "distance",
         "fraud_probability",
-        "reason",
-        "state_types",
         "priority",
-        "primary_stadium",
-        "secondary_stadium",
-        "issuemelding",
-        "is_sia",
     )
