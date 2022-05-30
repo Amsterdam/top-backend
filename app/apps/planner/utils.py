@@ -13,7 +13,7 @@ def remove_cases_from_list(cases, cases_to_remove):
     """
     Returns a new list without the 'cases_to_remove' items
     """
-    cases_to_remove = [case.get("id") for case in cases_to_remove]
+    cases_to_remove = [str(case.get("id")) for case in cases_to_remove]
 
     def should_not_remove(case):
         return str(case.get("id")) not in cases_to_remove
