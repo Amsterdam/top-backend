@@ -11,15 +11,6 @@ date = OpenApiParameter(
     description="Date",
 )
 
-stadium = OpenApiParameter(
-    name="stadium",
-    type=OpenApiTypes.STR,
-    location=OpenApiParameter.QUERY,
-    description="Stadium",
-)
-
-unplanned_parameters = [date, stadium]
-
 postal_code = OpenApiParameter(
     name="postalCode",
     type=OpenApiTypes.STR,

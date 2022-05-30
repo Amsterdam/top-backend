@@ -210,9 +210,6 @@ def dumpdata(request):
         "visits.Situation",
         "visits.Observation",
         "visits.SuggestNextVisit",
-        "cases.Project",
-        "cases.Stadium",
-        "cases.StadiumLabel",
         "--indent=4",
     )
     sys.stdout = sysout

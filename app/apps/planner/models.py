@@ -1,7 +1,6 @@
 import datetime
 
 import requests
-from apps.cases.models import Project, Stadium, StadiumLabel
 from apps.visits.models import Observation, Situation, SuggestNextVisit
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
@@ -54,39 +53,11 @@ class TeamSettings(models.Model):
         on_delete=models.SET_NULL,
         related_name="team_settings_default_weights",
     )
-    is_sia_weights = models.ForeignKey(
-        to="Weights",
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="team_settings_is_sia_weights",
-    )
-    show_issuemelding = models.BooleanField(
-        default=True,
-    )
-    show_vakantieverhuur = models.BooleanField(
-        default=True,
-    )
-    project_choices = models.ManyToManyField(
-        to=Project,
-        blank=True,
-        related_name="team_settings_list",
-    )
-    stadia_choices = models.ManyToManyField(
-        to=Stadium,
-        blank=True,
-        related_name="team_settings_list",
-    )
     fraud_prediction_model = models.CharField(
         choices=FRAUD_PREDICTION_MODEL_CHOICES,
         max_length=50,
         blank=True,
         null=True,
-    )
-    marked_stadia = models.ManyToManyField(
-        to=StadiumLabel,
-        blank=True,
-        related_name="stadium_label_team_settings_list",
     )
     observation_choices = models.ManyToManyField(
         to=Observation,
@@ -271,31 +242,6 @@ class DaySettings(models.Model):
     )
     housing_corporation_combiteam = models.BooleanField(default=False)
 
-    # BWV Fields
-    projects = models.ManyToManyField(
-        to=Project,
-        blank=True,
-        related_name="projects_day_settings_list",
-    )
-    primary_stadium = models.ForeignKey(
-        to=Stadium,
-        null=True,
-        blank=True,
-        related_name="primary_stadium_day_settings_list",
-        on_delete=models.SET_NULL,
-    )
-    secondary_stadia = models.ManyToManyField(
-        to=Stadium,
-        blank=True,
-        related_name="secondary_stadia_day_settings_list",
-    )
-    exclude_stadia = models.ManyToManyField(
-        to=Stadium,
-        blank=True,
-        related_name="exclude_stadia_day_settings_list",
-    )
-    sia_presedence = models.BooleanField(default=False)
-
     def get_postal_code_ranges(self):
         postal_code_ranges_presets = [
             pcr
@@ -405,32 +351,8 @@ class Weights(models.Model):
         default=SCORING_WEIGHTS.FRAUD_PROBABILITY.value,
         validators=WEIGHTS_VALIDATORS,
     )
-    reason = models.FloatField(
-        default=SCORING_WEIGHTS.REASON.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
-    state_types = models.FloatField(
-        default=SCORING_WEIGHTS.STATE_TYPE.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
     priority = models.FloatField(
         default=SCORING_WEIGHTS.PRIORITY.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
-    primary_stadium = models.FloatField(
-        default=SCORING_WEIGHTS.PRIMARY_STADIUM.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
-    secondary_stadium = models.FloatField(
-        default=SCORING_WEIGHTS.SECONDARY_STADIUM.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
-    issuemelding = models.FloatField(
-        default=SCORING_WEIGHTS.ISSUEMELDING.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
-    is_sia = models.FloatField(
-        default=SCORING_WEIGHTS.IS_SIA.value,
         validators=WEIGHTS_VALIDATORS,
     )
 
@@ -442,50 +364,26 @@ class Weights(models.Model):
         self,
         distance,
         fraud_probability,
-        reason,
-        state_types,
         priority,
-        primary_stadium,
-        secondary_stadium,
-        issuemelding,
-        is_sia,
     ):
         values = [
             distance,
             fraud_probability,
-            reason,
-            state_types,
             priority,
-            primary_stadium,
-            secondary_stadium,
-            issuemelding,
-            is_sia,
         ]
         weights = [
             self.distance,
             self.fraud_probability,
-            self.reason,
-            self.state_types,
             self.priority,
-            self.primary_stadium,
-            self.secondary_stadium,
-            self.issuemelding,
-            self.is_sia,
         ]
 
         products = [value * weight for value, weight in zip(values, weights)]
         return sum(products)
 
     def __str__(self):
-        return "%s: %s-%s-%s-%s-%s-%s-%s-%s-%s" % (
+        return "%s: %s-%s-%s" % (
             self.name,
             self.distance,
             self.fraud_probability,
-            self.reason,
-            self.state_types,
             self.priority,
-            self.primary_stadium,
-            self.secondary_stadium,
-            self.issuemelding,
-            self.is_sia,
         )

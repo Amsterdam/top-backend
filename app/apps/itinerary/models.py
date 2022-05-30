@@ -1,6 +1,4 @@
-import logging
-
-from apps.cases.models import Case, Project, Stadium
+from apps.cases.models import Case
 from apps.planner.algorithm.knapsack import (
     ItineraryKnapsackList,
     ItineraryKnapsackSuggestions,
@@ -13,7 +11,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from settings.const import STARTING_FROM_DATE
 
 
 class Itinerary(models.Model):
@@ -136,11 +133,6 @@ class Itinerary(models.Model):
         # Initialise using this itinerary's settings
 
         weights = self.settings.day_settings.team_settings.default_weights
-        if (
-            self.settings.sia_presedence
-            and self.settings.day_settings.team_settings.is_sia_weights
-        ):
-            weights = self.settings.day_settings.team_settings.is_sia_weights
         if not weights:
             weights = Weights()
 
@@ -239,27 +231,6 @@ class ItinerarySettings(models.Model):
         null=True,
     )
     housing_corporation_combiteam = models.BooleanField(default=False)
-
-    # BWV Fields
-    projects = models.ManyToManyField(to=Project, blank=False, related_name="settings")
-
-    primary_stadium = models.ForeignKey(
-        to=Stadium,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name="settings_as_primary_stadium",
-    )
-
-    secondary_stadia = models.ManyToManyField(
-        to=Stadium, blank=True, related_name="settings_as_secondary_stadia"
-    )
-
-    exclude_stadia = models.ManyToManyField(
-        to=Stadium, blank=True, related_name="settings_as_exclude_stadia"
-    )
-
-    sia_presedence = models.BooleanField(default=False)
 
     def get_cases_query_params(self):
         cases_query_params = self.day_settings.get_cases_query_params()

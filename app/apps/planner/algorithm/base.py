@@ -22,11 +22,6 @@ class ItineraryGenerateAlgorithm:
         self.auth_header = kwargs.get("auth_header")
         self.settings = settings
         self.opening_date = settings.opening_date
-        self.stadia = list(
-            settings.day_settings.team_settings.stadia_choices.all().values_list(
-                "name", flat=True
-            )
-        )
         self.target_length = int(settings.target_length)
         self.postal_code_ranges = [
             vars(postal_code_setting) for postal_code_setting in postal_code_settings
@@ -34,29 +29,9 @@ class ItineraryGenerateAlgorithm:
         self.settings.postal_code_ranges = self.postal_code_ranges
 
         try:
-            self.primary_stadium = settings.primary_stadium.name
-        except AttributeError:
-            self.primary_stadium = None
-
-        self.projects = [project.name for project in settings.projects.all()]
-        self.secondary_stadia = [
-            stadium.name for stadium in settings.secondary_stadia.all()
-        ]
-        self.exclude_stadia = [
-            stadium.name for stadium in settings.exclude_stadia.all()
-        ]
-        self.exclude_cases = []
-
-        try:
             self.start_case_id = settings.start_case.case_id
         except AttributeError:
             self.start_case_id = None
-
-    def __get_filter_stadia__(self):
-        """
-        Gets a list of filter stadia to filter on
-        """
-        return self.stadia
 
     def __get_eligible_cases__(self):
         logger.info("v2 __get_eligible_cases__")

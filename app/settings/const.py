@@ -9,16 +9,7 @@ WEEK_DAYS = [
 ]
 WEEK_DAYS_CHOICES = [[i, wd] for i, wd in enumerate(WEEK_DAYS)]
 
-ISSUEMELDING = "Issuemelding"
-TERUGKOPPELING_SIA = "Terugkoppeling SIA"
-VERVOLG_SIA = "Vervolg SIA"
-
 STARTING_FROM_DATE = "2019-01-01"
-
-EXCLUDE_STADIA = (
-    TERUGKOPPELING_SIA,
-    VERVOLG_SIA,
-)
 
 POSTAL_CODE_RANGES = [
     {"range_start": 1000, "range_end": 1109},

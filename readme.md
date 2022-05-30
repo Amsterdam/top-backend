@@ -24,15 +24,6 @@ Start the dev server for local development:
 docker-compose up
 ```
 
-## Importing an SQL dump
-Once you've built your Docker images and have started the development server (see previous steps), you can import an SQL dump.
-
-To load local *bwv* dumps into the local *bwv* database:
-```bash
-bwv_db/import.sh </path/to/local/dir/with/dumps>
-```
-Make sure you are pointing to a directory, not the sql dump file itself.
-
 ## Importing fixtures dump
 The Django project needs some configuration in order to run locally. It's possible to add these manually, but the quickest way is importing using fixtures from the acceptance environment. You can download these at: https://acc.api.top.amsterdam.nl/admin/planner/dumpdata/. You'll need to be logged in using an admin account first to access this url.
 
