@@ -448,7 +448,7 @@ DECOS_JOIN_DEFAULT_FIELD_MAPPING = {
 DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
 
 DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS = "90642DCCC2DB46469657C3D0DF0B1ED7"
-USE_DECOS_MOCK_DATA = False
+USE_DECOS_MOCK_DATA = os.environ.get("USE_DECOS_MOCK_DATA", "False") == "True"
 
 RABBIT_MQ_URL = os.environ.get("RABBIT_MQ_URL")
 RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
@@ -482,3 +482,8 @@ AZA_CASE_STATE_TYPES = [
         "name": "Hercontrole",
     },
 ]
+AZA_CASE_STATE_NAMES = (
+    "Huisbezoek",
+    "Hercontrole",
+    "Leegstandsgesprek",
+)

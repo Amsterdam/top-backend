@@ -155,8 +155,7 @@ class CaseSearchViewSet(ViewSet):
                     "current_states": [
                         s
                         for s in c.get("current_states", [])
-                        if s.get("status_name")
-                        in [t.get("name") for t in settings.AZA_CASE_STATE_TYPES]
+                        if s.get("status_name") in settings.AZA_CASE_STATE_NAMES
                     ]
                 },
             }
@@ -191,10 +190,8 @@ class CaseSearchViewSet(ViewSet):
             queryParams.update(
                 {
                     "open_cases": True,
-                    "state_types": [
-                        t.get("id", 0) for t in settings.AZA_CASE_STATE_TYPES
-                    ],
                     "page_size": 1000,
+                    "task": ["task_uitvoeren_leegstandsgesprek", "task_create_visit"],
                 }
             )
             response = requests.get(
