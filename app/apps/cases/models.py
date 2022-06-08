@@ -72,7 +72,7 @@ class Case(models.Model):
         case_data["current_states"] = [
             state
             for state in case_data["current_states"]
-            if str(state.get("status")) in state_types_ids
+            if str(state.get("status_name")) in settings.AZA_CASE_STATE_NAMES
         ]
         case_data.update({"deleted": False})
         return case_data

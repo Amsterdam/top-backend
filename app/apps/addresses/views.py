@@ -62,8 +62,8 @@ def fetch_residents(bag_id, auth_header=None):
 class AddressViewSet(ViewSet):
     lookup_field = "bag_id"
 
-    @action(detail=True, url_name="permits details", url_path="permits")
-    def get_permit(self, request, bag_id):
+    @action(detail=True, url_name="decos", url_path="decos")
+    def get_decos(self, request, bag_id):
         url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits/"
 
         response = requests.get(
