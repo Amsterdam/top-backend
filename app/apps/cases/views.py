@@ -2,7 +2,6 @@ import logging
 from datetime import datetime
 
 import requests
-from apps.cases.serializers import DecosPermitSerializer, PermitCheckmarkSerializer
 from apps.cases.swagger_parameters import case_search_parameters
 from apps.fraudprediction.utils import get_fraud_prediction
 from apps.itinerary.models import Itinerary
@@ -15,8 +14,7 @@ from django.conf import settings
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import extend_schema
 from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework import serializers
 from rest_framework.decorators import action
@@ -24,7 +22,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from utils import queries_bag_api as bag_api
 from utils import queries_brk_api as brk_api
-from utils.queries_decos_api import DecosJoinRequest
 from utils.queries_zaken_api import get_headers
 
 from .mock import get_zaken_case_list
@@ -211,46 +208,3 @@ class CaseSearchViewSet(ViewSet):
             cases = self.__add_teams__(cases, datetime.now())
             cases = self._clean_cases(cases)
             return JsonResponse({"cases": cases})
-
-
-bag_id = OpenApiParameter(
-    name="bag_id",
-    type=OpenApiTypes.STR,
-    location=OpenApiParameter.QUERY,
-    required=True,
-    description="Verblijfsobjectidentificatie",
-)
-
-
-class PermitViewSet(ViewSet):
-    @extend_schema(
-        parameters=[bag_id],
-        description="Get permit checkmarks based on bag id",
-        responses={200: PermitCheckmarkSerializer()},
-    )
-    @action(detail=False, url_name="permit checkmarks", url_path="checkmarks")
-    def get_permit_checkmarks(self, request):
-        bag_id = request.GET.get("bag_id")
-        response = DecosJoinRequest().get_checkmarks_by_bag_id(bag_id)
-
-        serializer = PermitCheckmarkSerializer(data=response)
-
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return Response(serializer.initial_data)
-
-    @extend_schema(
-        parameters=[bag_id],
-        description="Get permit details based on bag id",
-        responses={200: DecosPermitSerializer(many=True)},
-    )
-    @action(detail=False, url_name="permit details", url_path="details")
-    def get_permit_details(self, request):
-        bag_id = request.GET.get("bag_id")
-        response = DecosJoinRequest().get_permits_by_bag_id(bag_id)
-
-        serializer = DecosPermitSerializer(data=response, many=True)
-
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return Response(serializer.initial_data)

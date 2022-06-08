@@ -2,8 +2,6 @@ from apps.addresses import router as addresses_router
 from apps.cases import router as case_router
 from apps.health.views import health_default
 from apps.itinerary import router as itinerary_router
-from apps.permits import router as permits_router
-from apps.permits.views import DecosAPISearch
 from apps.planner import router as planner_router
 from apps.planner.views import dumpdata as planner_dumpdata
 from apps.users import router as users_router
@@ -22,7 +20,6 @@ admin.site.index_title = "Wonen looplijsten"
 v1_urls = (
     itinerary_router.router.urls
     + case_router.router.urls
-    + permits_router.router.urls
     + addresses_router.router.urls
     + planner_router.router.urls
     + users_router.router.urls
@@ -40,7 +37,6 @@ v1_urls = (
 urlpatterns = [
     # Admin environment
     path("admin/planner/dumpdata", planner_dumpdata, name="planner-dumpdata"),
-    path("admin/decos-api-search/", DecosAPISearch.as_view(), name="decos_api_search"),
     path("admin/", admin.site.urls),
     # Health check urls
     path("looplijsten/health", health_default, name="health-default"),

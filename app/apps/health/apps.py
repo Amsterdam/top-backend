@@ -9,13 +9,11 @@ class HealthConfig(AppConfig):
         from .health_checks import (
             BAGServiceCheck,
             CeleryExecuteTask,
-            DecosJoinCheck,
             OnderhuurHitkansServiceCheck,
             VakantieverhuurHitkansServiceCheck,
         )
 
         plugin_dir.register(BAGServiceCheck)
         plugin_dir.register(CeleryExecuteTask)
-        # plugin_dir.register(DecosJoinCheck)
         plugin_dir.register(VakantieverhuurHitkansServiceCheck)
         plugin_dir.register(OnderhuurHitkansServiceCheck)
