@@ -487,3 +487,7 @@ AZA_CASE_STATE_NAMES = (
     "Hercontrole",
     "Leegstandsgesprek",
 )
+AZA_ALLOWED_TASK_NAMES = (
+    "task_uitvoeren_leegstandsgesprek",
+    "task_create_visit",
+)
