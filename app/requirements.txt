@@ -34,4 +34,4 @@ djangorestframework-simplejwt==4.7.2
 
 # Algorithm toolbox
 geopy==2.1.0
-joblib==1.0.1
+joblib==1.1.0
