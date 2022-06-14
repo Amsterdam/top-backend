@@ -72,10 +72,10 @@ class Case(models.Model):
         if str(case_data["id"]) not in used_cases_ids and not allowed_task_names:
             return CASE_404
 
-        case_data["current_states"] = [
+        case_data["workflows"] = [
             state
-            for state in case_data["current_states"]
-            if str(state.get("status_name")) in settings.AZA_CASE_STATE_NAMES
+            for state in case_data["workflows"]
+            if str(state.get("state", {}).get("name")) in settings.AZA_CASE_STATE_NAMES
         ]
         case_data.update({"deleted": False})
         return case_data
