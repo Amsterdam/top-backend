@@ -79,7 +79,6 @@ ADMINS = (("Author", "p.curet@mail.amsterdam.nl"),)
 
 # Database
 DEFAULT_DATABASE_NAME = "default"
-BWV_DATABASE_NAME = "bwv"
 
 # Django 3.2 fixes warning
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -91,14 +90,6 @@ DATABASES = {
         "USER": os.environ.get("DATABASE_USER"),
         "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
         "HOST": os.environ.get("DATABASE_HOST", "database"),
-        "PORT": "5432",
-    },
-    BWV_DATABASE_NAME: {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.environ.get("BWV_DB_NAME"),
-        "USER": os.environ.get("BWV_DB_USER"),
-        "PASSWORD": os.environ.get("BWV_DB_PASSWORD"),
-        "HOST": os.environ.get("BWV_DB_HOST", "bwv_db"),
         "PORT": "5432",
     },
 }
