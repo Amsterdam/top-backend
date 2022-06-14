@@ -1,20 +1,6 @@
-import json
-import logging
-from datetime import datetime
-
 import requests
-from apps.permits.api_queries_decos_join import DecosJoinRequest
-from apps.permits.forms import SearchForm
-from apps.permits.serializers import DecosSerializer
 from apps.users.utils import get_keycloak_auth_header_from_request
-from constance.backends.database.models import Constance
 from django.conf import settings
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import Http404
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import FormView
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status

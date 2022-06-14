@@ -47,7 +47,6 @@ INSTALLED_APPS = (
     "apps.fraudprediction",
     "apps.visits",
     "apps.health",
-    "apps.permits",
     "apps.addresses",
     # Enable admin templates inheritance
     "django.contrib.admin",
@@ -197,7 +196,6 @@ SPECTACULAR_SETTINGS = {
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY = "BRK_AUTHENTICATION_TOKEN"
-CONSTANCE_DECOS_JOIN_PERMIT_VALID_CONF = "DECOS_JOIN_PERMIT_VALID_CONF"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY = "BRK_AUTHENTICATION_TOKEN_EXPIRY"
 CONSTANCE_MAPS_KEY = "MAPS_KEY"
 
@@ -205,10 +203,6 @@ CONSTANCE_CONFIG = {
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY: (
         "",
         "Authentication token for accessing BRK API",
-    ),
-    CONSTANCE_DECOS_JOIN_PERMIT_VALID_CONF: (
-        "",
-        "Decos Join permit valid conf",
     ),
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY: (
         "",
@@ -370,76 +364,6 @@ SECRET_KEY_TOP_ZAKEN = os.environ.get("SECRET_KEY_TOP_ZAKEN", None)
 
 # AZA for accessing TOP
 SECRET_KEY_AZA_TOP = os.getenv("SECRET_KEY_AZA_TOP", None)
-
-# Connect to Decos Join
-DECOS_JOIN_API = os.getenv(
-    "DECOS_JOIN_API", "https://decosdvl.acc.amsterdam.nl/decosweb/aspx/api/v1/"
-)
-DECOS_JOIN_AUTH_BASE64 = os.getenv("DECOS_JOIN_AUTH_BASE64", None)
-DECOS_JOIN_TOKEN = os.getenv("DECOS_JOIN_TOKEN", None)
-DECOS_JOIN_USERNAME = os.getenv("DECOS_JOIN_USERNAME", None)
-DECOS_JOIN_PASSWORD = os.getenv("DECOS_JOIN_PASSWORD", None)
-# Decos Join Book keys
-DECOS_JOIN_B_EN_B_VERGUNNING_ID = "D8D961993D7E478D9B644587822817B1"
-DECOS_JOIN_VAKANTIEVERHUURVERGUNNING_ID = "1C0D0EBF55EE49EE872AE1D61433DC21"
-DECOS_JOIN_VAKANTIEVERHUUR_MELDINGEN_ID = "E6325A942DF440B386D8DFFEC013F795"
-DECOS_JOIN_VAKANTIEVERHUUR_AFMELDINGEN_ID = "F86015A1A927451082A9E2F2023EF8F7"
-DECOS_JOIN_OMZETTINGSVERGUNNING_ID = "82A3A125E688446E987F3C477CC88315"
-DECOS_JOIN_SPLITSINGSVERGUNNING_ID = "1EBF2890290D4A07BC8A79B450F3E2DA"
-DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID = (
-    "DD0616BFE4AE45539C2FF95D6A55ED82"
-)
-DECOS_JOIN_LIGPLAATSVERGUNNING_ID = "7C9DAAA30DBF4B06A68B555D09CEC6E4"
-DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF = (
-    (
-        DECOS_JOIN_B_EN_B_VERGUNNING_ID,
-        "B&B - vergunning",
-    ),
-    (
-        DECOS_JOIN_VAKANTIEVERHUURVERGUNNING_ID,
-        "Vakantieverhuurvergunning",
-    ),
-    (
-        DECOS_JOIN_OMZETTINGSVERGUNNING_ID,
-        "Omzettingsvergunning",
-    ),
-    (
-        DECOS_JOIN_SPLITSINGSVERGUNNING_ID,
-        "Splitsingsvergunning",
-    ),
-    (
-        DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID,
-        "Onttrekking- vorming en samenvoegingsvergunning",
-    ),
-    (
-        DECOS_JOIN_LIGPLAATSVERGUNNING_ID,
-        "Ligplaatsvergunning",
-    ),
-)
-DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION = "{date6} <= {ts_now} and {date7} >= {ts_now} and {date5} <= {ts_now} and '{dfunction}'.startswith('Verleend') or {date6} <= {ts_now} and {date5} <= {ts_now} and '{dfunction}'.startswith('Verleend')"
-DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA = {
-    "date5": 0,
-    "date6": 0,
-    "date7": 9999999999,
-    "date13": 9999999999,
-    "dfunction": "",
-}
-DECOS_JOIN_DEFAULT_FIELD_MAPPING = {
-    "date6": "DATE_VALID_FROM",
-    "date7": "DATE_VALID_UNTIL",
-    "dfunction": "RESULT",
-    "text45": "PERMIT_NAME",
-    "text9": "PERMIT_TYPE",
-    "surname": "APPLICANT",
-    "text19": "HOLDER",
-    "subject1": "SUBJECT",
-    "text6": "ADDRESS",
-}
-
-DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
-
-DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS = "90642DCCC2DB46469657C3D0DF0B1ED7"
-USE_DECOS_MOCK_DATA = os.environ.get("USE_DECOS_MOCK_DATA", "False") == "True"
 
 RABBIT_MQ_URL = os.environ.get("RABBIT_MQ_URL")
 RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
