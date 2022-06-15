@@ -149,10 +149,11 @@ class CaseSearchViewSet(ViewSet):
             {
                 **c,
                 **{
-                    "current_states": [
+                    "workflows": [
                         s
-                        for s in c.get("current_states", [])
-                        if s.get("status_name") in settings.AZA_CASE_STATE_NAMES
+                        for s in c.get("workflows", [])
+                        if s.get("state", {}).get("name")
+                        in settings.AZA_CASE_STATE_NAMES
                     ]
                 },
             }
