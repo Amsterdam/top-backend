@@ -68,14 +68,13 @@ class TeamSettingsViewSet(ModelViewSet):
         team_settings = self.get_object()
         data = []
 
-        if team_settings.use_zaken_backend:
-            serializer = CaseReasonSerializer(
-                team_settings.fetch_team_reasons(
-                    get_keycloak_auth_header_from_request(request)
-                ),
-                many=True,
-            )
-            data = serializer.data
+        serializer = CaseReasonSerializer(
+            team_settings.fetch_team_reasons(
+                get_keycloak_auth_header_from_request(request)
+            ),
+            many=True,
+        )
+        data = serializer.data
 
         return Response(data)
 
@@ -92,13 +91,12 @@ class TeamSettingsViewSet(ModelViewSet):
         team_settings = self.get_object()
         data = {}
 
-        if team_settings.use_zaken_backend:
-            serializer = TeamScheduleTypesSerializer(
-                team_settings.fetch_team_schedules(
-                    get_keycloak_auth_header_from_request(request)
-                )
+        serializer = TeamScheduleTypesSerializer(
+            team_settings.fetch_team_schedules(
+                get_keycloak_auth_header_from_request(request)
             )
-            data = serializer.data
+        )
+        data = serializer.data
 
         return Response(data)
 
@@ -112,15 +110,13 @@ class TeamSettingsViewSet(ModelViewSet):
         methods=["get"],
     )
     def state_types(self, request, pk):
-        team_settings = self.get_object()
         data = []
 
-        if team_settings.use_zaken_backend:
-            serializer = CaseStateTypeSerializer(
-                settings.AZA_CASE_STATE_TYPES,
-                many=True,
-            )
-            data = serializer.data
+        serializer = CaseStateTypeSerializer(
+            settings.AZA_CASE_STATE_TYPES,
+            many=True,
+        )
+        data = serializer.data
 
         return Response(data)
 
@@ -137,14 +133,13 @@ class TeamSettingsViewSet(ModelViewSet):
         team_settings = self.get_object()
         data = []
 
-        if team_settings.use_zaken_backend:
-            serializer = CaseProjectSerializer(
-                team_settings.fetch_projects(
-                    get_keycloak_auth_header_from_request(request)
-                ),
-                many=True,
-            )
-            data = serializer.data
+        serializer = CaseProjectSerializer(
+            team_settings.fetch_projects(
+                get_keycloak_auth_header_from_request(request)
+            ),
+            many=True,
+        )
+        data = serializer.data
 
         return Response(data)
 

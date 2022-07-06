@@ -34,9 +34,6 @@ class TeamSettings(models.Model):
     enabled = models.BooleanField(
         default=True,
     )
-    use_zaken_backend = models.BooleanField(
-        default=False,
-    )
     zaken_team_name = models.CharField(
         max_length=50,
         blank=True,
