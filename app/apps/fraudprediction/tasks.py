@@ -20,7 +20,6 @@ def fraudpredict_vakantieverhuur_task(self):
 
         prediction_instance = FraudPredictAPIBased(
             model_name=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
-            use_zaken_backend=True,
         )
         result = prediction_instance.fraudpredict()
 
@@ -43,7 +42,6 @@ def fraudpredict_onderhuur_task(self):
 
         prediction_instance = FraudPredictAPIBased(
             model_name=settings.FRAUD_PREDICTION_MODEL_ONDERHUUR,
-            use_zaken_backend=False,
         )
         result = prediction_instance.fraudpredict()
 

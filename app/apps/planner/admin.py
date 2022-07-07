@@ -38,7 +38,6 @@ class DaySettingsInline(admin.TabularInline):
 class TeamSettingsAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "use_zaken_backend",
         "fraudprediction_pilot_enabled",
         "enabled",
     )
@@ -50,7 +49,6 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "enabled",
-                    "use_zaken_backend",
                     "zaken_team_name",
                     "fraudprediction_pilot_enabled",
                     "fraud_prediction_model",

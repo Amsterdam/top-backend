@@ -16,7 +16,6 @@ celery_logger = logging.getLogger("celery")
 
 class FraudPredictAPIBased:
     model_name = None
-    use_zaken_backend = True
     MODEL_KEYS = {
         settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR: [
             "prediction",
@@ -36,8 +35,7 @@ class FraudPredictAPIBased:
         ],
     }
 
-    def __init__(self, model_name=None, use_zaken_backend=True):
-        self.use_zaken_backend = use_zaken_backend
+    def __init__(self, model_name=None):
         if model_name:
             self.model_name = model_name
         if not self.model_name:
