@@ -49,7 +49,7 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "enabled",
-                    "zaken_team_name",
+                    "zaken_team_id",
                     "fraudprediction_pilot_enabled",
                     "fraud_prediction_model",
                 )
