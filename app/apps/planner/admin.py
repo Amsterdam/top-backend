@@ -23,6 +23,8 @@ class DaySettingsInline(admin.TabularInline):
                     "week_segments",
                     "priorities",
                     "reasons",
+                    "postal_code_ranges",
+                    "districts",
                     "state_types",
                     "week_days",
                     "max_use_limit",
