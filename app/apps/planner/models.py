@@ -278,7 +278,7 @@ class DaySettings(models.Model):
                 "schedule_week_segment": self.week_segments,
                 "project": self.project_ids,
                 "reason": self.reasons,
-                "district": self.districts if self.districts is not None else [],
+                "district": self.districts,
                 "priority": self.priorities,
             }
         )

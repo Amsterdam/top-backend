@@ -258,7 +258,7 @@ class ItinerarySettings(models.Model):
                 "postal_code_range": postal_code_range,
                 "schedule_from_date_added": self.opening_date.strftime("%Y-%m-%d"),
                 "reason": self.reasons,
-                "district": self.districts if self.districts is not None else [],
+                "district": self.districts,
                 "project": self.project_ids,
                 "priority": self.priorities,
             }
