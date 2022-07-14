@@ -149,6 +149,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
             week_segments=day_settings.week_segments,
             priorities=day_settings.priorities,
             project_ids=day_settings.project_ids,
+            districts=day_settings.districts,
             housing_corporations=day_settings.housing_corporations,
             housing_corporation_combiteam=day_settings.housing_corporation_combiteam,
             reasons=day_settings.reasons,

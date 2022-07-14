@@ -231,6 +231,11 @@ class DaySettings(models.Model):
         blank=True,
         null=True,
     )
+    districts = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
     housing_corporations = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
@@ -273,6 +278,7 @@ class DaySettings(models.Model):
                 "schedule_week_segment": self.week_segments,
                 "project": self.project_ids,
                 "reason": self.reasons,
+                "district": self.districts,
                 "priority": self.priorities,
             }
         )

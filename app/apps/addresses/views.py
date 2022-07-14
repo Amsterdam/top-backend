@@ -33,6 +33,19 @@ def fetch_housing_corporations(auth_header=None):
     return response.json().get("results", [])
 
 
+def fetch_districts(auth_header=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/districts/"
+
+    response = requests.get(
+        url,
+        timeout=5,
+        headers=get_headers(auth_header),
+    )
+    response.raise_for_status()
+
+    return response.json().get("results", [])
+
+
 def fetch_residents(bag_id, auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents/"
 
@@ -93,3 +106,12 @@ class AddressViewSet(ViewSet):
             bag_id, get_keycloak_auth_header_from_request(request)
         )
         return Response(data, status=status_code)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="districts",
+    )
+    def get_districts(self, request):
+        data = fetch_districts(get_keycloak_auth_header_from_request(request))
+        return Response(data)
