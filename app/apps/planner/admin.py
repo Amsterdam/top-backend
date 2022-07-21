@@ -25,6 +25,7 @@ class DaySettingsInline(admin.TabularInline):
                     "reasons",
                     "postal_code_ranges",
                     "districts",
+                    "postal_code_ranges_presets",
                     "state_types",
                     "week_days",
                     "max_use_limit",
