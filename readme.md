@@ -25,7 +25,7 @@ docker-compose up
 ```
 
 ## Importing fixtures dump
-The Django project needs some configuration in order to run locally. It's possible to add these manually, but the quickest way is importing using fixtures from the acceptance environment. You can download these at: https://acc.api.top.amsterdam.nl/admin/planner/dumpdata/. You'll need to be logged in using an admin account first to access this url.
+The Django project needs some configuration in order to run locally. It's possible to add these manually, but the quickest way is importing using fixtures from the acceptance environment. You can download these at: https://acc.api.top.amsterdam.nl/admin/planner/ by clicking on "DOWNLOAD JSON FIXTURE". You'll need to be logged in using an admin account first to access this url.
 
 Move the json into the app directory on the root of your project, and run the following command
 
