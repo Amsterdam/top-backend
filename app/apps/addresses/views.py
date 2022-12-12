@@ -50,10 +50,7 @@ def fetch_meldingen(bag_id, auth_header=None, query_params=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/meldingen/"
 
     response = requests.get(
-        url,
-        timeout=30,
-        headers=get_headers(auth_header),
-        params=query_params
+        url, timeout=30, headers=get_headers(auth_header), params=query_params
     )
 
     return response.json(), response.status_code
