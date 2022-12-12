@@ -46,6 +46,18 @@ def fetch_districts(auth_header=None):
     return response.json().get("results", [])
 
 
+def fetch_meldingen(bag_id, auth_header=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/meldingen/"
+
+    response = requests.get(
+        url,
+        timeout=30,
+        headers=get_headers(auth_header),
+    )
+
+    return response.json(), response.status_code
+
+
 def fetch_residents(bag_id, auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents/"
 
@@ -95,6 +107,17 @@ class AddressViewSet(ViewSet):
         data = serializer.data
 
         return Response(data)
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="meldingen",
+    )
+    def meldingen_by_bag_id(self, request, bag_id):
+        data, status_code = fetch_meldingen(
+            bag_id, get_keycloak_auth_header_from_request(request)
+        )
+        return Response(data, status=status_code)
 
     @action(
         detail=True,
