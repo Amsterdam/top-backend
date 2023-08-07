@@ -15,6 +15,6 @@ class HealthConfig(AppConfig):
 
         plugin_dir.register(BAGServiceCheck)
         plugin_dir.register(CeleryExecuteTask)
-        plugin_dir.register(VakantieverhuurHitkansServiceCheck)
+        # plugin_dir.register(VakantieverhuurHitkansServiceCheck) Algorithm for Vakantieverhuur is rejected!
         # Only uncomment below if endpoints for OnderhuurHitkans are available on production
         # plugin_dir.register(OnderhuurHitkansServiceCheck)
