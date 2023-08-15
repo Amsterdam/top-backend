@@ -20,7 +20,7 @@ requests-mock==1.9.3
 django-constance[database]==2.8.0
 
 # Other
-requests==2.27.1
+requests==2.31.0
 django-filter==21.1
 tenacity==7.0.0
 django-health-check==3.16.5
