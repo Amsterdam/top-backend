@@ -1,50 +1,30 @@
 import datetime
-import json
 import sys
 
 from apps.itinerary.models import Itinerary
-from apps.planner.models import DaySettings, PostalCodeRangeSet, TeamSettings
+from apps.planner.models import DaySettings, TeamSettings
 from apps.planner.serializers import (
     CaseProjectSerializer,
     CaseReasonSerializer,
     CaseStateTypeSerializer,
     DaySettingsSerializer,
     NewDaySettingsSerializer,
-    PlannerSettingsSerializer,
-    PostalCodeRangePresetSerializer,
     TeamScheduleTypesSerializer,
     TeamSettingsSerializer,
 )
 from apps.users.utils import get_keycloak_auth_header_from_request
-from constance.backends.database.models import Constance
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.core.management import call_command
-from django.http import Http404, HttpResponse, HttpResponseBadRequest, JsonResponse
-from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
+from django.http import Http404, HttpResponse
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import CreateAPIView, GenericAPIView
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateModelMixin
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.viewsets import ModelViewSet
 from settings.const import DAY_SETTING_IN_USE
-
-from .mock import get_team_reasons, get_team_schedules, get_team_state_types
-
-
-class PostalCodeRangePresetViewSet(ModelViewSet):
-    """
-    A view for listing PostalCodeRangeSets
-    """
-
-    serializer_class = PostalCodeRangePresetSerializer
-    queryset = PostalCodeRangeSet.objects.all()
 
 
 class TeamSettingsViewSet(ModelViewSet):
@@ -68,14 +48,13 @@ class TeamSettingsViewSet(ModelViewSet):
         team_settings = self.get_object()
         data = []
 
-        if team_settings.use_zaken_backend:
-            serializer = CaseReasonSerializer(
-                team_settings.fetch_team_reasons(
-                    get_keycloak_auth_header_from_request(request)
-                ),
-                many=True,
-            )
-            data = serializer.data
+        serializer = CaseReasonSerializer(
+            team_settings.fetch_team_reasons(
+                get_keycloak_auth_header_from_request(request)
+            ),
+            many=True,
+        )
+        data = serializer.data
 
         return Response(data)
 
@@ -92,13 +71,12 @@ class TeamSettingsViewSet(ModelViewSet):
         team_settings = self.get_object()
         data = {}
 
-        if team_settings.use_zaken_backend:
-            serializer = TeamScheduleTypesSerializer(
-                team_settings.fetch_team_schedules(
-                    get_keycloak_auth_header_from_request(request)
-                )
+        serializer = TeamScheduleTypesSerializer(
+            team_settings.fetch_team_schedules(
+                get_keycloak_auth_header_from_request(request)
             )
-            data = serializer.data
+        )
+        data = serializer.data
 
         return Response(data)
 
@@ -112,15 +90,13 @@ class TeamSettingsViewSet(ModelViewSet):
         methods=["get"],
     )
     def state_types(self, request, pk):
-        team_settings = self.get_object()
         data = []
 
-        if team_settings.use_zaken_backend:
-            serializer = CaseStateTypeSerializer(
-                settings.AZA_CASE_STATE_TYPES,
-                many=True,
-            )
-            data = serializer.data
+        serializer = CaseStateTypeSerializer(
+            settings.AZA_CASE_STATE_TYPES,
+            many=True,
+        )
+        data = serializer.data
 
         return Response(data)
 
@@ -137,14 +113,13 @@ class TeamSettingsViewSet(ModelViewSet):
         team_settings = self.get_object()
         data = []
 
-        if team_settings.use_zaken_backend:
-            serializer = CaseProjectSerializer(
-                team_settings.fetch_projects(
-                    get_keycloak_auth_header_from_request(request)
-                ),
-                many=True,
-            )
-            data = serializer.data
+        serializer = CaseProjectSerializer(
+            team_settings.fetch_projects(
+                get_keycloak_auth_header_from_request(request)
+            ),
+            many=True,
+        )
+        data = serializer.data
 
         return Response(data)
 

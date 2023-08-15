@@ -58,21 +58,24 @@ class Case(models.Model):
         used_cases_ids = [
             case.case_id for case in Itinerary.get_cases_for_date(timezone.now().date())
         ]
-        current_states_ids = [
-            str(state.get("status")) for state in case_data["current_states"]
+        current_task_names = [
+            task.get("task_name")
+            for workflow in case_data["workflows"]
+            for task in workflow.get("tasks", [])
         ]
-        state_types_ids = [str(cst.get("id")) for cst in settings.AZA_CASE_STATE_TYPES]
-        current_state_types_ids = [
-            id for id in state_types_ids if id in current_states_ids
+        allowed_task_names = [
+            task_name
+            for task_name in current_task_names
+            if task_name in settings.AZA_ALLOWED_TASK_NAMES
         ]
 
-        if str(case_data["id"]) not in used_cases_ids and not current_state_types_ids:
+        if str(case_data["id"]) not in used_cases_ids and not allowed_task_names:
             return CASE_404
 
-        case_data["current_states"] = [
+        case_data["workflows"] = [
             state
-            for state in case_data["current_states"]
-            if str(state.get("status")) in state_types_ids
+            for state in case_data["workflows"]
+            if str(state.get("state", {}).get("name")) in settings.AZA_CASE_STATE_NAMES
         ]
         case_data.update({"deleted": False})
         return case_data

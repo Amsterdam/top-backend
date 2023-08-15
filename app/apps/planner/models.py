@@ -34,11 +34,7 @@ class TeamSettings(models.Model):
     enabled = models.BooleanField(
         default=True,
     )
-    use_zaken_backend = models.BooleanField(
-        default=False,
-    )
-    zaken_team_name = models.CharField(
-        max_length=50,
+    zaken_team_id = models.PositiveSmallIntegerField(
         blank=True,
         null=True,
     )
@@ -80,13 +76,13 @@ class TeamSettings(models.Model):
         )
         return {
             "open_cases": "true",
-            "theme": self.zaken_team_name,
+            "theme": self.zaken_team_id,
             "page_size": 1000,
             "schedule_visit_from": today,
         }
 
     def fetch_projects(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/case-projects/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_id}/case-projects/"
 
         response = requests.get(
             url,
@@ -101,7 +97,7 @@ class TeamSettings(models.Model):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_schedules()
 
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/schedule-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_id}/schedule-types/"
 
         response = requests.get(
             url,
@@ -116,7 +112,7 @@ class TeamSettings(models.Model):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_reasons()
 
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/reasons/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_id}/reasons/"
 
         response = requests.get(
             url,
@@ -235,6 +231,11 @@ class DaySettings(models.Model):
         blank=True,
         null=True,
     )
+    districts = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
     housing_corporations = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
@@ -261,7 +262,7 @@ class DaySettings(models.Model):
             f"{pr.get('range_start')}-{pr.get('range_end')}"
             for pr in self.get_postal_code_ranges()
         ]
-        if self.team_settings.zaken_team_name == "6":
+        if self.team_settings.zaken_team_id == 6:
             cases_query_params.update(
                 {
                     "housing_corporation": self.housing_corporations,
@@ -277,6 +278,7 @@ class DaySettings(models.Model):
                 "schedule_week_segment": self.week_segments,
                 "project": self.project_ids,
                 "reason": self.reasons,
+                "district": self.districts,
                 "priority": self.priorities,
             }
         )
@@ -295,7 +297,7 @@ class DaySettings(models.Model):
         return response.json()
 
     def fetch_team_schedules(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/schedule-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_id}/schedule-types/"
 
         response = requests.get(
             url,
@@ -307,7 +309,7 @@ class DaySettings(models.Model):
         return response.json()
 
     def fetch_team_reasons(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/reasons/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_id}/reasons/"
 
         response = requests.get(
             url,

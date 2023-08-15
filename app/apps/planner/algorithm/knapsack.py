@@ -44,7 +44,11 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         ):
             fraud_probability = 0
 
-        priority = 0
+        priority = (
+            next(iter(case.get("schedules", [])), {"priority": {"weight": 0}})
+            .get("priority", {})
+            .get("weight", 0)
+        )
 
         score = self.weights.score(
             distance,

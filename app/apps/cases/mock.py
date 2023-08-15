@@ -38,6 +38,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -94,6 +95,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -150,6 +152,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -206,6 +209,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -262,6 +266,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -318,6 +323,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -374,6 +380,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -430,6 +437,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -486,6 +494,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -542,6 +551,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -598,6 +608,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -654,6 +665,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -710,6 +722,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -766,6 +779,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -822,6 +836,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -878,6 +893,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -934,6 +950,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -990,6 +1007,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1046,6 +1064,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1102,6 +1121,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1158,6 +1178,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1214,6 +1235,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1270,6 +1292,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1326,6 +1349,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1382,6 +1406,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1438,6 +1463,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1494,6 +1520,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1550,6 +1577,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1606,6 +1634,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1698,6 +1727,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1790,6 +1820,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1864,6 +1895,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1920,6 +1952,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -1976,6 +2009,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -2032,6 +2066,7 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -2111,6 +2146,7 @@ def get_zaken_case_search_result_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,
@@ -2167,6 +2203,7 @@ def get_zaken_case_search_result_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
+            "workflows": [],
             "schedules": [
                 {
                     "id": 2,

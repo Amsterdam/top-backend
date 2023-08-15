@@ -1,8 +1,6 @@
 import logging
 
 import requests
-from apps.health.utils import assert_bwv_health
-from apps.permits.api_queries_decos_join import DecosJoinRequest
 from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
@@ -90,47 +88,7 @@ class OnderhuurHitkansServiceCheck(APIServiceCheckBackend):
     verbose_name = "Onderhuur fraudpredictions API Endpoint"
 
 
-class BWVDatabaseCheck(BaseHealthCheckBackend):
-    def check_status(self):
-        logger.debug("Checking status of API url...")
-        try:
-            assert_bwv_health()
-        except ConnectionRefusedError as e:
-            self.add_error(
-                ServiceUnavailable(
-                    "Unable to connect to BWV database: Connection was refused."
-                ),
-                e,
-            )
-        except BaseException as e:
-            self.add_error(ServiceUnavailable("Unknown error"), e)
-        else:
-            logger.debug("Connection established. BWV database is healthy.")
-
-
 class CeleryExecuteTask(BaseHealthCheckBackend):
     def check_status(self):
         result = debug_task.apply_async(ignore_result=False)
         assert result, "Debug task executes successfully"
-
-
-class DecosJoinCheck(BaseHealthCheckBackend):
-    """
-    Endpoint for checking the Decos Join API Endpoint
-    """
-
-    critical_service = True
-    api_url = settings.DECOS_JOIN_API
-    verbose_name = "Decos Join API Endpoint"
-
-    def check_status(self):
-        logger.debug("Checking status of Decos Join API url...")
-        response = DecosJoinRequest().get()
-        if not response:
-            self.add_error(
-                ServiceUnavailable(
-                    "Unable to connect to Decos Join: Connection was refused."
-                )
-            )
-        else:
-            logger.debug("Decos Join API connection established.")

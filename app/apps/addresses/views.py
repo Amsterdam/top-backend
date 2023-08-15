@@ -1,20 +1,6 @@
-import json
-import logging
-from datetime import datetime
-
 import requests
-from apps.permits.api_queries_decos_join import DecosJoinRequest
-from apps.permits.forms import SearchForm
-from apps.permits.serializers import DecosSerializer
 from apps.users.utils import get_keycloak_auth_header_from_request
-from constance.backends.database.models import Constance
 from django.conf import settings
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import Http404
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import FormView
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
@@ -23,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from utils.queries_zaken_api import get_headers
 
-from .serializers import HousingCorporationSerializer
+from .serializers import HousingCorporationSerializer, MeldingenSerializer
 
 bag_id = OpenApiParameter(
     name="bag_id",
@@ -47,6 +33,29 @@ def fetch_housing_corporations(auth_header=None):
     return response.json().get("results", [])
 
 
+def fetch_districts(auth_header=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/districts/"
+
+    response = requests.get(
+        url,
+        timeout=5,
+        headers=get_headers(auth_header),
+    )
+    response.raise_for_status()
+
+    return response.json().get("results", [])
+
+
+def fetch_meldingen(bag_id, auth_header=None, query_params=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/meldingen/"
+
+    response = requests.get(
+        url, timeout=30, headers=get_headers(auth_header), params=query_params
+    )
+
+    return response.json(), response.status_code
+
+
 def fetch_residents(bag_id, auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents/"
 
@@ -62,8 +71,8 @@ def fetch_residents(bag_id, auth_header=None):
 class AddressViewSet(ViewSet):
     lookup_field = "bag_id"
 
-    @action(detail=True, url_name="permits details", url_path="permits")
-    def get_permit(self, request, bag_id):
+    @action(detail=True, url_name="decos", url_path="decos")
+    def get_decos(self, request, bag_id):
         url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits/"
 
         response = requests.get(
@@ -97,6 +106,51 @@ class AddressViewSet(ViewSet):
 
         return Response(data)
 
+    @extend_schema(
+        description="Gets all meldingen for holiday rental.",
+        responses={status.HTTP_200_OK: MeldingenSerializer(many=True)},
+        parameters=[
+            OpenApiParameter(
+                name="offset",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Page number.",
+            ),
+            OpenApiParameter(
+                name="limit",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Number of items per page.",
+            ),
+            OpenApiParameter(
+                name="start_date",
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Shows meldingen from the given date.",
+            ),
+            OpenApiParameter(
+                name="end_date",
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Shows meldingen till the given date.",
+            ),
+        ],
+    )
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="meldingen",
+    )
+    def meldingen_by_bag_id(self, request, bag_id):
+        data, status_code = fetch_meldingen(
+            bag_id, get_keycloak_auth_header_from_request(request), request.query_params
+        )
+        return Response(data, status=status_code)
+
     @action(
         detail=True,
         methods=["get"],
@@ -107,3 +161,12 @@ class AddressViewSet(ViewSet):
             bag_id, get_keycloak_auth_header_from_request(request)
         )
         return Response(data, status=status_code)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="districts",
+    )
+    def get_districts(self, request):
+        data = fetch_districts(get_keycloak_auth_header_from_request(request))
+        return Response(data)

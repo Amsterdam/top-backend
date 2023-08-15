@@ -16,20 +16,12 @@ def deploy(environment) {
         [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy.yml'],
         [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_looplijsten-backend"]
     ]
-  // build job: 'Subtask_Openstack_Playbook',
-  //   parameters: [
-  //       [$class: 'StringParameterValue', name: 'INFRASTRUCTURE', value: 'secure'],
-  //       [$class: 'StringParameterValue', name: 'INVENTORY', value: environment],
-  //       [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy.yml'],
-  //       [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_looplijsten-bwv"]
-  //   ]
 }
 
 pipeline {
   agent any
   environment {
     DOCKER_IMAGE = "fixxx/looplijsten"
-    BWV_SYNC_DOCKER_IMAGE = "fixxx/looplijsten-bwv-sync"
     APP = "looplijsten-api"
     DOCKER_IMAGE_URL = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten"
   }
@@ -66,23 +58,6 @@ pipeline {
         }
       }
     }
-
-    // stage("Build bwv-sync image") {
-    //   steps {
-    //     script {
-    //       def image = docker.build("${DOCKER_REGISTRY_NO_PROTOCOL}/${env.BWV_SYNC_DOCKER_IMAGE}:${env.COMMIT_HASH}",
-    //         "--no-cache " +
-    //         "--shm-size 1G " +
-    //         " ./bwv_sync")
-    //       image.push()
-    //       image.push("latest")
-    //       // CMDB requires acceptance and production tags. For bwv_sync application there is only one used version,
-    //       // so there is no distinction between the environments.
-    //       image.push("acceptance")
-    //       image.push("production")
-    //     }
-    //   }
-    // }
 
     stage("Push and deploy acceptance image") {
       when {

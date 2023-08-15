@@ -23,6 +23,9 @@ class DaySettingsInline(admin.TabularInline):
                     "week_segments",
                     "priorities",
                     "reasons",
+                    "postal_code_ranges",
+                    "districts",
+                    "postal_code_ranges_presets",
                     "state_types",
                     "week_days",
                     "max_use_limit",
@@ -38,7 +41,6 @@ class DaySettingsInline(admin.TabularInline):
 class TeamSettingsAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "use_zaken_backend",
         "fraudprediction_pilot_enabled",
         "enabled",
     )
@@ -50,8 +52,7 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "enabled",
-                    "use_zaken_backend",
-                    "zaken_team_name",
+                    "zaken_team_id",
                     "fraudprediction_pilot_enabled",
                     "fraud_prediction_model",
                 )

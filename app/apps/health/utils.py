@@ -1,7 +1,5 @@
-from django.conf import settings
 from django.db import connections
 from django.http import JsonResponse
-from utils.query_helpers import do_query
 
 
 def get_health_response(health_checks, success_dictionary):
@@ -67,33 +65,3 @@ def assert_health_generic(database_name):
     cursor = connections[database_name].cursor()
     cursor.execute("select 1")
     assert cursor.fetchone()
-
-
-def get_bwv_sync_times():
-    query = """SELECT start, finished FROM sync_log ORDER BY start DESC"""
-
-    executed_query = do_query(query)
-
-    return executed_query
-
-
-BWV_TABLES = [
-    "bwv_benb_meldingen",
-    "bwv_hotline_bevinding",
-    "bwv_medewerkers",
-    "bwv_personen",
-    "bwv_personen_hist",
-    "bwv_vakantieverhuur",
-    "bwv_woningen",
-    "import_adres",
-    "import_stadia",
-    "import_wvs",
-    # 'sync_log'
-]
-
-
-def assert_bwv_health():
-    assert_health_generic(database_name=settings.BWV_DATABASE_NAME)
-    assert_health_database_tables(
-        database_name=settings.BWV_DATABASE_NAME, tables=BWV_TABLES
-    )

@@ -225,6 +225,11 @@ class ItinerarySettings(models.Model):
         blank=True,
         null=True,
     )
+    districts = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
     housing_corporations = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
@@ -238,7 +243,7 @@ class ItinerarySettings(models.Model):
             f"{pr.get('range_start')}-{pr.get('range_end')}"
             for pr in self.postal_code_ranges
         ]
-        if self.day_settings.team_settings.zaken_team_name == "6":
+        if self.day_settings.team_settings.zaken_team_id == 6:
             cases_query_params.update(
                 {
                     "housing_corporation": self.housing_corporations,
@@ -253,6 +258,7 @@ class ItinerarySettings(models.Model):
                 "postal_code_range": postal_code_range,
                 "schedule_from_date_added": self.opening_date.strftime("%Y-%m-%d"),
                 "reason": self.reasons,
+                "district": self.districts,
                 "project": self.project_ids,
                 "priority": self.priorities,
             }
