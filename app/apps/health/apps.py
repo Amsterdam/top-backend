@@ -8,12 +8,14 @@ class HealthConfig(AppConfig):
     def ready(self):
         from .health_checks import (
             BAGServiceCheck,
+            BRKServiceCheck,
             CeleryExecuteTask,
             OnderhuurHitkansServiceCheck,
             VakantieverhuurHitkansServiceCheck,
         )
 
         plugin_dir.register(BAGServiceCheck)
+        plugin_dir.register(BRKServiceCheck)
         plugin_dir.register(CeleryExecuteTask)
         # plugin_dir.register(VakantieverhuurHitkansServiceCheck) Algorithm for Vakantieverhuur is rejected!
         # Only uncomment below if endpoints for OnderhuurHitkans are available on production

@@ -5,6 +5,7 @@ from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
 from settings.celery import debug_task
+from utils import queries_brk_api as brk_api
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class BAGServiceCheck(APIServiceCheckBackend):
 
     critical_service = True
     api_url = settings.BAG_API_SEARCH_URL
-    verbose_name = "BAG API Endpoint"
+    verbose_name = "BAG API"
 
 
 class ZakenServiceCheck(APIServiceCheckBackend):
@@ -92,3 +93,22 @@ class CeleryExecuteTask(BaseHealthCheckBackend):
     def check_status(self):
         result = debug_task.apply_async(ignore_result=False)
         assert result, "Debug task executes successfully"
+
+
+class BRKServiceCheck(BaseHealthCheckBackend):
+    """
+    Endpoint for checking the BRK Service API Endpoint
+    """
+
+    def check_status(self):
+        try:
+            api_response = brk_api.request_brk_data(settings.BAG_ID_AMSTEL_1)
+            assert api_response, "BRK API connection Failed"
+        except Exception as e:
+            self.add_error(ServiceUnavailable("BRK API connection failed"), e)
+            logger.error("BRK API connection failed: %s", e)
+        else:
+            logger.info("BRK API connection is healthy.")
+
+    def identifier(self):
+        return "BRK API"
