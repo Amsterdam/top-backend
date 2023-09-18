@@ -100,6 +100,8 @@ class BRKServiceCheck(BaseHealthCheckBackend):
     Endpoint for checking the BRK Service API Endpoint
     """
 
+    critical_service = False
+
     def check_status(self):
         try:
             api_response = brk_api.request_brk_data(settings.BAG_ID_AMSTEL_1)
