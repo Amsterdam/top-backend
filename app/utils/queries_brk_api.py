@@ -104,11 +104,12 @@ def get_brk_data(bag_id):
     Does an authenticated request to BRK, and returns the owners of a given bag_id location
     """
     try:
-        assert bag_id, "No BAG ID given for BRK request"
+        # Input validation
+        if not bag_id:
+            raise ValueError("No BAG ID given for BRK request")
+
         brk_data = request_brk_data(bag_id)
-        brk_owners = brk_data.get("results")[0].get("rechten")
-        brk_owners = {"owners": brk_owners}
-        return brk_owners
+        return brk_data
     except Exception as e:
         logger.error("Requesting BRK data failed: {}".format(str(e)))
         error_objects = {
