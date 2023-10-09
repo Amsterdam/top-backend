@@ -6,11 +6,10 @@ class HealthConfig(AppConfig):
     name = "apps.health"
 
     def ready(self):
-        from .health_checks import (
+        from .health_checks import (  # OnderhuurHitkansServiceCheck,
             BAGServiceCheck,
             BRKServiceCheck,
             CeleryExecuteTask,
-            OnderhuurHitkansServiceCheck,
         )
 
         plugin_dir.register(BAGServiceCheck)
