@@ -211,8 +211,14 @@ CONSTANCE_CONFIG = {
     CONSTANCE_MAPS_KEY: ("", "Maps API Key"),
 }
 
+TAG_NAME = os.getenv("TAG_NAME", "default-release")
+
 # Error logging through Sentry
-sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    integrations=[DjangoIntegration()],
+    release=TAG_NAME,
+)
 
 OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
 OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
