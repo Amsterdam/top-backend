@@ -17,12 +17,6 @@ celery_logger = logging.getLogger("celery")
 class FraudPredictAPIBased:
     model_name = None
     MODEL_KEYS = {
-        settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR: [
-            "prediction",
-            "score",
-            "business_rules",
-            "shap_values",
-        ],
         settings.FRAUD_PREDICTION_MODEL_ONDERHUUR: [
             "snapshot",
             "br_count",
@@ -45,9 +39,7 @@ class FraudPredictAPIBased:
         return import_from_settings(f"{self.model_name.upper()}_{settings_key}")
 
     def get_mock_data(self):
-        if self.model_name == settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR:
-            return fraud_prediction_results()
-        elif self.model_name == settings.FRAUD_PREDICTION_MODEL_ONDERHUUR:
+        if self.model_name == settings.FRAUD_PREDICTION_MODEL_ONDERHUUR:
             return fraud_prediction_onderhuur_results()
 
     def fraudpredict(self):
