@@ -1,5 +1,4 @@
 import datetime
-import json
 
 import requests
 from apps.fraudprediction.models import FraudPrediction

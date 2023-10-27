@@ -1,13 +1,10 @@
-import json
 import os
 import sys
 from datetime import timedelta
 from os.path import join
 
 import sentry_sdk
-from keycloak_oidc.default_settings import *
 from sentry_sdk.integrations.django import DjangoIntegration
-from settings import const as settings_const
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

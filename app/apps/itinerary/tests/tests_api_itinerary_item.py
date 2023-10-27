@@ -3,7 +3,7 @@ from apps.cases.mock import get_zaken_case_list
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItineraryItem
 from django.conf import settings
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase

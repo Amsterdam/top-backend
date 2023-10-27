@@ -11,7 +11,7 @@ from settings.const import POSTAL_CODE_RANGES, WEEK_DAYS_CHOICES
 from utils.queries_zaken_api import get_headers
 
 from .const import SCORING_WEIGHTS
-from .mock import get_team_reasons, get_team_schedules, get_team_state_types
+from .mock import get_team_reasons, get_team_schedules
 
 WEIGHTS_VALIDATORS = [MinValueValidator(0), MaxValueValidator(1)]
 
