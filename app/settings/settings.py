@@ -15,6 +15,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_DEVELOPMENT_AUTHENTICATION = (
     os.getenv("LOCAL_DEVELOPMENT_AUTHENTICATION", False) == "True"
 )
+LOCAL_DEVELOPMENT_USE_MULTIPROCESSING = (
+    os.getenv("LOCAL_DEVELOPMENT_USE_MULTIPROCESSING", False) == "True"
+)
 
 INSTALLED_APPS = (
     "django.contrib.auth",

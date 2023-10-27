@@ -11,6 +11,7 @@ from apps.planner.utils import (
     is_day_of_this_year_odd,
     remove_cases_from_list,
 )
+from django.conf import settings
 from joblib import Parallel, delayed
 
 logger = logging.getLogger(__name__)
@@ -173,13 +174,23 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         # Run in parallel processes to improve speed
         jobs = multiprocessing.cpu_count()
 
-        # multiprocessing freezes during local sometimes, option is trying threads insteads
-        # candidates = Parallel(n_jobs=jobs, prefer="threads")(
-
-        candidates = Parallel(n_jobs=jobs, backend="multiprocessing")(
-            delayed(self.parallelized_function)(case, cases, fraud_predictions, index)
-            for index, case in enumerate(topped_cases)
-        )
+        # Multiprocessing sometimes freezes during local development.
+        # SSL error: decryption failed or bad record mac
+        # Use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in .env
+        if settings.LOCAL_DEVELOPMENT_USE_MULTIPROCESSING:
+            candidates = Parallel(n_jobs=jobs, backend="multiprocessing")(
+                delayed(self.parallelized_function)(
+                    case, cases, fraud_predictions, index
+                )
+                for index, case in enumerate(topped_cases)
+            )
+        else:
+            candidates = Parallel(n_jobs=jobs, prefer="threads")(
+                delayed(self.parallelized_function)(
+                    case, cases, fraud_predictions, index
+                )
+                for index, case in enumerate(topped_cases)
+            )
 
         best_list = self.get_best_list(candidates)
         best_list = sorted(best_list, key=lambda case: case["distance"])
