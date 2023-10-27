@@ -4,6 +4,7 @@ from datetime import timedelta
 from os.path import join
 
 import sentry_sdk
+from keycloak_oidc.default_settings import *  # noqa
 from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
