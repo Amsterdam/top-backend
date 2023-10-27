@@ -1,19 +1,19 @@
-import json
 import os
 import sys
 from datetime import timedelta
 from os.path import join
 
 import sentry_sdk
-from keycloak_oidc.default_settings import *
 from sentry_sdk.integrations.django import DjangoIntegration
-from settings import const as settings_const
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Local development settings
 LOCAL_DEVELOPMENT_AUTHENTICATION = (
     os.getenv("LOCAL_DEVELOPMENT_AUTHENTICATION", False) == "True"
+)
+LOCAL_DEVELOPMENT_USE_MULTIPROCESSING = (
+    os.getenv("LOCAL_DEVELOPMENT_USE_MULTIPROCESSING", False) == "True"
 )
 
 INSTALLED_APPS = (

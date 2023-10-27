@@ -4,7 +4,6 @@ from apps.visits.serializers import (
     SuggestNextVisitSerializer,
     VisitSerializer,
 )
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 

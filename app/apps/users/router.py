@@ -1,4 +1,4 @@
-from apps.users.views import IsAuthorizedView, ObtainAuthTokenOIDC, UserListView
+from apps.users.views import UserListView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()

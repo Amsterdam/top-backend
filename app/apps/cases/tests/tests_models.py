@@ -5,7 +5,6 @@ from unittest.mock import Mock
 
 from apps.cases.models import Case
 from apps.fraudprediction.models import FraudPrediction
-from django.db.utils import IntegrityError
 from django.test import TestCase
 
 

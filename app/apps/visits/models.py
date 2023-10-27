@@ -3,7 +3,6 @@ from apps.fraudprediction.models import FraudPrediction
 from apps.users.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.dispatch import receiver
 
 
 class Visit(models.Model):

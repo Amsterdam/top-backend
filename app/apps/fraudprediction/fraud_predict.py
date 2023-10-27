@@ -7,7 +7,7 @@ from apps.fraudprediction.models import FraudPrediction
 from django.conf import settings
 from utils.queries_zaken_api import get_fraudprediction_cases_from_AZA_by_model_name
 
-from .mock import fraud_prediction_onderhuur_results, fraud_prediction_results
+from .mock import fraud_prediction_onderhuur_results
 from .utils import import_from_settings
 
 LOGGER = logging.getLogger(__name__)
@@ -169,7 +169,7 @@ class FraudPredictAPIBased:
         dictionary = dictionary.copy()
 
         for key, value in dictionary.items():
-            if type(value) == int or type(value) == float:
+            if isinstance(value, (int, float)):
                 pass
             else:
                 dictionary[key] = 0.0

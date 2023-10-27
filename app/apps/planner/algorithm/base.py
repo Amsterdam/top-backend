@@ -4,7 +4,6 @@ import logging
 import requests
 from apps.cases.mock import get_zaken_case_list
 from apps.planner.utils import (
-    calculate_geo_distances,
     get_cases_with_odd_or_even_ids,
     is_day_of_this_year_odd,
     remove_cases_from_list,

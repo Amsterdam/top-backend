@@ -1,5 +1,4 @@
 from apps.planner.models import DaySettings, TeamSettings
-from constance.test import override_config
 from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status

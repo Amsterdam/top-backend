@@ -1,11 +1,8 @@
-import datetime
 from unittest.mock import patch
 
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItineraryItem
 from django.test import TestCase
-from django.utils import timezone
-from model_bakery import baker
 
 FOO_CASE_ID_A = "FOO_CASE_ID_A"
 FOO_CASE_ID_B = "FOO_CASE_ID_B"

@@ -50,6 +50,16 @@ Once you're in the admin, you can click on "add" in the User section to create n
 It's possible to bypass Keycloak authentication when running the project locally.
 To do so, make sure the LOCAL_DEVELOPMENT_AUTHENTICATION flag is set to True in docker-compose.yml.
 
+## Bypassing multiprocessing and use threads:
+The algorithm uses multiprocessing to select cases for a list. Multiprocessing sometimes freezes during local development. You will see a database SSL error:
+```
+    SSL error: decryption failed or bad record mac
+    could not receive data from client: Connection reset by peer
+    unexpected EOF on client connection with an open transaction
+```
+To fix this use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in the .env file.
+
+
 # Running commands
 Run a command inside the docker container:
 

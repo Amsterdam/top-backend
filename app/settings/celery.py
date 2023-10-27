@@ -1,7 +1,7 @@
 import os
 
 from celery import Celery
-from celery.signals import after_setup_logger, setup_logging
+from celery.signals import setup_logging
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
 
