@@ -134,12 +134,12 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         score = sum([case["score"] for case in cases])
         return {"score": score, "list": cases}
 
-    def generate(self):
+    def generate(self, auth_header=None):
         fraud_predictions = get_fraud_predictions()
         if self.start_case_id:
             case = Case.get(
                 case_id=self.start_case_id,
-            ).__get_case__(self.start_case_id)
+            ).__get_case__(self.start_case_id, auth_header)
             case["fraud_prediction"] = fraud_predictions.get(
                 str(self.start_case_id), None
             )

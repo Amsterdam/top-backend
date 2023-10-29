@@ -46,6 +46,11 @@ You can add other users easily through the Django admin.
 Navigate to http://localhost:8000/admin and sign in using the superuser you just created.
 Once you're in the admin, you can click on "add" in the User section to create new users.
 
+## Accessing the API documentation
+
+You can access the documentation at:
+http://localhost:8000/api/v1/swagger/
+
 ## Bypassing Keycloak and using local development authentication:
 It's possible to bypass Keycloak authentication when running the project locally.
 To do so, make sure the LOCAL_DEVELOPMENT_AUTHENTICATION flag is set to True in docker-compose.yml.
