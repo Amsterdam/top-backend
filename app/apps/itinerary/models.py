@@ -148,7 +148,7 @@ class Itinerary(models.Model):
         generator.exclude(cases)
 
         # Generator the list
-        generated_list = generator.generate()
+        generated_list = generator.generate(auth_header=auth_header)
 
         return generated_list
 
