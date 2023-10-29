@@ -176,7 +176,7 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
         # Multiprocessing sometimes freezes during local development.
         # SSL error: decryption failed or bad record mac
-        # Use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to True in .env
+        # Use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in .env
         if settings.LOCAL_DEVELOPMENT_USE_MULTIPROCESSING:
             candidates = Parallel(n_jobs=jobs, backend="multiprocessing")(
                 delayed(self.parallelized_function)(
