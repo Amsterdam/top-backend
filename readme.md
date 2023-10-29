@@ -62,7 +62,7 @@ The algorithm uses multiprocessing to select cases for a list. Multiprocessing s
     could not receive data from client: Connection reset by peer
     unexpected EOF on client connection with an open transaction
 ```
-To fix this use threads instead by setting LOCAL_DEVELOPMENT_USE_THREADS to True in the .env file.
+To fix this use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in the .env file.
 
 
 # Running commands
