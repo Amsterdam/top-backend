@@ -29,3 +29,15 @@ def fraudpredict_onderhuur_task(self):
         self.retry(exc=exception)
 
     return result
+
+
+@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
+def fraudpredict_vakantieverhuur_task(self):
+    """
+    This task is still being called by Celery.
+    If Celery cannot find this task it will generate a KeyError and celery will stop.
+    To prevent failures in production just pass this task and write a log to Sentry.
+    TODO: Remove this over time.
+    """
+    logger.error("The 'fraudpredict_vakantieverhuur_task' is called by Celery")
+    pass
