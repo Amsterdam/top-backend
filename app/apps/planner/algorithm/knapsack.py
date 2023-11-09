@@ -136,6 +136,7 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
     def generate(self, auth_header=None):
         fraud_predictions = get_fraud_predictions()
+        # If the user has selected a start_case, this will be the center for the distance score calculations.
         if self.start_case_id:
             case = Case.get(
                 case_id=self.start_case_id,
@@ -151,7 +152,10 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
             return suggestions
 
-        # If no location is given, generate all possible lists, and choose the best one
+        # No start_case is selected, so all possible cases are used as a center for distance score calculations.
+        # This means that all possible lists will be calculated. TODO: Is this needed? Users are always starting at the office.
+
+        # Get all (open) cases with the day settings configuration as parameters. Maximum is 1000!
         cases = self.__get_eligible_cases__()
         if not cases:
             logger.warning("No eligible cases, could not generate best list")
@@ -174,8 +178,8 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         # Run in parallel processes to improve speed
         jobs = multiprocessing.cpu_count()
 
-        # Multiprocessing sometimes freezes during local development.
-        # SSL error: decryption failed or bad record mac
+        # Multiprocessing sometimes freezes during local development and you will
+        # see this message: SSL error: decryption failed or bad record mac
         # Use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in .env
         if settings.LOCAL_DEVELOPMENT_USE_MULTIPROCESSING:
             candidates = Parallel(n_jobs=jobs, backend="multiprocessing")(
