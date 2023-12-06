@@ -37,8 +37,7 @@ INSTALLED_APPS = (
     "health_check",
     "health_check.db",
     "health_check.contrib.migrations",
-    "health_check.contrib.celery_ping",
-    "health_check.contrib.rabbitmq",
+    "health_check.contrib.celery_ping"
     # Your apps
     "apps.users",
     "apps.itinerary",
@@ -272,10 +271,8 @@ LOGGING = {
         },
         "celery": {
             "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": "celery.log",
-            "formatter": "verbose",
-            "maxBytes": 1024 * 1024 * 100,  # 100 mb
+            "class": "logging.StreamHandler",
+            "stream": sys.stdout,
         },
     },
     "loggers": {
@@ -366,14 +363,11 @@ SECRET_KEY_TOP_ZAKEN = os.environ.get("SECRET_KEY_TOP_ZAKEN", None)
 # AZA for accessing TOP
 SECRET_KEY_AZA_TOP = os.getenv("SECRET_KEY_AZA_TOP", None)
 
-RABBIT_MQ_URL = os.environ.get("RABBIT_MQ_URL")
-RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
-RABBIT_MQ_USERNAME = os.environ.get("RABBIT_MQ_USERNAME")
-RABBIT_MQ_PASSWORD = os.environ.get("RABBIT_MQ_PASSWORD")
-
+REDIS = os.getenv("REDIS")
+REDIS_URL = f"redis://{REDIS}"
 HEALTHCHECK_CELERY_PING_TIMEOUT = 5
 
-CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_USERNAME}:{RABBIT_MQ_PASSWORD}@{RABBIT_MQ_URL}"
+CELERY_BROKER_URL = REDIS_URL
 
 BROKER_URL = CELERY_BROKER_URL
 CELERY_TASK_TRACK_STARTED = True

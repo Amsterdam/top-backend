@@ -1,0 +1,120 @@
+name: top-backend
+tenantId: 72fca1b1-2c2e-4376-a445-294d80196804
+
+labels:
+  app: top-backend
+
+image:
+  registry: saks01weuacrpgpgo5qvmwo.azurecr.io
+  tag: latest
+
+network:
+  allow-ingress:
+    selector: app == 'top-backend'
+    ingress:
+      - action: Allow
+    egress:
+      - action: Allow
+
+serviceAccount: app
+serviceAccounts:
+  app: {}
+
+secrets:
+  certificate:
+    type: keyvault
+    tls: wonen
+
+deployments:
+  top-backend:
+    image:
+      repository: salmagundi/top-backend
+    securityContext:
+      runAsUser: 101
+    selectorLabels:
+      component: top-backend
+    containers:
+      - name: main
+        ports:
+          - port: 8080
+            name: http
+    tempDirs:
+      - /tmp
+      - /static
+
+  top-celery-worker:
+    image:
+      repository: salmagundi/top-backend
+    selectorLabels:
+      component: top-celery-worker
+    containers:
+      - name: main
+        command:
+          - celery
+        args:
+          - "-A"
+          - "settings"
+          - "worker"
+          - "-l"
+          - "info"
+          - "-Q"
+          - "AZA"
+    tempDirs:
+      - /tmp
+      - /static
+
+  top-celery-beat:
+    image:
+      repository: salmagundi/top-backend
+    selectorLabels:
+      component: top-celery-beat
+    containers:
+      - name: main
+        command:
+          - celery
+        args:
+          - "-A"
+          - "settings"
+          - "beat"
+          - "-l"
+          - "debug"
+          - "--scheduler"
+          - "django_celery_beat.schedulers:DatabaseScheduler"
+    tempDirs:
+      - /tmp
+      - /static
+
+services:
+  top-backend:
+    selector:
+      component: top-backend
+    ports:
+      - port: 8080
+        targetPort: 8080
+
+ingress:
+  top-backend-internal:
+    className: nginx-internal
+    paths:
+      - path: /
+        pathType: Prefix
+        service: top-backend
+        port: 8080
+    tls: certificate
+
+jobs:
+  certificate-init:
+    image:
+      repository: salmagundi/top-backend
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+    labels:
+      component: certificate
+    secrets:
+      - certificate
+    containers:
+      - name: main
+        command:
+          - sleep
+        args:
+          - "1"

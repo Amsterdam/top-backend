@@ -7,7 +7,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
 
 app = Celery("proj")
 app.config_from_object("django.conf:settings", namespace="CELERY")
-
+app.conf.task_default_queue = 'TOP'
 
 @setup_logging.connect
 def config_loggers(*args, **kwargs):
