@@ -9,7 +9,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from utils.queries_zaken_api import get_headers
 
-from .serializers import HousingCorporationSerializer, MeldingenSerializer
+from .serializers import (
+    HousingCorporationSerializer,
+    MeldingenSerializer,
+    PowerbrowserSerializer,
+)
 
 bag_id = OpenApiParameter(
     name="bag_id",
@@ -68,6 +72,17 @@ def fetch_residents(bag_id, auth_header=None):
     return response.json(), response.status_code
 
 
+def fetch_power_browser_permits(bag_id, auth_header=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/permits-powerbrowser/"
+    response = requests.get(
+        url,
+        timeout=30,
+        headers=get_headers(auth_header),
+    )
+
+    return response.json(), response.status_code
+
+
 class AddressViewSet(ViewSet):
     lookup_field = "bag_id"
 
@@ -77,7 +92,7 @@ class AddressViewSet(ViewSet):
 
         response = requests.get(
             url,
-            timeout=10,
+            timeout=30,
             headers={
                 "Authorization": request.headers.get("Authorization"),
             },
@@ -85,6 +100,21 @@ class AddressViewSet(ViewSet):
         response.raise_for_status()
 
         return Response(response.json())
+
+    @extend_schema(
+        description="Get B&B PowerBrowser permit details based on bag id",
+        responses={status.HTTP_200_OK: PowerbrowserSerializer(many=True)},
+    )
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="permits-powerbrowser",
+    )
+    def power_browser_permits_by_bag_id(self, request, bag_id):
+        data, status_code = fetch_power_browser_permits(
+            bag_id, get_keycloak_auth_header_from_request(request)
+        )
+        return Response(data, status=status_code)
 
     @extend_schema(
         description="Gets the projects associated with the requested team",
