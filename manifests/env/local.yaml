@@ -2,7 +2,7 @@ image:
   registry: 127.0.0.1:5001
   imagePullPolicy: Always
 
-host: top-backend.localhost
+host: top-b.local
 
 secrets:
   certificate:
@@ -18,7 +18,7 @@ configMaps:
       DJANGO_SETTINGS_MODULE: settings.settings
       DJANGO_SECRET_KEY: local
       DJANGO_DEBUG: "True"
-      DJANGO_ALLOWED_HOSTS: 0.0.0.0,localhost,api,top-backend.localhost
+      DJANGO_ALLOWED_HOSTS: 0.0.0.0,localhost,api,top-backend.localhost,top-b.local
       CORS_ORIGIN_WHITELIST: http://0.0.0.0:3000,http://localhost:3000,http://0.0.0.0:2999,http://localhost:2999
       DATABASE_NAME: looplijsten
       DATABASE_USER: salmagundi
