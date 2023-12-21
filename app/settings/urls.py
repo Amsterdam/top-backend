@@ -12,6 +12,17 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django.views.generic import View
+from django.http import JsonResponse
+from django.conf.urls import url
+
+
+
+class MyView(View):
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({}, status=204)
+
+
 
 admin.site.site_header = "Wonen looplijsten"
 admin.site.site_title = "Wonen looplijsten"
@@ -52,6 +63,7 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema-v1"),
         name="swagger-ui",
     ),
+    url(regex=r'^$', view=MyView.as_view(), name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # JSON handlers for errors
