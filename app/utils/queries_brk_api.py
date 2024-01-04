@@ -49,6 +49,8 @@ def request_new_token():
 
     token_request_url = settings.BRK_ACCESS_URL
     try: 
+        logger.error("token req url", token_request_url)
+        logger.error("token req payload", payload)
         response = requests.post(token_request_url, data=payload, timeout=0.5)
     except Exception as e:
         logger.error("Request token error: ", e)
@@ -56,6 +58,7 @@ def request_new_token():
     response_json = response.json()
     logger.error("RESPONSE JSON: ", response_json)
     access_token = response_json.get("access_token")
+    logger.error("ACCESS TOKEN: ", access_token)
     set_token(access_token)
 
     expires_in = response_json.get("expires_in")
