@@ -40,6 +40,7 @@ def set_expiry(expiry):
 
 
 def request_new_token():
+    logger.error("Start request_new_token")
     payload = {
         "grant_type": "client_credentials",
         "client_id": settings.BRK_ACCESS_CLIENT_ID,
@@ -47,11 +48,13 @@ def request_new_token():
     }
 
     token_request_url = settings.BRK_ACCESS_URL
-
-    response = requests.post(token_request_url, data=payload, timeout=0.5)
+    try: 
+        response = requests.post(token_request_url, data=payload, timeout=0.5)
+    except Exception as e:
+        logger.error("Request token error: ", e)
     response.raise_for_status()
     response_json = response.json()
-
+    logger.error("RESPONSE JSON: ", response_json)
     access_token = response_json.get("access_token")
     set_token(access_token)
 
@@ -87,11 +90,7 @@ def get_brk_request_headers():
 
 @retry(stop=stop_after_attempt(3), after=after_log(logger, logging.ERROR))
 def request_brk_data(bag_id):
-    logger.error("Start")
-    try:
-        headers = get_brk_request_headers()
-    except Exception as e:
-        logger.error("Headers: ", e)
+    headers = get_brk_request_headers()
     logger.error("Headers", headers)
     try: 
         brk_data_request = requests.get(
