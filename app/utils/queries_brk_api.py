@@ -88,12 +88,16 @@ def get_brk_request_headers():
 @retry(stop=stop_after_attempt(3), after=after_log(logger, logging.ERROR))
 def request_brk_data(bag_id):
     headers = get_brk_request_headers()
-    brk_data_request = requests.get(
-        settings.BRK_API_OBJECT_EXPAND_URL,
-        params={"verblijfsobjecten__id": bag_id},
-        headers=headers,
-        timeout=0.5,
-    )
+    logger.error("Headers", headers)
+    try: 
+        brk_data_request = requests.get(
+            settings.BRK_API_OBJECT_EXPAND_URL,
+            params={"verblijfsobjecten__id": bag_id},
+            headers=headers,
+            timeout=0.5,
+        )
+    except Exception as e:
+        logger.error("ERR: ", e)
     brk_data_request.raise_for_status()
     brk_data = brk_data_request.json()
     return brk_data
