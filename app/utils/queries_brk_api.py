@@ -87,7 +87,11 @@ def get_brk_request_headers():
 
 @retry(stop=stop_after_attempt(3), after=after_log(logger, logging.ERROR))
 def request_brk_data(bag_id):
-    headers = get_brk_request_headers()
+    logger.error("Start")
+    try:
+        headers = get_brk_request_headers()
+    except Exception as e:
+        logger.error("Headers: ", e)
     logger.error("Headers", headers)
     try: 
         brk_data_request = requests.get(
