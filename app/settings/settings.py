@@ -347,6 +347,7 @@ if APPLICATIONINSIGHTS_CONNECTION_STRING:
     LOGGING["loggers"][""]["handlers"] = ["azure", "console"]
     LOGGING["loggers"]["apps"]["handlers"] = ["azure", "console"]
     LOGGING["loggers"]["woonfraude_model"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["celery"]["handlers"] = ["azure", "console", "celery"]
 
 
 
