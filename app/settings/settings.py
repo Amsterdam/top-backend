@@ -3,15 +3,14 @@ import sys
 from datetime import timedelta
 from os.path import join
 
-import sentry_sdk
 from keycloak_oidc.default_settings import *  # noqa
-from sentry_sdk.integrations.django import DjangoIntegration
+from opencensus.trace import config_integration
 
 from .azure_settings import Azure
 
 azure = Azure()
 
-
+config_integration.trace_integrations(['requests', 'logging', 'postgresql'])
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -70,6 +69,8 @@ MIDDLEWARE = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.accesslogs.middleware.LoggingMiddleware",
+    "opencensus.ext.django.middleware.OpencensusMiddleware",
+
 )
 
 ROOT_URLCONF = "settings.urls"
@@ -233,17 +234,12 @@ CONSTANCE_CONFIG = {
 
 TAG_NAME = os.getenv("TAG_NAME", "default-release")
 
-# Error logging through Sentry
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN"),
-    integrations=[DjangoIntegration()],
-    release=TAG_NAME,
-)
-
 # These variables are not used but must me set as None for the keycloak_oidc library.
 # TODO: Change the keycloak_oidc library so this can be removed.
 OIDC_RP_CLIENT_ID = None
 OIDC_RP_CLIENT_SECRET = None
+OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
+OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
 OIDC_AUTHORIZED_GROUPS = ("wonen_top", "wonen_zaak")
 OIDC_AUTHENTICATION_CALLBACK_URL = "v1:oidc-authenticate"
@@ -282,6 +278,11 @@ LOGGING = {
             "format": "{levelname} {message}",
             "style": "{",
         },
+        
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO"
     },
     "handlers": {
         "console": {
@@ -312,8 +313,43 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": True,
+        },
     },
 }
+
+APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv(
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"
+)
+
+if APPLICATIONINSIGHTS_CONNECTION_STRING:
+    OPENCENSUS = {
+        "TRACE": {
+            "SAMPLER": "opencensus.trace.samplers.ProbabilitySampler(rate=1)",
+            "EXPORTER": f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
+        }
+    }
+    LOGGING["handlers"]["azure"] = {
+        "level": "INFO",
+        "class": "opencensus.ext.azure.log_exporter.AzureLogHandler",
+        "connection_string": APPLICATIONINSIGHTS_CONNECTION_STRING,
+    }
+    LOGGING["root"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["django"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"][""]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["apps"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["woonfraude_model"]["handlers"] = ["azure", "console"]
+
+
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
