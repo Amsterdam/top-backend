@@ -12,7 +12,8 @@ from django.db import transaction
 from rest_framework import serializers
 
 from .tasks import push_visit
-
+import logging
+logger = logging.getLogger(__name__)
 
 class SituationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -78,6 +79,7 @@ class VisitSerializer(serializers.ModelSerializer):
         return super().is_valid(raise_exception)
 
     def _complete_visit_and_update_aza(self, instance):
+        logger.info("TOP: Executed _complete_visit_and_update_aza")
         instance.capture_visit_meta_data()
         auth_header = get_keycloak_auth_header_from_request(self.context.get("request"))
         task = push_visit.s(
