@@ -34,7 +34,7 @@ class TeamSettingsViewSet(ModelViewSet):
     """
 
     serializer_class = TeamSettingsSerializer
-    queryset = TeamSettings.objects.filter(enabled=True)
+    queryset = TeamSettings.objects.filter(enabled=True).values('name', 'id')
 
     @extend_schema(
         description="Gets the reasons associated with the requested team",
