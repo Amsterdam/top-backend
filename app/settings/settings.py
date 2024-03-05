@@ -221,8 +221,10 @@ sentry_sdk.init(
     release=TAG_NAME,
 )
 
-OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
-OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
+# These variables are not used but must me set as None for the keycloak_oidc library.
+# TODO: Change the keycloak_oidc library so this can be removed.
+OIDC_RP_CLIENT_ID = None
+OIDC_RP_CLIENT_SECRET = None
 OIDC_USE_NONCE = False
 OIDC_AUTHORIZED_GROUPS = ("wonen_top", "wonen_zaak")
 OIDC_AUTHENTICATION_CALLBACK_URL = "v1:oidc-authenticate"
