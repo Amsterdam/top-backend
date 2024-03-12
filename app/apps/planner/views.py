@@ -11,6 +11,7 @@ from apps.planner.serializers import (
     NewDaySettingsSerializer,
     TeamScheduleTypesSerializer,
     TeamSettingsSerializer,
+    TeamSettingsThemeSerializer,
 )
 from apps.users.utils import get_keycloak_auth_header_from_request
 from django.conf import settings
@@ -190,3 +191,12 @@ def dumpdata(request):
     sys.stdout = sysout
 
     return response
+
+class TeamSettingsThemesViewSet(ModelViewSet):
+    """
+    Gets all themes from team-settings
+    """
+
+    serializer_class = TeamSettingsThemeSerializer
+    queryset = TeamSettings.objects.filter(enabled=True)
+    http_method_names = ['get']

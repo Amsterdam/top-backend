@@ -290,3 +290,12 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
             "day_settings_list",
             "fraud_prediction_model",
         )
+
+
+class TeamSettingsThemeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamSettings
+        fields = (
+            "id",
+            "name",
+        )
