@@ -192,6 +192,7 @@ def dumpdata(request):
 
     return response
 
+
 class TeamSettingsThemesViewSet(ModelViewSet):
     """
     Gets all themes from team-settings
