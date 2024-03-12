@@ -1,6 +1,7 @@
 """
 Tests for accesslogs models
 """
+
 from apps.accesslogs.models import LogEntry
 from django.db.utils import DataError
 from django.test import TestCase

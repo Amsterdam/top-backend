@@ -1,6 +1,7 @@
 """
 Tests for the health views
 """
+
 from unittest.mock import Mock, patch
 
 from apps.health.views import health_default

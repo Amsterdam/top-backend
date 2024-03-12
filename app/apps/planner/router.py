@@ -1,4 +1,8 @@
-from apps.planner.views import DaySettingsViewSet, TeamSettingsViewSet, TeamSettingsThemesViewSet
+from apps.planner.views import (
+    DaySettingsViewSet,
+    TeamSettingsThemesViewSet,
+    TeamSettingsViewSet,
+)
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()

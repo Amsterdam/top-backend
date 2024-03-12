@@ -52,9 +52,11 @@ def get_fraudprediction_cases_from_AZA_by_model_name(model_name):
             queryParams = {
                 "open_cases": "true",
                 "state_types": [str(state.get("id", 0)) for state in state_types],
-                "theme": team_settings.get("zaken_team_id")
-                if team_settings is not None
-                else None,
+                "theme": (
+                    team_settings.get("zaken_team_id")
+                    if team_settings is not None
+                    else None
+                ),
                 "page_size": 1000,
             }
             logger.info("With queryParams")

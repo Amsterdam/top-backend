@@ -200,4 +200,4 @@ class TeamSettingsThemesViewSet(ModelViewSet):
 
     serializer_class = TeamSettingsThemeSerializer
     queryset = TeamSettings.objects.filter(enabled=True)
-    http_method_names = ['get']
+    http_method_names = ["get"]

@@ -1,6 +1,7 @@
 """
 Tests for helpers
 """
+
 from datetime import datetime
 
 from apps.cases.models import Case

@@ -1,6 +1,7 @@
 """
 Tests for accesslogs middleware
 """
+
 from unittest.mock import Mock
 
 from apps.accesslogs.middleware import LoggingMiddleware
