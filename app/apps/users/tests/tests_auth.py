@@ -4,6 +4,7 @@ Note: It's possible to write more extensive tests for the auth module, but the m
 intention with these tests is to make sure a User is created of synched when authenticating
 with the OIDC provider
 """
+
 from unittest.mock import Mock
 
 from django.core.exceptions import SuspiciousOperation

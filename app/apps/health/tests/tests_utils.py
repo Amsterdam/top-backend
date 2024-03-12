@@ -1,6 +1,7 @@
 """
 Tests for the health util functions
 """
+
 import json
 from unittest.mock import Mock, patch
 

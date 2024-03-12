@@ -1,6 +1,7 @@
 """
 Tests for cases models
 """
+
 from apps.users.models import User
 from django.db import transaction
 from django.test import TestCase

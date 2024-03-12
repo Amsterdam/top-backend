@@ -1,6 +1,7 @@
 """
 Tests for the health views
 """
+
 from apps.planner.utils import (
     filter_cases_with_postal_code,
     get_case_coordinates,

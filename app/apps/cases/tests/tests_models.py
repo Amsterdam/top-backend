@@ -1,6 +1,7 @@
 """
 Tests for cases models
 """
+
 from unittest.mock import Mock
 
 from apps.cases.models import Case
