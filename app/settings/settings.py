@@ -5,6 +5,7 @@ from os.path import join
 
 from keycloak_oidc.default_settings import *  # noqa
 from opencensus.trace import config_integration
+import socket
 
 from .azure_settings import Azure
 
@@ -434,6 +435,14 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TIMEZONE = "Europe/Amsterdam"
 CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "socket_keepalive": True,
+    "socket_keepalive_options": {
+        socket.TCP_KEEPIDLE: 60,
+        socket.TCP_KEEPCNT: 5,
+        socket.TCP_KEEPINTVL: 10,
+    },
+}
 
 SPECTACULAR_DEFAULTS = {
     "POSTPROCESSING_HOOKS": [
