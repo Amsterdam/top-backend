@@ -43,16 +43,22 @@ urlpatterns = [
     path("health/", include("health_check.urls")),
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
-    # # Swagger/OpenAPI documentation
-    path(
-        "api/v1/schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema-v1"
-    ),
-    path(
-        "api/v1/swagger/",
-        SpectacularSwaggerView.as_view(url_name="schema-v1"),
-        name="swagger-ui",
-    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += [
+        # # Swagger/OpenAPI documentation
+        path(
+            "api/v1/schema/",
+            SpectacularAPIView.as_view(api_version="v1"),
+            name="schema-v1",
+        ),
+        path(
+            "api/v1/swagger/",
+            SpectacularSwaggerView.as_view(url_name="schema-v1"),
+            name="swagger-ui",
+        ),
+    ]
 
 # JSON handlers for errors
 handler500 = "rest_framework.exceptions.server_error"
