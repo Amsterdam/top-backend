@@ -8,20 +8,18 @@ from apps.users import router as users_router
 from apps.users.views import IsAuthorizedView, ObtainAuthTokenOIDC
 from apps.visits import router as visits_router
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from django.views.generic import View
 from django.http import JsonResponse
-from django.conf.urls import url
-
+from django.urls import include, path
+from django.views.generic import View
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 class MyView(View):
     def get(self, request, *args, **kwargs):
         return JsonResponse({}, status=204)
-
 
 
 admin.site.site_header = "Wonen looplijsten"
@@ -54,17 +52,23 @@ urlpatterns = [
     path("health/", include("health_check.urls")),
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
-    # # Swagger/OpenAPI documentation
-    path(
-        "api/v1/schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema-v1"
-    ),
-    path(
-        "api/v1/swagger/",
-        SpectacularSwaggerView.as_view(url_name="schema-v1"),
-        name="swagger-ui",
-    ),
-    url(regex=r'^$', view=MyView.as_view(), name='index'),
+    url(regex=r"^$", view=MyView.as_view(), name="index"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += [
+        # # Swagger/OpenAPI documentation
+        path(
+            "api/v1/schema/",
+            SpectacularAPIView.as_view(api_version="v1"),
+            name="schema-v1",
+        ),
+        path(
+            "api/v1/swagger/",
+            SpectacularSwaggerView.as_view(url_name="schema-v1"),
+            name="swagger-ui",
+        ),
+    ]
 
 # JSON handlers for errors
 handler500 = "rest_framework.exceptions.server_error"
