@@ -36,6 +36,7 @@ def stuck_tasks():
     stuck_tasks = []
     for task_id in AsyncResult.all().iterkeys():
         task = AsyncResult(task_id)
+        print(task)
         if task.state == 'STARTED' and (timezone.now() - task.date_started).total_seconds() > threshold_seconds:
             stuck_tasks.append({
                 'task_id': task_id,
