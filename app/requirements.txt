@@ -38,7 +38,7 @@ joblib==1.3.2
 
 #redis
 redis==3.5.3
-
+django_redis==3.1.6
 #Azure
 azure-identity
 applicationinsights==0.11.10
