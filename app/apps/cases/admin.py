@@ -1,10 +1,7 @@
 from apps.cases.models import Case
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
-from django.contrib import admin
-from django.http import HttpResponse
-from django.urls import path
-from django_redis import get_redis_connection
+
 
 class HasUnderscoreFilter(SimpleListFilter):
     title = "underscore"
@@ -22,3 +19,10 @@ class HasUnderscoreFilter(SimpleListFilter):
                 return queryset.all().exclude(case_id__contains="_")
             elif self.value() == "yes_":
                 return queryset.all().filter(case_id__contains="_")
+
+
+@admin.register(Case)
+class CaseAdmin(admin.ModelAdmin):
+    list_filter = (HasUnderscoreFilter, "is_top_bwv_case")
+    list_display = ("id", "case_id", "is_top_bwv_case")
+    search_fields = ("case_id",)
