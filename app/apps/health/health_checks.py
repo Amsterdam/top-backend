@@ -4,7 +4,7 @@ import requests
 from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
-from settings.celery import debug_task
+from settings.celery import debug_task, stuck_tasks
 from utils import queries_brk_api as brk_api
 
 logger = logging.getLogger(__name__)
@@ -80,10 +80,13 @@ class OnderhuurHitkansServiceCheck(APIServiceCheckBackend):
 
 
 class CeleryExecuteTask(BaseHealthCheckBackend):
-    def check_status(self):
-        result = debug_task.apply_async(ignore_result=False)
-        assert result, "Debug task executes successfully"
+    result = debug_task.apply_async(ignore_result=False)
+    assert result, "Debug task executes successfully"
 
+class CeleryStuckTasks(BaseHealthCheckBackend):
+    def check_status(self):
+        result = stuck_tasks()
+        assert result, "No stuck tasks"
 
 class BRKServiceCheck(BaseHealthCheckBackend):
     """
