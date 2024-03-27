@@ -55,8 +55,7 @@ INSTALLED_APPS = (
     "apps.health",
     "apps.addresses",
     # Enable admin templates inheritance
-    "django.contrib.admin",
-    "redis_status"
+    "django.contrib.admin"
 )
 
 # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
