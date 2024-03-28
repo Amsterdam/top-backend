@@ -34,10 +34,9 @@ def stuck_tasks():
     # Query Celery's task database for tasks that are in progress for more than a certain duration
     threshold_seconds = 10  # Adjust this threshold as needed (e.g., 10 minutes)
     stuck_tasks = []
-    for task in app.control.inspect().registered():
-        print()
-        print(task)
-
+    print(app.control.inspect())
+    print(app.control.inspect().active())
+    print(app.control.inspect().registered())
     if stuck_tasks:
         return False
     else:
