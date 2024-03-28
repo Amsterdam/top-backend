@@ -13,9 +13,9 @@ class HealthConfig(AppConfig):
             CeleryStuckTasks
         )
 
-        plugin_dir.register(BAGServiceCheck)
-        plugin_dir.register(BRKServiceCheck)
-        plugin_dir.register(CeleryExecuteTask)
+        # plugin_dir.register(BAGServiceCheck)
+        # plugin_dir.register(BRKServiceCheck)
+        # plugin_dir.register(CeleryExecuteTask)
         plugin_dir.register(CeleryStuckTasks)
         # Only uncomment below if endpoints for OnderhuurHitkans are available on production
         # plugin_dir.register(OnderhuurHitkansServiceCheck)
