@@ -49,7 +49,7 @@ def push_visit(self, visit_id, auth_header=None, task_name_ids=[]):
             url,
             timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
             json=data,
-            headers=get_headers(auth_header),
+            headers=get_headers(),
         )
         response.raise_for_status()
     except Exception as exception:
