@@ -9,19 +9,19 @@ Dankzij de TOP app hebben toezichthouders Wonen veel informatie over zaken, adre
 
 ## Build:
 ```bash
-docker-compose build
+docker-compose -f docker-compose.local.yml build
 ```
 
 ## Creating networks
 Before running the project, you need to create the networks:
 ```bash
-docker network create looplijsten_backend
+docker network create top_network
 docker network create top_and_zaak_backend_bridge
 ```
 ## Starting the development server:
 Start the dev server for local development:
 ```bash
-docker-compose up
+docker-compose -f docker-compose.local.yml up
 ```
 
 ## Importing fixtures dump

@@ -1,17 +1,17 @@
 import os
+import socket
 import sys
 from datetime import timedelta
 from os.path import join
 
 from keycloak_oidc.default_settings import *  # noqa
 from opencensus.trace import config_integration
-import socket
 
 from .azure_settings import Azure
 
 azure = Azure()
 
-config_integration.trace_integrations(['requests', 'logging', 'postgresql'])
+config_integration.trace_integrations(["requests", "logging", "postgresql"])
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -71,7 +71,6 @@ MIDDLEWARE = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # "apps.accesslogs.middleware.LoggingMiddleware",
     "opencensus.ext.django.middleware.OpencensusMiddleware",
-
 )
 
 ROOT_URLCONF = "settings.urls"
@@ -95,11 +94,11 @@ DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
 DATABASE_USER = os.getenv("DATABASE_USER", "dev")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
 DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
-DATABASE_OPTIONS = {'sslmode': 'allow', 'connect_timeout': 5}
+DATABASE_OPTIONS = {"sslmode": "allow", "connect_timeout": 5}
 
-if 'azure.com' in DATABASE_HOST:
+if "azure.com" in DATABASE_HOST:
     DATABASE_PASSWORD = azure.auth.db_password
-    DATABASE_OPTIONS['sslmode'] = 'require'
+    DATABASE_OPTIONS["sslmode"] = "require"
 
 DATABASES = {
     "default": {
@@ -110,7 +109,7 @@ DATABASES = {
         "HOST": DATABASE_HOST,
         "CONN_MAX_AGE": 60 * 5,
         "PORT": DATABASE_PORT,
-        'OPTIONS': {'sslmode': 'allow', 'connect_timeout': 5},
+        "OPTIONS": {"sslmode": "allow", "connect_timeout": 5},
     },
 }
 
@@ -247,23 +246,23 @@ OIDC_AUTHENTICATION_CALLBACK_URL = "v1:oidc-authenticate"
 
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv(
     "OIDC_OP_AUTHORIZATION_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth",
 )
 OIDC_OP_TOKEN_ENDPOINT = os.getenv(
     "OIDC_OP_TOKEN_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token",
 )
 OIDC_OP_USER_ENDPOINT = os.getenv(
     "OIDC_OP_USER_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo",
 )
 OIDC_OP_JWKS_ENDPOINT = os.getenv(
     "OIDC_OP_JWKS_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs",
 )
 OIDC_OP_LOGOUT_ENDPOINT = os.getenv(
     "OIDC_OP_LOGOUT_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
 )
 
 
@@ -279,12 +278,8 @@ LOGGING = {
             "format": "{levelname} {message}",
             "style": "{",
         },
-        
     },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO"
-    },
+    "root": {"handlers": ["console"], "level": "INFO"},
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
@@ -349,9 +344,6 @@ if APPLICATIONINSIGHTS_CONNECTION_STRING:
     LOGGING["loggers"]["apps"]["handlers"] = ["azure", "console"]
     LOGGING["loggers"]["woonfraude_model"]["handlers"] = ["azure", "console"]
     LOGGING["loggers"]["celery"]["handlers"] = ["azure", "console", "celery"]
-
-
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),

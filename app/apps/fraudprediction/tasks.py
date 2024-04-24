@@ -36,7 +36,7 @@ def fraudpredict_vakantieverhuur_task(self):
     """
     This task is still being called by Celery.
     If Celery cannot find this task it will generate a KeyError and celery will stop.
-    To prevent failures in production just pass this task and write a log to Sentry.
+    To prevent failures in production just pass this task.
     TODO: Remove this over time.
     """
     logger.error("The 'fraudpredict_vakantieverhuur_task' is called by Celery")
