@@ -44,7 +44,7 @@ class Case(models.Model):
         }
         response = requests.get(
             url,
-            timeout=5,
+            timeout=10,
             params=queryParams,
             headers=get_headers(auth_header),
         )
