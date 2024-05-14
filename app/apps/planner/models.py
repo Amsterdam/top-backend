@@ -123,6 +123,30 @@ class TeamSettings(models.Model):
 
         return response.json().get("results", [])
 
+    def fetch_subjects(self, auth_header=None):
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_id}/subjects/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
+
+    def fetch_tags(self, auth_header=None):
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_id}/tags/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
+
     class Meta:
         verbose_name_plural = "Team settings"
         ordering = ["name"]
@@ -231,6 +255,16 @@ class DaySettings(models.Model):
         blank=True,
         null=True,
     )
+    subjects = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    tags = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
     districts = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
@@ -278,6 +312,8 @@ class DaySettings(models.Model):
                 "schedule_week_segment": self.week_segments,
                 "project": self.project_ids,
                 "reason": self.reasons,
+                "subject": self.subjects,
+                "tag": self.tags,
                 "district": self.districts,
                 "priority": self.priorities,
             }
