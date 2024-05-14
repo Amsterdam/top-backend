@@ -1,3 +1,5 @@
+import logging
+
 from apps.cases.models import Case
 from apps.users.serializers import UserSerializer
 from apps.users.utils import get_keycloak_auth_header_from_request
@@ -12,8 +14,9 @@ from django.db import transaction
 from rest_framework import serializers
 
 from .tasks import push_visit
-import logging
+
 logger = logging.getLogger(__name__)
+
 
 class SituationSerializer(serializers.ModelSerializer):
     class Meta:

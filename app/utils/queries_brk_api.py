@@ -48,7 +48,7 @@ def request_new_token():
     }
 
     token_request_url = settings.BRK_ACCESS_URL
-    try: 
+    try:
         logger.error("token req url", token_request_url)
         logger.error("token req payload", payload)
         response = requests.post(token_request_url, data=payload, timeout=0.5)
@@ -95,7 +95,7 @@ def get_brk_request_headers():
 def request_brk_data(bag_id):
     headers = get_brk_request_headers()
     logger.error("Headers", headers)
-    try: 
+    try:
         brk_data_request = requests.get(
             settings.BRK_API_OBJECT_EXPAND_URL,
             params={"verblijfsobjecten__id": bag_id},

@@ -225,6 +225,16 @@ class ItinerarySettings(models.Model):
         blank=True,
         null=True,
     )
+    subjects = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    tags = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
     districts = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
@@ -261,6 +271,8 @@ class ItinerarySettings(models.Model):
                 "district": self.districts,
                 "project": self.project_ids,
                 "priority": self.priorities,
+                "subject": self.subjects,
+                "tag": self.tags,
             }
         )
         return cases_query_params
