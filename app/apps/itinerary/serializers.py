@@ -54,6 +54,8 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
             "reasons",
             "state_types",
             "project_ids",
+            "subjects",
+            "tags",
             "housing_corporations",
         )
 
@@ -149,6 +151,8 @@ class ItinerarySerializer(serializers.ModelSerializer):
             week_segments=day_settings.week_segments,
             priorities=day_settings.priorities,
             project_ids=day_settings.project_ids,
+            subjects=day_settings.subjects,
+            tags=day_settings.tags,
             districts=day_settings.districts,
             housing_corporations=day_settings.housing_corporations,
             housing_corporation_combiteam=day_settings.housing_corporation_combiteam,
