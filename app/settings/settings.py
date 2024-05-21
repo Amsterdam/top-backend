@@ -265,7 +265,7 @@ OIDC_OP_LOGOUT_ENDPOINT = os.getenv(
     "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
 )
 
-
+LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "DEBUG")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -279,15 +279,15 @@ LOGGING = {
             "style": "{",
         },
     },
-    "root": {"handlers": ["console"], "level": "INFO"},
+    "root": {"handlers": ["console"], "level": LOGGING_LEVEL},
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "DEBUG",
+            "level": LOGGING_LEVEL,
             "stream": sys.stdout,
         },
         "celery": {
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "class": "logging.StreamHandler",
             "stream": sys.stdout,
         },
@@ -295,27 +295,27 @@ LOGGING = {
     "loggers": {
         "woonfraude_model": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": True,
         },
         "apps": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": True,
         },
-        "mozilla_django_oidc": {"handlers": ["console"], "level": "DEBUG"},
+        "mozilla_django_oidc": {"handlers": ["console"], "level": LOGGING_LEVEL},
         "celery": {
             "handlers": ["celery", "console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": True,
         },
         "django": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": True,
         },
         "": {
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "handlers": ["console"],
             "propagate": True,
         },
