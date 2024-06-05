@@ -6,7 +6,7 @@ from os.path import join
 
 from keycloak_oidc.default_settings import *  # noqa
 from opencensus.trace import config_integration
-
+from opencensus.ext.azure.trace_exporter import AzureExporter
 from .azure_settings import Azure
 
 azure = Azure()
@@ -327,14 +327,28 @@ APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv(
 )
 
 if APPLICATIONINSIGHTS_CONNECTION_STRING:
+     # Only log queries when in DEBUG due to high cost
+    def filter_traces(envelope):
+        if LOGGING_LEVEL == "DEBUG":
+            return True
+        log_data = envelope.data.baseData
+        if 'query' in log_data["name"].lower():
+            return False
+        if log_data["name"] == "GET /":
+            return False
+        if 'applicationinsights' in log_data["message"].lower():
+            return False
+        return True
+    exporter = AzureExporter(connection_string=APPLICATIONINSIGHTS_CONNECTION_STRING)
+    exporter.add_telemetry_processor(filter_traces)
     OPENCENSUS = {
         "TRACE": {
             "SAMPLER": "opencensus.trace.samplers.ProbabilitySampler(rate=1)",
-            "EXPORTER": f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
+            "EXPORTER": exporter
         }
     }
     LOGGING["handlers"]["azure"] = {
-        "level": "INFO",
+        "level": LOGGING_LEVEL,
         "class": "opencensus.ext.azure.log_exporter.AzureLogHandler",
         "connection_string": APPLICATIONINSIGHTS_CONNECTION_STRING,
     }
