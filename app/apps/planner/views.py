@@ -7,6 +7,8 @@ from apps.planner.serializers import (
     CaseProjectSerializer,
     CaseReasonSerializer,
     CaseStateTypeSerializer,
+    CaseSubjectSerializer,
+    CaseTagSerializer,
     DaySettingsSerializer,
     NewDaySettingsSerializer,
     TeamScheduleTypesSerializer,
@@ -118,6 +120,50 @@ class TeamSettingsViewSet(ModelViewSet):
             team_settings.fetch_projects(
                 get_keycloak_auth_header_from_request(request)
             ),
+            many=True,
+        )
+        data = serializer.data
+
+        return Response(data)
+
+    @extend_schema(
+        description="Gets the subjects associated with the requested team",
+        responses={status.HTTP_200_OK: CaseSubjectSerializer(many=True)},
+    )
+    @action(
+        detail=True,
+        url_path="subjects",
+        methods=["get"],
+    )
+    def subjects(self, request, pk):
+        team_settings = self.get_object()
+        data = []
+
+        serializer = CaseSubjectSerializer(
+            team_settings.fetch_subjects(
+                get_keycloak_auth_header_from_request(request)
+            ),
+            many=True,
+        )
+        data = serializer.data
+
+        return Response(data)
+
+    @extend_schema(
+        description="Gets the tags associated with the requested team",
+        responses={status.HTTP_200_OK: CaseTagSerializer(many=True)},
+    )
+    @action(
+        detail=True,
+        url_path="tags",
+        methods=["get"],
+    )
+    def tags(self, request, pk):
+        team_settings = self.get_object()
+        data = []
+
+        serializer = CaseTagSerializer(
+            team_settings.fetch_tags(get_keycloak_auth_header_from_request(request)),
             many=True,
         )
         data = serializer.data

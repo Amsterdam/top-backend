@@ -1,11 +1,18 @@
 import os
+import socket
 import sys
 from datetime import timedelta
 from os.path import join
 
-import sentry_sdk
 from keycloak_oidc.default_settings import *  # noqa
-from sentry_sdk.integrations.django import DjangoIntegration
+from opencensus.ext.azure.trace_exporter import AzureExporter
+from opencensus.trace import config_integration
+
+from .azure_settings import Azure
+
+azure = Azure()
+
+config_integration.trace_integrations(["requests", "logging", "postgresql"])
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,7 +45,6 @@ INSTALLED_APPS = (
     "health_check.db",
     "health_check.contrib.migrations",
     "health_check.contrib.celery_ping",
-    "health_check.contrib.rabbitmq",
     # Your apps
     "apps.users",
     "apps.itinerary",
@@ -64,7 +70,8 @@ MIDDLEWARE = (
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "apps.accesslogs.middleware.LoggingMiddleware",
+    # "apps.accesslogs.middleware.LoggingMiddleware",
+    "opencensus.ext.django.middleware.OpencensusMiddleware",
 )
 
 ROOT_URLCONF = "settings.urls"
@@ -83,16 +90,30 @@ DEFAULT_DATABASE_NAME = "default"
 # Django 3.2 fixes warning
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
+DATABASE_HOST = os.getenv("DATABASE_HOST", "database")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
+DATABASE_USER = os.getenv("DATABASE_USER", "dev")
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
+DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
+DATABASE_OPTIONS = {"sslmode": "allow", "connect_timeout": 5}
+
+if "azure.com" in DATABASE_HOST:
+    DATABASE_PASSWORD = azure.auth.db_password
+    DATABASE_OPTIONS["sslmode"] = "require"
+
 DATABASES = {
-    DEFAULT_DATABASE_NAME: {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.environ.get("DATABASE_NAME"),
-        "USER": os.environ.get("DATABASE_USER"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-        "HOST": os.environ.get("DATABASE_HOST", "database"),
-        "PORT": "5432",
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": DATABASE_NAME,
+        "USER": DATABASE_USER,
+        "PASSWORD": DATABASE_PASSWORD,
+        "HOST": DATABASE_HOST,
+        "CONN_MAX_AGE": 60 * 5,
+        "PORT": DATABASE_PORT,
+        "OPTIONS": {"sslmode": "allow", "connect_timeout": 5},
     },
 }
+
 
 # General
 APPEND_SLASH = True
@@ -186,7 +207,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # CORS and allowed hosts
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
 CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST").split(",")
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/v[0-9]/",
@@ -214,43 +235,38 @@ CONSTANCE_CONFIG = {
 
 TAG_NAME = os.getenv("TAG_NAME", "default-release")
 
-# Error logging through Sentry
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN"),
-    integrations=[DjangoIntegration()],
-    release=TAG_NAME,
-)
-
 # These variables are not used but must me set as None for the keycloak_oidc library.
 # TODO: Change the keycloak_oidc library so this can be removed.
 OIDC_RP_CLIENT_ID = None
 OIDC_RP_CLIENT_SECRET = None
+OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
+OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
 OIDC_AUTHORIZED_GROUPS = ("wonen_top", "wonen_zaak")
 OIDC_AUTHENTICATION_CALLBACK_URL = "v1:oidc-authenticate"
 
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv(
     "OIDC_OP_AUTHORIZATION_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth",
 )
 OIDC_OP_TOKEN_ENDPOINT = os.getenv(
     "OIDC_OP_TOKEN_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token",
 )
 OIDC_OP_USER_ENDPOINT = os.getenv(
     "OIDC_OP_USER_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo",
 )
 OIDC_OP_JWKS_ENDPOINT = os.getenv(
     "OIDC_OP_JWKS_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs",
 )
 OIDC_OP_LOGOUT_ENDPOINT = os.getenv(
     "OIDC_OP_LOGOUT_ENDPOINT",
-    "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
+    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
 )
 
-
+LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "DEBUG")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -264,39 +280,86 @@ LOGGING = {
             "style": "{",
         },
     },
+    "root": {"handlers": ["console"], "level": LOGGING_LEVEL},
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "DEBUG",
+            "level": LOGGING_LEVEL,
             "stream": sys.stdout,
         },
         "celery": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": "celery.log",
-            "formatter": "verbose",
-            "maxBytes": 1024 * 1024 * 100,  # 100 mb
+            "level": LOGGING_LEVEL,
+            "class": "logging.StreamHandler",
+            "stream": sys.stdout,
         },
     },
     "loggers": {
         "woonfraude_model": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": True,
         },
         "apps": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": True,
         },
-        "mozilla_django_oidc": {"handlers": ["console"], "level": "DEBUG"},
+        "mozilla_django_oidc": {"handlers": ["console"], "level": LOGGING_LEVEL},
         "celery": {
             "handlers": ["celery", "console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
+            "propagate": True,
+        },
+        "django": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": True,
+        },
+        "": {
+            "level": LOGGING_LEVEL,
+            "handlers": ["console"],
             "propagate": True,
         },
     },
 }
+
+APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv(
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"
+)
+
+if APPLICATIONINSIGHTS_CONNECTION_STRING:
+    # Only log queries when in DEBUG due to high cost
+    def filter_traces(envelope):
+        if LOGGING_LEVEL == "DEBUG":
+            return True
+        log_data = envelope.data.baseData
+        if "query" in log_data["name"].lower():
+            return False
+        if log_data["name"] == "GET /":
+            return False
+        if "applicationinsights" in log_data["message"].lower():
+            return False
+        return True
+
+    exporter = AzureExporter(connection_string=APPLICATIONINSIGHTS_CONNECTION_STRING)
+    exporter.add_telemetry_processor(filter_traces)
+    OPENCENSUS = {
+        "TRACE": {
+            "SAMPLER": "opencensus.trace.samplers.ProbabilitySampler(rate=1)",
+            "EXPORTER": exporter,
+        }
+    }
+    LOGGING["handlers"]["azure"] = {
+        "level": LOGGING_LEVEL,
+        "class": "opencensus.ext.azure.log_exporter.AzureLogHandler",
+        "connection_string": APPLICATIONINSIGHTS_CONNECTION_STRING,
+    }
+    LOGGING["root"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["django"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"][""]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["apps"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["woonfraude_model"]["handlers"] = ["azure", "console"]
+    LOGGING["loggers"]["celery"]["handlers"] = ["azure", "console", "celery"]
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
@@ -366,20 +429,28 @@ SECRET_KEY_TOP_ZAKEN = os.environ.get("SECRET_KEY_TOP_ZAKEN", None)
 # AZA for accessing TOP
 SECRET_KEY_AZA_TOP = os.getenv("SECRET_KEY_AZA_TOP", None)
 
-RABBIT_MQ_URL = os.environ.get("RABBIT_MQ_URL")
-RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
-RABBIT_MQ_USERNAME = os.environ.get("RABBIT_MQ_USERNAME")
-RABBIT_MQ_PASSWORD = os.environ.get("RABBIT_MQ_PASSWORD")
-
+REDIS_HOST = os.getenv("REDIS_HOST")
+REDIS_PORT = os.getenv("REDIS_PORT")
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
+REDIS_URL = f"rediss://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
 HEALTHCHECK_CELERY_PING_TIMEOUT = 5
 
-CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_USERNAME}:{RABBIT_MQ_PASSWORD}@{RABBIT_MQ_URL}"
-
+CELERY_BROKER_URL = REDIS_URL
+BROKER_CONNECTION_MAX_RETRIES = None
+BROKER_CONNECTION_TIMEOUT = 120
 BROKER_URL = CELERY_BROKER_URL
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TIMEZONE = "Europe/Amsterdam"
 CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "socket_keepalive": True,
+    "socket_keepalive_options": {
+        socket.TCP_KEEPIDLE: 60,
+        socket.TCP_KEEPCNT: 5,
+        socket.TCP_KEEPINTVL: 10,
+    },
+}
 
 SPECTACULAR_DEFAULTS = {
     "POSTPROCESSING_HOOKS": [

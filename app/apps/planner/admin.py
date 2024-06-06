@@ -31,6 +31,8 @@ class DaySettingsInline(admin.TabularInline):
                     "max_use_limit",
                     "start_time",
                     "project_ids",
+                    "subjects",
+                    "tags",
                 )
             },
         ),

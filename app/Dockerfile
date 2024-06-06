@@ -25,10 +25,12 @@ RUN pip install uwsgi
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
-COPY deploy /deploy/
+
 
 RUN chmod +x /app/wait-for.sh
 RUN chmod +x /app/celery.sh
 RUN chmod +x /app/celery-beat.sh
+RUN chmod +x /app/deploy/entrypoint.sh
 
-CMD ["/deploy/entrypoint.sh"]
+ENTRYPOINT ["/app/deploy/entrypoint.sh"]
+CMD ["uwsgi", "--ini", "/app/deploy/config.ini"]
