@@ -1,6 +1,6 @@
 from apps.addresses import router as addresses_router
 from apps.cases import router as case_router
-from apps.health.views import health_default
+from apps.health.views import health_default, is_healthy
 from apps.itinerary import router as itinerary_router
 from apps.planner import router as planner_router
 from apps.planner.views import dumpdata as planner_dumpdata
@@ -50,6 +50,7 @@ urlpatterns = [
     # Health check urls
     path("looplijsten/health", health_default, name="health-default"),
     path("health/", include("health_check.urls")),
+    path("startup", is_healthy),
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
     url(regex=r"^$", view=MyView.as_view(), name="index"),
