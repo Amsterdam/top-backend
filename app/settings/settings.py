@@ -205,7 +205,7 @@ EMAIL_PORT = 1025
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # CORS and allowed hosts
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = "*"
 CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST").split(",")
 CORS_ORIGIN_ALLOW_ALL = True
 
