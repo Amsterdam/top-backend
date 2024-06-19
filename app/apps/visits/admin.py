@@ -6,11 +6,51 @@ from apps.visits.models import (
     VisitMetaData,
 )
 from django.contrib import admin
+from django.utils import timezone
+from datetime import timedelta
 
 
+class StartTimeFilter(admin.SimpleListFilter):
+    title = 'start_time'
+    parameter_name = 'start_time'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('today', 'Today'),
+            ('past_7_days', 'Past 7 days'),
+            ('this_month', 'This month'),
+            ('longer_than_a_month', 'Longer than a month ago'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'today':
+            today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            today_end = today_start + timedelta(days=1)
+            return queryset.filter(start_time__range=(today_start, today_end))
+
+        elif self.value() == 'past_7_days':
+            past_7_days_start = timezone.now() - timedelta(days=7)
+            return queryset.filter(start_time__gte=past_7_days_start)
+
+        elif self.value() == 'this_month':
+            first_day_of_month = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            next_month = first_day_of_month.replace(month=first_day_of_month.month + 1)
+            return queryset.filter(start_time__range=(first_day_of_month, next_month))
+
+        elif self.value() == 'longer_than_a_month':
+            one_month_ago = timezone.now() - timedelta(days=30)
+            return queryset.filter(start_time__lt=one_month_ago)
+
+        return queryset
+    
 @admin.register(Visit)
 class VisitAdmin(admin.ModelAdmin):
-    list_display = ("id", "author", "start_time", "case_id")
+    list_display = ("id", "case_id", "author", "start_time", "completed", "situation", )
+    search_fields = ("case_id__case_id",)
+    list_filter = (
+        StartTimeFilter,
+        "completed"
+    )
 
 
 @admin.register(VisitMetaData)
