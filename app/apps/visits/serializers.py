@@ -2,7 +2,6 @@ import logging
 
 from apps.cases.models import Case
 from apps.users.serializers import UserSerializer
-from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import (
     Observation,
     Situation,
@@ -12,6 +11,8 @@ from apps.visits.models import (
 )
 from django.db import transaction
 from rest_framework import serializers
+
+from app.utils.queries_zaken_api import get_headers
 
 from .tasks import push_visit
 
@@ -84,7 +85,7 @@ class VisitSerializer(serializers.ModelSerializer):
     def _complete_visit_and_update_aza(self, instance):
         logger.info("TOP: Executed _complete_visit_and_update_aza")
         instance.capture_visit_meta_data()
-        auth_header = get_keycloak_auth_header_from_request(self.context.get("request"))
+        auth_header = get_headers()
         task = push_visit.s(
             visit_id=instance.id,
             auth_header=auth_header,
