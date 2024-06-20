@@ -11,7 +11,6 @@ from apps.visits.models import (
 )
 from django.db import transaction
 from rest_framework import serializers
-from utils.queries_zaken_api import get_headers
 
 from .tasks import push_visit
 
@@ -84,11 +83,7 @@ class VisitSerializer(serializers.ModelSerializer):
     def _complete_visit_and_update_aza(self, instance):
         logger.info("TOP: Executed _complete_visit_and_update_aza")
         instance.capture_visit_meta_data()
-        auth_header = get_headers()
-        task = push_visit.s(
-            visit_id=instance.id,
-            auth_header=auth_header,
-        ).delay
+        task = push_visit.s(visit_id=instance.id).delay
         transaction.on_commit(task)
 
     def create(self, validated_data):
