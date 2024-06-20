@@ -11,8 +11,7 @@ from apps.visits.models import (
 )
 from django.db import transaction
 from rest_framework import serializers
-
-from app.utils.queries_zaken_api import get_headers
+from utils.queries_zaken_api import get_headers
 
 from .tasks import push_visit
 
