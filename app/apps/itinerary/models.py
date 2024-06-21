@@ -1,3 +1,5 @@
+import logging
+
 from apps.cases.models import Case
 from apps.planner.algorithm.knapsack import (
     ItineraryKnapsackList,
@@ -11,6 +13,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+logger = logging.getLogger(__name__)
 
 
 class Itinerary(models.Model):
@@ -384,7 +388,7 @@ class ItineraryItem(models.Model):
             last_item = itinerary_items[-1]
             self.position = last_item.position + 1
 
-    def check_items_same_position(self):
+    def items_with_same_position_exist(self):
         """
         Don't allow saving if another item in the list has the same position
         """
@@ -393,8 +397,7 @@ class ItineraryItem(models.Model):
         )
         items_with_same_position = items_with_same_position.exclude(pk=self.pk)
 
-        if items_with_same_position.exists():
-            raise ValueError("An item with this position already exists")
+        return items_with_same_position.exists()
 
     def check_items_same_case(self):
         """
@@ -421,7 +424,8 @@ class ItineraryItem(models.Model):
             # If no position is given, set the item to the last in list
             self.set_position_to_last()
 
-        self.check_items_same_position()
+        if self.items_with_same_position_exist():
+            return
         self.check_items_same_case()
 
         super().save(*args, **kwargs)

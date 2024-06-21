@@ -18,6 +18,14 @@ CASE_404 = {
     },
 }
 
+CASE_401 = {
+    "deleted": True,
+    "address": {
+        "street_name": "Geen toegang tot zaak",
+        "number": 401,
+    },
+}
+
 
 class Case(models.Model):
     class Meta:
@@ -50,6 +58,10 @@ class Case(models.Model):
         )
         if response.status_code == 404:
             return CASE_404
+
+        if response.status_code == 401:
+            return CASE_401
+
         response.raise_for_status()
 
         case_data = response.json()
@@ -84,7 +96,7 @@ class Case(models.Model):
 
         response = requests.get(
             url,
-            timeout=5,
+            timeout=20,
             headers=get_headers(auth_header),
         )
         response.raise_for_status()
