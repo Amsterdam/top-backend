@@ -8,8 +8,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      LOCAL_DEVELOPMENT_AUTHENTICATION: True
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
