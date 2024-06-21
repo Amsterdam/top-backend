@@ -71,8 +71,8 @@ class CaseViewSetTest(APITestCase):
         url = reverse("v1:case-visits", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
-        self.assertEqual(response.json()[0]["id"], visit_2.id)
-        self.assertEqual(response.json()[1]["id"], visit_1.id)
+        self.assertEqual(response.json()[0]["id"], visit_1.id)
+        self.assertEqual(response.json()[1]["id"], visit_2.id)
 
 
 class CaseSearchViewSetTest(APITestCase):
