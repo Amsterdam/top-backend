@@ -97,8 +97,9 @@ The project uses [Black](https://github.com/psf/black) for formatting and [Flake
 # Testing
 ## Running unit tests
 Unit tests can be run using the following command:
-```
-docker-compose run --rm api python manage.py test
+```bash
+docker-compose -f docker-compose.local.yml run --rm api python manage.py test
+
 ```
 
 ## Unit test in pull requests

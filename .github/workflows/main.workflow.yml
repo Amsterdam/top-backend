@@ -21,6 +21,6 @@ jobs:
     - name: Create Docker Top and Zaak Backend Bridge network
       run: docker network create top_and_zaak_backend_bridge
     - name: Build Docker image
-      run: docker-compose up -d
+      run: docker-compose -f docker-compose.local.yml up -d
     - name: Run Tests
-      run: docker-compose exec -T api python manage.py test
+      run: docker-compose -f docker-compose.local.yml exec -T api python manage.py test
