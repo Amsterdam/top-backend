@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from apps.itinerary.models import (
     Itinerary,
     ItineraryItem,
@@ -10,7 +12,6 @@ from apps.itinerary.serializers import ItinerarySerializer
 from django.contrib import admin
 from django.http import JsonResponse
 from django.utils import timezone
-from datetime import timedelta
 
 
 class PostalCodeSettingsInline(admin.StackedInline):
@@ -41,33 +42,37 @@ class ItineraryItemInline(admin.StackedInline):
 
 
 class CreatedAtFilter(admin.SimpleListFilter):
-    title = 'created_at'
-    parameter_name = 'created_at'
+    title = "created_at"
+    parameter_name = "created_at"
 
     def lookups(self, request, model_admin):
         return (
-            ('today', 'Today'),
-            ('past_7_days', 'Past 7 days'),
-            ('this_month', 'This month'),
-            ('longer_than_a_month', 'Longer than a month ago'),
+            ("today", "Today"),
+            ("past_7_days", "Past 7 days"),
+            ("this_month", "This month"),
+            ("longer_than_a_month", "Longer than a month ago"),
         )
 
     def queryset(self, request, queryset):
-        if self.value() == 'today':
-            today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        if self.value() == "today":
+            today_start = timezone.now().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             today_end = today_start + timedelta(days=1)
             return queryset.filter(created_at__range=(today_start, today_end))
 
-        elif self.value() == 'past_7_days':
+        elif self.value() == "past_7_days":
             past_7_days_start = timezone.now() - timedelta(days=7)
             return queryset.filter(created_at__gte=past_7_days_start)
 
-        elif self.value() == 'this_month':
-            first_day_of_month = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        elif self.value() == "this_month":
+            first_day_of_month = timezone.now().replace(
+                day=1, hour=0, minute=0, second=0, microsecond=0
+            )
             next_month = first_day_of_month.replace(month=first_day_of_month.month + 1)
             return queryset.filter(created_at__range=(first_day_of_month, next_month))
 
-        elif self.value() == 'longer_than_a_month':
+        elif self.value() == "longer_than_a_month":
             one_month_ago = timezone.now() - timedelta(days=30)
             return queryset.filter(created_at__lt=one_month_ago)
 
@@ -82,9 +87,7 @@ class ItineraryAdmin(admin.ModelAdmin):
         "start_case",
     )
     search_fields = ["team_members__user__email"]
-    list_filter = (
-        CreatedAtFilter,
-    )
+    list_filter = (CreatedAtFilter,)
 
     inlines = [
         ItineraryTeamMemberInline,
@@ -117,6 +120,7 @@ class ItineraryItemAdmin(admin.ModelAdmin):
         "external_state_id",
     )
     list_display = (
-        "case", "itinerary",
+        "case",
+        "itinerary",
     )
     search_fields = ["case__case_id"]
