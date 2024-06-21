@@ -1,8 +1,10 @@
 import logging
+from datetime import timedelta
 
 import requests
 from celery import shared_task
 from django.conf import settings
+from django.utils import timezone
 from utils.queries_zaken_api import get_headers
 
 from .models import Visit
@@ -12,6 +14,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_RETRY_DELAY = 10
 CONNECT_TIMEOUT = 10
 READ_TIMEOUT = 60
+DAYS_UNTIL_DELETION = 30
 
 
 def get_serialized_visit(visit_id):
@@ -57,3 +60,20 @@ def push_visit(self, visit_id, auth_header=None, task_name_ids=[]):
         self.retry(exc=exception)
 
     return f"visit_id: {visit_id}"
+
+
+@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
+def clean_up_visits_task(self):
+    """
+    Clean up visits older than 30 days.
+    """
+    logger.info("Started cleanup of visits")
+
+    try:
+        one_month_ago = timezone.now() - timedelta(days=DAYS_UNTIL_DELETION)
+        deleted_count, _ = Visit.objects.filter(start_time__lt=one_month_ago).delete()
+        logger.info(f"Ended visits cleanup, deleted {deleted_count} visits")
+
+    except Exception as exception:
+        logger.error(f"Exception occurred during visits cleanup: {exception}")
+        self.retry(exc=exception)
