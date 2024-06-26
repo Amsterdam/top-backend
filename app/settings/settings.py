@@ -429,21 +429,25 @@ SECRET_KEY_TOP_ZAKEN = os.environ.get("SECRET_KEY_TOP_ZAKEN", None)
 # AZA for accessing TOP
 SECRET_KEY_AZA_TOP = os.getenv("SECRET_KEY_AZA_TOP", None)
 
-REDIS_HOST = os.getenv("REDIS_HOST")
-REDIS_PORT = os.getenv("REDIS_PORT")
-REDIS_USERNAME = ""
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
-if "windows.net" in REDIS_HOST:
-    REDIS_USERNAME = os.getenv("REDIS_USERNAME")
-    REDIS_PASSWORD = azure.auth.redis_password
 
-REDIS_URL = f"rediss://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+def get_redis_url():
+    REDIS_HOST = os.getenv("REDIS_HOST")
+    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_USERNAME = ""
+    REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
+    if "windows.net" in REDIS_HOST:
+        REDIS_USERNAME = os.getenv("REDIS_USERNAME")
+        REDIS_PASSWORD = azure.auth.redis_password
+    f"rediss://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+
+
+REDIS_URL = get_redis_url()
 HEALTHCHECK_CELERY_PING_TIMEOUT = 5
 
-CELERY_BROKER_URL = REDIS_URL
+CELERY_BROKER_URL = get_redis_url()
 BROKER_CONNECTION_MAX_RETRIES = None
 BROKER_CONNECTION_TIMEOUT = 120
-BROKER_URL = CELERY_BROKER_URL
+BROKER_URL = get_redis_url()
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TIMEZONE = "Europe/Amsterdam"
