@@ -438,7 +438,7 @@ def get_redis_url():
     if "windows.net" in REDIS_HOST:
         REDIS_USERNAME = os.getenv("REDIS_USERNAME")
         REDIS_PASSWORD = azure.auth.redis_password
-    f"rediss://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+    return f"rediss://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
 
 
 REDIS_URL = get_redis_url()
