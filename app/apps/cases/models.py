@@ -50,6 +50,7 @@ class Case(models.Model):
         )
         if response.status_code == 404:
             return CASE_404
+
         response.raise_for_status()
 
         case_data = response.json()
@@ -84,7 +85,7 @@ class Case(models.Model):
 
         response = requests.get(
             url,
-            timeout=5,
+            timeout=20,
             headers=get_headers(auth_header),
         )
         response.raise_for_status()
