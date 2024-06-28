@@ -429,17 +429,11 @@ SECRET_KEY_TOP_ZAKEN = os.environ.get("SECRET_KEY_TOP_ZAKEN", None)
 # AZA for accessing TOP
 SECRET_KEY_AZA_TOP = os.getenv("SECRET_KEY_AZA_TOP", None)
 
-
 def get_redis_url():
     REDIS_HOST = os.getenv("REDIS_HOST")
     REDIS_PORT = os.getenv("REDIS_PORT")
-    REDIS_USERNAME = ""
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
-    if "windows.net" in REDIS_HOST:
-        REDIS_USERNAME = os.getenv("REDIS_USERNAME")
-        REDIS_PASSWORD = azure.auth.redis_password
-    return f"rediss://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
-
+    return f"rediss://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
 
 REDIS_URL = get_redis_url()
 HEALTHCHECK_CELERY_PING_TIMEOUT = 5
