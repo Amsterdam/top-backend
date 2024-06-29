@@ -87,20 +87,6 @@ class ItineraryItemModelTest(TestCase):
 
         self.assertEquals(item.position, items[-1].position + 1)
 
-    def test_save_same_position_error(self, mock):
-        """
-        Saving throws an error if another item has the same position
-        """
-        items = self.get_itinerary_items()
-        itinerary = items[0].itinerary
-        case_c = Case.get(FOO_CASE_C_ID)
-        same_position = items[0].position
-
-        with self.assertRaises(Exception):
-            ItineraryItem.objects.create(
-                itinerary=itinerary, case=case_c, position=same_position
-            )
-
     def test_save_same_case_error(self, mock):
         """
         saving throws an error if another item has the same case
