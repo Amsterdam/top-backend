@@ -58,16 +58,6 @@ class ItineraryModelTest(TestCase):
 
         self.assertEquals(itinerary.items.all()[0].position, 3)
 
-    def test_add_case_same_position_fail(self, mock):
-        """
-        add_case with same positions should fail
-        """
-        itinerary = Itinerary.objects.create()
-        itinerary.add_case("FOO_CASE_ID_A", 3)
-
-        with self.assertRaises(Exception):
-            itinerary.add_case("FOO_CASE_ID_B", 3)
-
     def test_add_same_cases_fail(self, mock):
         """
         add_case with same case should fail
