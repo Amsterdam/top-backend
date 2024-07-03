@@ -266,7 +266,7 @@ OIDC_OP_LOGOUT_ENDPOINT = os.getenv(
     "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
 )
 
-LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "DEBUG")
+LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "WARNING")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
