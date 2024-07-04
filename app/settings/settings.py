@@ -49,7 +49,6 @@ INSTALLED_APPS = (
     "apps.users",
     "apps.itinerary",
     "apps.cases",
-    "apps.accesslogs",
     "apps.planner",
     "apps.fraudprediction",
     "apps.visits",
@@ -70,7 +69,6 @@ MIDDLEWARE = (
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "apps.accesslogs.middleware.LoggingMiddleware",
     "opencensus.ext.django.middleware.OpencensusMiddleware",
 )
 
