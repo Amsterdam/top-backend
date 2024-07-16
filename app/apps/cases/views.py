@@ -185,22 +185,11 @@ class CaseSearchViewSet(ViewSet):
             queryParams = dict(
                 (param_translate.get(k, k), v) for k, v in queryParams.items()
             )
-            queryParams.update(
-                {
-                    "open_cases": True,
-                    "page_size": 1000,
-                    "task": ["task_uitvoeren_leegstandsgesprek", "task_create_visit"],
-                }
-            )
-            response = requests.get(
-                url,
-                params=queryParams,
-                timeout=60,
-                headers=get_headers(get_keycloak_auth_header_from_request(request)),
-            )
-            response.raise_for_status()
-
-            result = response.json().get("results", [])
+            result = []
+            for tasks in settings.AZA_ALLOWED_TASK_NAMES:
+                result.extend(
+                    self.make_case_search_request(tasks, request, url, queryParams)
+                )
 
             for case in result:
                 Case.get(case_id=case.get("id"))
@@ -209,3 +198,29 @@ class CaseSearchViewSet(ViewSet):
             cases = self.__add_teams__(cases, datetime.now())
             cases = self._clean_cases(cases)
             return JsonResponse({"cases": cases})
+
+    def make_case_search_request(self, task, request, url, queryParams):
+        queryParams.update = {
+            "open_cases": True,
+            "page_size": 1000,
+            "task": task,
+        }
+        try:
+            response = requests.get(
+                url,
+                params=queryParams,
+                timeout=60,
+                headers=get_headers(get_keycloak_auth_header_from_request(request)),
+            )
+            response.raise_for_status()
+            return response.json().get("results", [])
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 400:
+                error_message = e.response.json()
+                if any(
+                    "Select a valid choice." in msg
+                    for msg in error_message.get("task", [])
+                ):
+                    return []
+            else:
+                raise
