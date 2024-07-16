@@ -186,6 +186,7 @@ class CaseSearchViewSet(ViewSet):
                 (param_translate.get(k, k), v) for k, v in queryParams.items()
             )
             result = []
+            # Separate http calls because if one of them fails it should still retrieve cases for the other task search.
             for task in settings.AZA_ALLOWED_TASK_NAMES:
                 result.extend(
                     self.make_case_search_request(task, request, url, queryParams)
@@ -201,7 +202,6 @@ class CaseSearchViewSet(ViewSet):
 
     def make_case_search_request(self, task, request, url, queryParams):
         updatedQueryParams = dict(queryParams)
-
         updatedQueryParams.update(
             {
                 "open_cases": True,
