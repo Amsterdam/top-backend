@@ -200,11 +200,15 @@ class CaseSearchViewSet(ViewSet):
             return JsonResponse({"cases": cases})
 
     def make_case_search_request(self, task, request, url, queryParams):
-        queryParams.update = {
-            "open_cases": True,
-            "page_size": 1000,
-            "task": task,
-        }
+        updatedQueryParams = dict(queryParams)
+
+        updatedQueryParams.update(
+            {
+                "open_cases": True,
+                "page_size": 1000,
+                "task": task,
+            }
+        )
         try:
             response = requests.get(
                 url,
