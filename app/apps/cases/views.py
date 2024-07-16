@@ -186,9 +186,9 @@ class CaseSearchViewSet(ViewSet):
                 (param_translate.get(k, k), v) for k, v in queryParams.items()
             )
             result = []
-            for tasks in settings.AZA_ALLOWED_TASK_NAMES:
+            for task in settings.AZA_ALLOWED_TASK_NAMES:
                 result.extend(
-                    self.make_case_search_request(tasks, request, url, queryParams)
+                    self.make_case_search_request(task, request, url, queryParams)
                 )
 
             for case in result:
@@ -212,7 +212,7 @@ class CaseSearchViewSet(ViewSet):
         try:
             response = requests.get(
                 url,
-                params=queryParams,
+                params=updatedQueryParams,
                 timeout=60,
                 headers=get_headers(get_keycloak_auth_header_from_request(request)),
             )
