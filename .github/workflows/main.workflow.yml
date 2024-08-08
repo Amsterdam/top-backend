@@ -36,3 +36,6 @@ jobs:
     - if: ${{ failure() }}
       name: "ON FAILURE: Backend logs"
       run: docker logs top-backend-api-1
+    - if: ${{ failure() }}
+      name: "ON FAILURE: Celery worker logs"
+      run: docker logs top_celery_worker
