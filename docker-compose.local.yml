@@ -14,7 +14,8 @@ services:
     volumes:
       - ./app:/app
       - ./api/deploy:/deploy
-    command: bash -c "/app/wait-for.sh top-redis:6379 && /app/wait-for.sh database:5432 && /app/deploy/entrypoint.development.sh"
+    entrypoint: /app/deploy/entrypoint.development.sh
+    command: uwsgi --ini /app/deploy/config.ini --py-auto-reload=1 --cheaper-initial=1 --cheaper=1 --processes=10
     depends_on:
       - database
 
@@ -46,8 +47,7 @@ services:
     image: ${REGISTRY:-127.0.0.1:5001}/${REPOSITORY:-salmagundi/top-backend}:${VERSION:-latest}
     container_name: top_celery_worker
     hostname: top_celery_worker
-    command: bash -c "/app/wait-for.sh top-redis:6379 && /app/wait-for.sh api:8000 -- /app/celery.sh"
-    # command: bash -c "/app/celery.sh"
+    command: bash -c "/app/wait-for.sh http://api:8000 -- /app/celery.sh"
     depends_on:
       - api
       - database
@@ -62,7 +62,7 @@ services:
     image: ${REGISTRY:-127.0.0.1:5001}/${REPOSITORY:-salmagundi/top-backend}:${VERSION:-latest}
     container_name: top_celery_beat
     hostname: top_celery_beat
-    command: bash -c "/app/wait-for.sh top-redis:6379 && /app/wait-for.sh api:8000 -- /app/celery-beat.sh"
+    command: bash -c "/app/wait-for.sh http://api:8000 -- /app/celery-beat.sh"
     # command: bash -c "/app/celery-beat.sh"
     depends_on:
       - api

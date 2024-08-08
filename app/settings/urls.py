@@ -8,11 +8,10 @@ from apps.users import router as users_router
 from apps.users.views import IsAuthorizedView, ObtainAuthTokenOIDC
 from apps.visits import router as visits_router
 from django.conf import settings
-from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import JsonResponse
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import View
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
@@ -53,7 +52,7 @@ urlpatterns = [
     path("startup", is_healthy),
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
-    url(regex=r"^$", view=MyView.as_view(), name="index"),
+    re_path(r"^$", view=MyView.as_view(), name="index"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
