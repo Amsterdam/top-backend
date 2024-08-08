@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta
 
 import requests
-from constance.backends.database.models import Constance
+from constance.models import Constance
 from django.conf import settings
 from tenacity import after_log, retry, stop_after_attempt
 

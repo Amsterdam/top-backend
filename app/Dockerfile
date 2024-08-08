@@ -1,4 +1,4 @@
-FROM amsterdam/python:3.9-buster
+FROM python:3.10-bullseye
 LABEL maintainer="datapunt@amsterdam.nl"
 
 ENV PYTHONUNBUFFERED 1
@@ -19,7 +19,14 @@ RUN mkdir -p ${DIRECTORYLIST} && chown datapunt ${DIRECTORYLIST}
 WORKDIR /app
 COPY requirements.txt /app/
 
-RUN apt-get update && apt-get install -y
+RUN apt-get update && apt-get install -y \
+gdal-bin \
+libgdal-dev \
+graphviz \
+graphviz-dev \
+postgresql-client
+
+
 RUN pip install --upgrade pip
 RUN pip install uwsgi
 RUN pip install --no-cache-dir -r requirements.txt
@@ -31,6 +38,7 @@ RUN chmod +x /app/wait-for.sh
 RUN chmod +x /app/celery.sh
 RUN chmod +x /app/celery-beat.sh
 RUN chmod +x /app/deploy/entrypoint.sh
+RUN chmod +x /app/deploy/entrypoint.development.sh
 
 ENTRYPOINT ["/app/deploy/entrypoint.sh"]
 CMD ["uwsgi", "--ini", "/app/deploy/config.ini"]
