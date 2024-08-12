@@ -26,7 +26,7 @@ django-celery-results==2.5.1
 django-timezone-field<7.0
 
 # Authentication
-datapunt-keycloak-oidc @ git+https://github.com/remyvdwereld/keycloak_oidc_top.git@improvement/update-top
+datapunt-keycloak-oidc @ git+https://github.com/remyvdwereld/keycloak_oidc_top.git@v1.1
 djangorestframework-simplejwt==5.3.1
 
 # Algorithm toolbox
