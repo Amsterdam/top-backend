@@ -47,6 +47,7 @@ services:
     image: ${REGISTRY:-127.0.0.1:5001}/${REPOSITORY:-salmagundi/top-backend}:${VERSION:-latest}
     container_name: top_celery_worker
     hostname: top_celery_worker
+    entrypoint: /app/deploy/docker-entrypoint.celery.sh
     command: bash -c "/app/wait-for.sh http://api:8000 -- /app/celery.sh"
     depends_on:
       - api
@@ -62,6 +63,7 @@ services:
     image: ${REGISTRY:-127.0.0.1:5001}/${REPOSITORY:-salmagundi/top-backend}:${VERSION:-latest}
     container_name: top_celery_beat
     hostname: top_celery_beat
+    entrypoint: /app/deploy/docker-entrypoint.celery.sh
     command: bash -c "/app/wait-for.sh http://api:8000 -- /app/celery-beat.sh"
     # command: bash -c "/app/celery-beat.sh"
     depends_on:
