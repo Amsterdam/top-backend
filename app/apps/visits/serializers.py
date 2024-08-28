@@ -77,9 +77,6 @@ class VisitSerializer(serializers.ModelSerializer):
     case_id = CaseField()
     completed = serializers.BooleanField(default=False)
 
-    def is_valid(self, raise_exception=False):
-        return super().is_valid(raise_exception)
-
     def _complete_visit_and_update_aza(self, instance):
         logger.info("TOP: Executed _complete_visit_and_update_aza")
         instance.capture_visit_meta_data()
