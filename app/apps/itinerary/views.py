@@ -137,10 +137,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             case_id = case.get("id")
             itinerary.add_case(case_id)
 
-        # Serialize the itinerary again
-        serializer = ItinerarySerializer(itinerary, context={"request": request})
-
-        return Response(serializer.data)
+        return Response("Itinerary created successfully")
 
     def list(self, request):
         date = self.__get_date_from_query_parameter__(request)
