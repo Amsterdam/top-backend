@@ -9,7 +9,7 @@ Dankzij de TOP app hebben toezichthouders Wonen veel informatie over zaken, adre
 
 ## Build:
 ```bash
-docker-compose -f docker-compose.local.yml build
+docker compose -f docker-compose.local.yml build
 ```
 
 ## Creating networks
@@ -21,7 +21,7 @@ docker network create top_and_zaak_backend_bridge
 ## Starting the development server:
 Start the dev server for local development:
 ```bash
-docker-compose -f docker-compose.local.yml up
+docker compose -f docker-compose.local.yml up
 ```
 
 ## Importing fixtures dump
@@ -30,13 +30,13 @@ The Django project needs some configuration in order to run locally. It's possib
 Move the json into the `app` directory on the root of your project, and run the following command
 
 ```bash
-docker-compose run --rm api python manage.py loaddata <name of fixture>
+docker compose run --rm api python manage.py loaddata <name of fixture>
 ```
 Remove the json fixture after installing it.
 
 ## Creating a superuser:
 ```bash
-docker-compose run --rm api python manage.py createsuperuser
+docker compose run --rm api python manage.py createsuperuser
 ```
 A superuser can be used to access the Django backend
 
@@ -69,12 +69,12 @@ To fix this use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING
 Run a command inside the docker container:
 
 ```bash
-docker-compose run --rm api [command]
+docker compose run --rm api [command]
 ```
 
 Running migrations:
 ```bash
-docker-compose run --rm api python manage.py migrate
+docker compose run --rm api python manage.py migrate
 ```
 
 ## Adding pre-commit hooks
@@ -98,7 +98,7 @@ The project uses [Black](https://github.com/psf/black) for formatting and [Flake
 ## Running unit tests
 Unit tests can be run using the following command:
 ```bash
-docker-compose -f docker-compose.local.yml run --rm api python manage.py test
+docker compose -f docker-compose.local.yml run --rm api python manage.py test
 
 ```
 
