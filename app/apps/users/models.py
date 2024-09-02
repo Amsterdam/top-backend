@@ -1,7 +1,6 @@
 import datetime
 import uuid
 
-from apps.users.user_manager import UserManager
 from apps.users.utils import generate_username
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -26,9 +25,7 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-    objects = UserManager()
+    REQUIRED_FIELDS = ["username"]
 
     @property
     def get_current_itinerary(self):
