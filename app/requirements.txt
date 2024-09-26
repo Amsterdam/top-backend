@@ -23,7 +23,7 @@ tenacity==8.2.3
 django-health-check==3.16.5
 django-celery-beat==2.7.0
 django-celery-results==2.5.1
-django-timezone-field<7.0
+django-timezone-field<8.0
 
 # Authentication
 datapunt-keycloak-oidc @ git+https://github.com/remyvdwereld/keycloak_oidc_top.git@main
