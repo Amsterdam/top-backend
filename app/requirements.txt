@@ -14,7 +14,7 @@ model-bakery==1.5.0
 requests-mock==1.9.3
 pytz==2024.1
 # Settings
-django-constance[database]==3.1.0
+django-constance[database]==4.1.2
 
 # Other
 requests==2.32.2
