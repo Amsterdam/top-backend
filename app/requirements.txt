@@ -6,7 +6,7 @@ celery==5.4.0
 # Rest apis
 djangorestframework==3.15.2
 django-cors-headers==3.11.0
-drf-spectacular==0.27.1
+drf-spectacular==0.27.2
 
 # Testing
 freezegun==1.2.1
