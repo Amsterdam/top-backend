@@ -83,7 +83,8 @@ class Itinerary(models.Model):
 
     def get_center(self, auth_header=None):
         """
-        Returns the center coordinates of the itinerary
+        Returns the center coordinates of the current itinerary.
+        If there's no intinerary, it returns the city center.
         """
         cases = self.get_cases()
 

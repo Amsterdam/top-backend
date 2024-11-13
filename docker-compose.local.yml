@@ -32,7 +32,7 @@ services:
   database:
     networks:
       - top_network
-    image: amsterdam/postgres12
+    image: postgis/postgis:14-3.2
     shm_size: "512m"
     ports:
       - "5409:5432"

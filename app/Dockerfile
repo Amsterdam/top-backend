@@ -20,11 +20,11 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 RUN apt-get update && apt-get install -y \
-gdal-bin \
-libgdal-dev \
-graphviz \
-graphviz-dev \
-postgresql-client
+  gdal-bin \
+  libgdal-dev \
+  graphviz \
+  graphviz-dev \
+  postgresql-client
 
 
 RUN pip install --upgrade pip
