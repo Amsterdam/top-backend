@@ -45,14 +45,18 @@ class CaseViewSet(ViewSet):
         }
         data.update(model_to_dict(case_instance))
         data.update(case_instance.data_context({"request": request}))
-        bag_id = data.get("address", {}).get("bag_id")
 
+        bag_id = data.get("address", {}).get("bag_id")
+        nummeraanduiding_id = data.get("address", {}).get("nummeraanduiding_id")
         day_settings_id = (
             case_instance.day_settings.id if case_instance.day_settings else None
         )
+
         data.update(
             {
-                "bag_data": bag_api.get_bag_data_by_bag_id(data.get("address")),
+                "bag_data": bag_api.get_bag_data_by_nummeraanduiding_id(
+                    nummeraanduiding_id
+                ),
                 "brk_data": brk_api.get_brk_data(bag_id),
                 "fraud_prediction": get_fraud_prediction(case_id),
                 "day_settings_id": day_settings_id,

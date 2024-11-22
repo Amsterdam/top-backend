@@ -30,13 +30,13 @@ The Django project needs some configuration in order to run locally. It's possib
 Move the json into the `app` directory on the root of your project, and run the following command
 
 ```bash
-docker compose run --rm api python manage.py loaddata <name of fixture>
+docker compose -f docker-compose.local.yml run --rm api python manage.py loaddata <name of fixture>
 ```
 Remove the json fixture after installing it.
 
 ## Creating a superuser:
 ```bash
-docker compose run --rm api python manage.py createsuperuser
+docker compose -f docker-compose.local.yml run --rm api python manage.py createsuperuser
 ```
 A superuser can be used to access the Django backend
 
@@ -95,11 +95,17 @@ The Github actions will use the same bash script to check if the code in the pul
 The project uses [Black](https://github.com/psf/black) for formatting and [Flake8](https://pypi.org/project/flake8/) for linting.
 
 # Testing
+
 ## Running unit tests
 Unit tests can be run using the following command:
 ```bash
 docker compose -f docker-compose.local.yml run --rm api python manage.py test
+```
 
+To run tests for a specific module, add a path:
+
+```bash
+docker compose -f docker-compose.local.yml run --rm api python manage.py test apps/cases
 ```
 
 ## Unit test in pull requests

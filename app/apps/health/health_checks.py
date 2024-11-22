@@ -51,12 +51,12 @@ class APIServiceCheckBackend(BaseHealthCheckBackend):
 
 class BAGServiceCheck(APIServiceCheckBackend):
     """
-    Endpoint for checking the BAG Service API Endpoint
+    Endpoint for checking the BAG BENKAGG Service API Endpoint
     """
 
     critical_service = True
-    api_url = settings.BAG_API_SEARCH_URL
-    verbose_name = "BAG API"
+    api_url = settings.BAG_BENKAGG_API_URL
+    verbose_name = "BAG BENKAGG API"
 
 
 class ZakenServiceCheck(APIServiceCheckBackend):
