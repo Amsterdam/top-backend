@@ -377,7 +377,7 @@ BRK_API_OBJECT_EXPAND_URL = os.getenv(
 )
 
 # BAG Access request settings
-BAG_API_SEARCH_URL = "https://api.data.amsterdam.nl/atlas/search/adres/"
+BAG_BENKAGG_API_URL = "https://api.data.amsterdam.nl/v1/benkagg/adresseerbareobjecten/"
 
 # Zaken Access request settings
 ZAKEN_API_URL = os.getenv("ZAKEN_API_URL", None)
