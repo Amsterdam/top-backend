@@ -46,8 +46,10 @@ class CaseViewSet(ViewSet):
         data.update(model_to_dict(case_instance))
         data.update(case_instance.data_context({"request": request}))
 
-        bag_id = data.get("address", {}).get("bag_id")
-        nummeraanduiding_id = data.get("address", {}).get("nummeraanduiding_id")
+        address = data.get("address", {})
+        bag_id = address.get("bag_id")
+        nummeraanduiding_id = address.get("nummeraanduiding_id")
+
         day_settings_id = (
             case_instance.day_settings.id if case_instance.day_settings else None
         )
