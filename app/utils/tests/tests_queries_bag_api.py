@@ -27,7 +27,7 @@ class FetchBagDataByNummeraanduidingIdTest(TestCase):
 
         self.assertEqual(result, {"data": "some_data"})
         mock_requests_get.assert_called_once_with(
-            f"{settings.BAG_BENKAGG_API_URL}123456789", timeout=0.5
+            f"{settings.BAG_BENKAGG_API_URL}123456789", timeout=5
         )
 
     @patch("requests.get")
