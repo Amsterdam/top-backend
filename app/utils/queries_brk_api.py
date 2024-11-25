@@ -51,7 +51,7 @@ def request_new_token():
     try:
         logger.error("token req url", token_request_url)
         logger.error("token req payload", payload)
-        response = requests.post(token_request_url, data=payload, timeout=0.5)
+        response = requests.post(token_request_url, data=payload, timeout=5)
     except Exception as e:
         logger.error("Request token error: ", e)
     response.raise_for_status()
@@ -100,7 +100,7 @@ def request_brk_data(bag_id):
             settings.BRK_API_OBJECT_EXPAND_URL,
             params={"verblijfsobjecten__id": bag_id},
             headers=headers,
-            timeout=0.5,
+            timeout=5,
         )
     except Exception as e:
         logger.error("ERR: ", e)

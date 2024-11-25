@@ -12,7 +12,7 @@ def fetch_bag_data_by_nummeraanduiding_id(nummeraanduiding_id):
     """
     url = f"{settings.BAG_BENKAGG_API_URL}{nummeraanduiding_id}"
     try:
-        response = requests.get(url, timeout=0.5)
+        response = requests.get(url, timeout=5)
         response.raise_for_status()  # Raise HTTPError for bad responses (4xx and 5xx)
         return response.json()
     except Exception as exc:
