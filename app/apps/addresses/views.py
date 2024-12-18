@@ -179,6 +179,21 @@ class AddressViewSet(ViewSet):
         )
         return Response(data, status=status_code)
 
+    @extend_schema(
+        description="Gets the residents associated with the requested object",
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "obo_access_token": {
+                        "type": "string",
+                        "description": "access_token for OBO-flow",
+                    },
+                },
+                "required": ["obo_access_token"],
+            }
+        },
+    )
     @action(
         detail=True,
         methods=["post"],
