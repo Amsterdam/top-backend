@@ -1,6 +1,7 @@
 import time
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from drf_spectacular.contrib.rest_framework_simplejwt import SimpleJWTScheme
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from mozilla_django_oidc.contrib.drf import OIDCAuthentication
@@ -13,24 +14,20 @@ class OIDCAuthenticationBackend(OIDCAuthenticationBackend):
     def validate_issuer(self, payload):
         issuer = self.get_settings("OIDC_OP_ISSUER")
         if not issuer == payload["iss"]:
-            raise Exception(
+            raise PermissionDenied(
                 '"iss": %r does not match configured value for OIDC_OP_ISSUER: %r'
                 % (payload["iss"], issuer)
             )
 
     def validate_audience(self, payload):
-        client_id = self.get_settings("OIDC_RP_CLIENT_ID")
         trusted_audiences = self.get_settings("OIDC_TRUSTED_AUDIENCES", [])
         trusted_audiences = set(trusted_audiences)
-        trusted_audiences.add(client_id)
 
         audience = payload["aud"]
-        if not isinstance(audience, list):
-            audience = [audience]
         audience = set(audience)
         distrusted_audiences = audience.difference(trusted_audiences)
         if distrusted_audiences:
-            raise Exception(
+            raise PermissionDenied(
                 '"aud" contains distrusted audiences: %r' % distrusted_audiences
             )
 
@@ -38,7 +35,9 @@ class OIDCAuthenticationBackend(OIDCAuthenticationBackend):
         expire_time = payload["exp"]
         now = time.time()
         if now > expire_time:
-            raise Exception("Id-token is expired %r > %r" % (now, expire_time))
+            raise PermissionDenied(
+                "Access-token is expired %r > %r" % (now, expire_time)
+            )
 
     def validate_id_token(self, payload):
         """Validate the content of the id token as required by OpenID Connect 1.0
