@@ -202,7 +202,7 @@ class AddressViewSet(ViewSet):
         methods=["get"],
     )
     def registrations_by_bag_id(self, request, bag_id):
-        data, status_code = fetch_meldingen(
+        data, status_code = fetch_registrations(
             bag_id, get_keycloak_auth_header_from_request(request), request.query_params
         )
         return Response(data, status=status_code)
