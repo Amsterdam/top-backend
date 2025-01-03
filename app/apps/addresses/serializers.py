@@ -14,6 +14,16 @@ class MeldingenSerializer(serializers.Serializer):
     data = serializers.ListField(child=serializers.DictField())
 
 
+class RegistrationDetailsSerializer(serializers.Serializer):
+    registrationNumber = serializers.CharField(required=True)
+    requester = serializers.DictField()
+    rentalHouse = serializers.DictField()
+    requestForOther = serializers.BooleanField()
+    requestForBedAndBreakfast = serializers.BooleanField()
+    createdAt = serializers.DateTimeField()
+    agreementDate = serializers.DateTimeField()
+
+
 class PowerbrowserSerializer(serializers.Serializer):
     baG_ID = serializers.CharField()
     product = serializers.CharField()
