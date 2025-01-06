@@ -15,6 +15,8 @@ from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.generics import GenericAPIView
@@ -102,12 +104,38 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             self.__replace_team_members__(pk, new_team_members)
             return self.__get_serialized_team__(pk)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="lat",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Latitude of the center of the map.",
+            ),
+            OpenApiParameter(
+                name="lng",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Longitude of the center of the map.",
+            ),
+        ],
+    )
     @action(detail=True, methods=["get"])
     def suggestions(self, request, pk):
-        """Returns a list of suggestions for the given itinerary"""
+        """
+        Returns a list of suggestions for the given itinerary based
+        on the center of the itinerary or the given lat/lng.
+        """
+        lat = self.request.query_params.get("lat")
+        lng = self.request.query_params.get("lng")
+        center = None
+        if lat and lng:
+            center = {"lat": lat, "lng": lng}
         itinerary = self.get_object()
         cases = itinerary.get_suggestions(
-            get_keycloak_auth_header_from_request(request)
+            get_keycloak_auth_header_from_request(request), center
         )
         return JsonResponse({"cases": cases})
 
