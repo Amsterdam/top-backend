@@ -218,8 +218,6 @@ class AddressViewSet(ViewSet):
                 "required": ["obo_access_token"],
             }
         },
-        description="Gets all registrations based on bag id.",
-        responses={status.HTTP_200_OK: RegistrationDetailsSerializer(many=True)},
     )
     @action(
         detail=True,
