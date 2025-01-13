@@ -7,6 +7,7 @@ from apps.fraudprediction.utils import get_fraud_prediction
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import ItineraryTeamMemberSerializer
 from apps.users.auth_apps import AZAKeyAuth
+from apps.users.permissions import IsInAuthorizedRealm
 from apps.users.utils import get_keycloak_auth_header_from_request
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
@@ -15,7 +16,6 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
-from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response

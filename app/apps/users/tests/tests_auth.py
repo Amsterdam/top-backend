@@ -9,7 +9,7 @@ from unittest.mock import Mock
 
 from django.core.exceptions import SuspiciousOperation
 from django.test import TestCase
-from keycloak_oidc.auth import OIDCAuthenticationBackend
+from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 from app.utils.unittest_helpers import get_test_user
 

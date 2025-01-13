@@ -71,13 +71,10 @@ def fetch_registrations(bag_id, auth_header=None, query_params=None):
     return response.json(), response.status_code
 
 
-def fetch_residents(bag_id, auth_header=None):
+def fetch_residents(bag_id, body, auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents/"
-
-    response = requests.get(
-        url,
-        timeout=30,
-        headers=get_headers(auth_header),
+    response = requests.post(
+        url, timeout=30, headers=get_headers(auth_header), json=body
     )
 
     return response.json(), response.status_code
@@ -207,14 +204,29 @@ class AddressViewSet(ViewSet):
         )
         return Response(data, status=status_code)
 
+    @extend_schema(
+        description="Gets the residents associated with the requested object",
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "obo_access_token": {
+                        "type": "string",
+                        "description": "access_token for OBO-flow",
+                    },
+                },
+                "required": ["obo_access_token"],
+            }
+        },
+    )
     @action(
         detail=True,
-        methods=["get"],
+        methods=["post"],
         url_path="residents",
     )
     def residents_by_bag_id(self, request, bag_id):
         data, status_code = fetch_residents(
-            bag_id, get_keycloak_auth_header_from_request(request)
+            bag_id, request.data, get_keycloak_auth_header_from_request(request)
         )
         return Response(data, status=status_code)
 

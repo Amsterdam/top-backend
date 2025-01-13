@@ -2,9 +2,9 @@ import logging
 
 from apps.users.auth import AuthenticationBackend
 from apps.users.models import User
+from apps.users.permissions import IsInAuthorizedRealm
 from apps.users.serializers import UserSerializer
 from django.http import HttpResponseBadRequest
-from keycloak_oidc.drf.permissions import IsInAuthorizedRealm
 from rest_framework import generics, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
