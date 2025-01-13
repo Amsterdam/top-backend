@@ -13,6 +13,7 @@ from .serializers import (
     HousingCorporationSerializer,
     MeldingenSerializer,
     PowerbrowserSerializer,
+    RegistrationDetailsSerializer,
 )
 
 bag_id = OpenApiParameter(
@@ -60,9 +61,18 @@ def fetch_meldingen(bag_id, auth_header=None, query_params=None):
     return response.json(), response.status_code
 
 
+def fetch_registrations(bag_id, auth_header=None, query_params=None):
+    url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/registrations/"
+
+    response = requests.get(
+        url, timeout=30, headers=get_headers(auth_header), params=query_params
+    )
+
+    return response.json(), response.status_code
+
+
 def fetch_residents(bag_id, body, auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents/"
-    print(body)
     response = requests.post(
         url, timeout=30, headers=get_headers(auth_header), json=body
     )
@@ -180,6 +190,21 @@ class AddressViewSet(ViewSet):
         return Response(data, status=status_code)
 
     @extend_schema(
+        description="Gets all registrations based on bag id.",
+        responses={status.HTTP_200_OK: RegistrationDetailsSerializer(many=True)},
+    )
+    @action(
+        detail=True,
+        url_path="registrations",
+        methods=["get"],
+    )
+    def registrations_by_bag_id(self, request, bag_id):
+        data, status_code = fetch_registrations(
+            bag_id, get_keycloak_auth_header_from_request(request), request.query_params
+        )
+        return Response(data, status=status_code)
+
+    @extend_schema(
         description="Gets the residents associated with the requested object",
         request={
             "application/json": {
@@ -193,6 +218,8 @@ class AddressViewSet(ViewSet):
                 "required": ["obo_access_token"],
             }
         },
+        description="Gets all registrations based on bag id.",
+        responses={status.HTTP_200_OK: RegistrationDetailsSerializer(many=True)},
     )
     @action(
         detail=True,

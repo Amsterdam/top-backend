@@ -112,7 +112,7 @@ class Itinerary(models.Model):
             "lng": settings.CITY_CENTRAL_LOCATION_LNG,
         }
 
-    def get_suggestions(self, auth_header=None):
+    def get_suggestions(self, auth_header=None, center=None):
         """
         Returns a list of suggested cases which can be added to this itinerary
         """
@@ -125,8 +125,9 @@ class Itinerary(models.Model):
         cases = Itinerary.get_cases_for_date(self.created_at)
         generator.exclude(cases)
 
-        # Generate suggestions based on this itineraries' center
-        center = self.get_center(auth_header)
+        # If no center is provided, calculate itineraries' center
+        if not center:
+            center = self.get_center(auth_header)
         generated_list = generator.generate({"address": center})
         generated_list = generator.sort_cases_by_distance(generated_list)
         return generated_list
