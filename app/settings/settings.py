@@ -19,7 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_DEVELOPMENT_AUTHENTICATION = (
     os.getenv("LOCAL_DEVELOPMENT_AUTHENTICATION", False) == "True"
 )
-
 LOCAL_DEVELOPMENT_USE_MULTIPROCESSING = (
     os.getenv("LOCAL_DEVELOPMENT_USE_MULTIPROCESSING", False) == "True"
 )
@@ -233,7 +232,6 @@ CONSTANCE_CONFIG = {
 
 TAG_NAME = os.getenv("TAG_NAME", "default-release")
 
-OIDC_AUTHORIZED_GROUPS = ("wonen_top", "wonen_zaak")
 OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
 OIDC_AUTHENTICATION_CALLBACK_URL = "oidc-authenticate"
