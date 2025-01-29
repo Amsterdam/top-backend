@@ -4,7 +4,6 @@ import sys
 from datetime import timedelta
 from os.path import join
 
-from keycloak_oidc.default_settings import *  # noqa
 from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace import config_integration
 
@@ -32,7 +31,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "corsheaders",
     # Third party apps
-    "keycloak_oidc",
+    # "keycloak_oidc",
     "rest_framework",  # utilities for rest apis
     "django_filters",  # for filtering rest endpoints,
     "drf_spectacular",  # for generating real OpenAPI 3.0 documentation
@@ -190,7 +189,7 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "keycloak_oidc.drf.permissions.IsInAuthorizedRealm",
+        "apps.users.permissions.IsInAuthorizedRealm",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": ("apps.users.auth.AuthenticationClass",),
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
@@ -233,36 +232,35 @@ CONSTANCE_CONFIG = {
 
 TAG_NAME = os.getenv("TAG_NAME", "default-release")
 
-# These variables are not used but must me set as None for the keycloak_oidc library.
-# TODO: Change the keycloak_oidc library so this can be removed.
-OIDC_RP_CLIENT_ID = None
-OIDC_RP_CLIENT_SECRET = None
-OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
 OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
-OIDC_AUTHORIZED_GROUPS = ("wonen_top", "wonen_zaak")
-OIDC_AUTHENTICATION_CALLBACK_URL = "v1:oidc-authenticate"
-
+OIDC_AUTHENTICATION_CALLBACK_URL = "oidc-authenticate"
+OIDC_RP_CLIENT_ID = os.environ.get(
+    "OIDC_RP_CLIENT_ID", "14c4257b-bcd1-4850-889e-7156c9efe2ec"
+)
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv(
     "OIDC_OP_AUTHORIZATION_ENDPOINT",
-    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth",
+    "https://login.microsoftonline.com/72fca1b1-2c2e-4376-a445-294d80196804/oauth2/v2.0/authorize",
 )
 OIDC_OP_TOKEN_ENDPOINT = os.getenv(
     "OIDC_OP_TOKEN_ENDPOINT",
-    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token",
+    "https://login.microsoftonline.com/72fca1b1-2c2e-4376-a445-294d80196804/oauth2/v2.0/token",
 )
 OIDC_OP_USER_ENDPOINT = os.getenv(
-    "OIDC_OP_USER_ENDPOINT",
-    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo",
+    "OIDC_OP_USER_ENDPOINT", "https://graph.microsoft.com/oidc/userinfo"
 )
 OIDC_OP_JWKS_ENDPOINT = os.getenv(
     "OIDC_OP_JWKS_ENDPOINT",
-    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs",
+    "https://login.microsoftonline.com/72fca1b1-2c2e-4376-a445-294d80196804/discovery/v2.0/keys",
 )
-OIDC_OP_LOGOUT_ENDPOINT = os.getenv(
-    "OIDC_OP_LOGOUT_ENDPOINT",
-    "https://acc.iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout",
+
+OIDC_RP_SIGN_ALGO = "RS256"
+OIDC_OP_ISSUER = os.getenv(
+    "OIDC_OP_ISSUER",
+    "https://sts.windows.net/72fca1b1-2c2e-4376-a445-294d80196804/",
 )
+
+OIDC_TRUSTED_AUDIENCES = f"api://{OIDC_RP_CLIENT_ID}"
 
 LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "WARNING")
 LOGGING = {
