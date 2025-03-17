@@ -11,6 +11,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import include, path, re_path
 from django.views.generic import View
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -53,6 +54,10 @@ urlpatterns = [
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
     re_path(r"^$", view=MyView.as_view(), name="index"),
+    path(
+        ".well-known/security.txt",
+        lambda: redirect("https://www.amsterdam.nl/security.txt"),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
