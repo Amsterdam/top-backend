@@ -19,6 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_DEVELOPMENT_AUTHENTICATION = (
     os.getenv("LOCAL_DEVELOPMENT_AUTHENTICATION", False) == "True"
 )
+
 LOCAL_DEVELOPMENT_USE_MULTIPROCESSING = (
     os.getenv("LOCAL_DEVELOPMENT_USE_MULTIPROCESSING", False) == "True"
 )
@@ -203,8 +204,8 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # CORS and allowed hosts
 ALLOWED_HOSTS = ["*"]
 
-CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST").split(",")
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ORIGIN_WHITELIST").split(",")
+CORS_ORIGIN_ALLOW_ALL = False
 
 SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/v[0-9]/",
