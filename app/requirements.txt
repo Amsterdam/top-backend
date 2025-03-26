@@ -11,7 +11,7 @@ drf-spectacular==0.27.1
 # Testing
 freezegun==1.2.1
 model-bakery==1.5.0
-requests-mock==1.9.3
+requests-mock==1.12.1
 pytz==2024.1
 # Settings
 django-constance[database]==3.1.0
