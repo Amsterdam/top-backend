@@ -13,7 +13,7 @@ from django.contrib import admin
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import include, path, re_path
-from django.views.generic import View
+from django.views.generic import RedirectView, View
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
@@ -53,11 +53,14 @@ urlpatterns = [
     path("startup", is_healthy),
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
-    re_path(r"^$", view=MyView.as_view(), name="index"),
+    path(
+        "favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)
+    ),
     path(
         ".well-known/security.txt",
         lambda: redirect("https://www.amsterdam.nl/security.txt"),
     ),
+    re_path(r"^$", view=MyView.as_view(), name="index"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
