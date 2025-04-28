@@ -19,7 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_DEVELOPMENT_AUTHENTICATION = (
     os.getenv("LOCAL_DEVELOPMENT_AUTHENTICATION", False) == "True"
 )
-
 LOCAL_DEVELOPMENT_USE_MULTIPROCESSING = (
     os.getenv("LOCAL_DEVELOPMENT_USE_MULTIPROCESSING", False) == "True"
 )
@@ -235,7 +234,7 @@ TAG_NAME = os.getenv("TAG_NAME", "default-release")
 
 OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
-OIDC_AUTHENTICATION_CALLBACK_URL = "oidc-authenticate"
+
 OIDC_RP_CLIENT_ID = os.environ.get(
     "OIDC_RP_CLIENT_ID", "14c4257b-bcd1-4850-889e-7156c9efe2ec"
 )
@@ -262,6 +261,12 @@ OIDC_OP_ISSUER = os.getenv(
 )
 
 OIDC_TRUSTED_AUDIENCES = f"api://{OIDC_RP_CLIENT_ID}"
+OIDC_USE_PKCE = True
+OIDC_RP_SCOPES = f"openid email api://{OIDC_RP_CLIENT_ID}/user_impersonation"
+LOGIN_URL = "/oidc/authenticate/"
+
+if LOCAL_DEVELOPMENT_AUTHENTICATION:
+    OIDC_AUTHENTICATION_CALLBACK_URL = "oidc-authenticate"
 
 LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "WARNING")
 LOGGING = {
