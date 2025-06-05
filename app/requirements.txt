@@ -1,5 +1,5 @@
 # Core
-Django==4.2.20
+Django==4.2.22
 psycopg2==2.9.10
 celery==5.4.0
 
