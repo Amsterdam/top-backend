@@ -3,6 +3,7 @@ from apps.cases import router as case_router
 from apps.health.views import health_default, is_healthy
 from apps.itinerary import router as itinerary_router
 from apps.planner import router as planner_router
+from apps.planner.views import dumpdata as planner_dumpdata
 from apps.users import router as users_router
 from apps.users.views import IsAuthorizedView, ObtainAuthTokenOIDC
 from apps.visits import router as visits_router
@@ -51,6 +52,7 @@ v1_urls = (
 urlpatterns = [
     path("oidc/", include("mozilla_django_oidc.urls")),
     path("admin/login/", admin_redirect),
+    path("admin/planner/dumpdata", planner_dumpdata, name="planner-dumpdata"),
     path("admin/", admin.site.urls),
     # Health check urls
     path("looplijsten/health", health_default, name="health-default"),
