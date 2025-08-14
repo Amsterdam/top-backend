@@ -1,4 +1,4 @@
-FROM python:3.10-bullseye
+FROM python:3.13-trixie
 LABEL maintainer="datapunt@amsterdam.nl"
 
 ENV PYTHONUNBUFFERED 1
@@ -26,13 +26,11 @@ RUN apt-get update && apt-get install -y \
   graphviz-dev \
   postgresql-client
 
-
 RUN pip install --upgrade pip
 RUN pip install uwsgi
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
-
 
 RUN chmod +x /app/wait-for.sh
 RUN chmod +x /app/celery.sh
