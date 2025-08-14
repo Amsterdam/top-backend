@@ -34,11 +34,14 @@ docker compose -f docker-compose.local.yml run --rm api python manage.py loaddat
 ```
 Remove the json fixture after installing it.
 
-## Creating a superuser:
+## Creating a superuser
+For accessing the Django admin during local development you'll have to become a `superuser`. This user should have the same `email` and `username` as the one that will be auto-created by the SSO login.
+
+Run the following command to either create the user, or make the existing one a superuser:
+
 ```bash
-docker compose -f docker-compose.local.yml run --rm api python manage.py createsuperuser
+sh bin/setup_superuser.sh <email>
 ```
-A superuser can be used to access the Django backend
 
 ## Accessing the Django admin and adding users:
 In order to generate lists you need at least 2 other users.
