@@ -6,3 +6,4 @@ app/datasets/*.csv
 dumps
 .env.local
 celery.log
+.DS_Store
