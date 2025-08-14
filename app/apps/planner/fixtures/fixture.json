@@ -1,0 +1,1201 @@
+[
+{
+    "model": "planner.teamsettings",
+    "pk": 1,
+    "fields": {
+        "name": "Vakantieverhuur",
+        "enabled": true,
+        "zaken_team_id": 2,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [
+            1
+        ],
+        "suggest_next_visit_choices": [
+            1,
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "planner.teamsettings",
+    "pk": 2,
+    "fields": {
+        "name": "Goed verhuurderschap",
+        "enabled": true,
+        "zaken_team_id": 8,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [],
+        "suggest_next_visit_choices": []
+    }
+},
+{
+    "model": "planner.teamsettings",
+    "pk": 3,
+    "fields": {
+        "name": "Kamerverhuur",
+        "enabled": true,
+        "zaken_team_id": 3,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [
+            1
+        ],
+        "suggest_next_visit_choices": [
+            1,
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "planner.teamsettings",
+    "pk": 4,
+    "fields": {
+        "name": "Leegstand",
+        "enabled": true,
+        "zaken_team_id": 5,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [],
+        "suggest_next_visit_choices": []
+    }
+},
+{
+    "model": "planner.teamsettings",
+    "pk": 5,
+    "fields": {
+        "name": "Onderhuur",
+        "enabled": true,
+        "zaken_team_id": 6,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [],
+        "suggest_next_visit_choices": []
+    }
+},
+{
+    "model": "planner.teamsettings",
+    "pk": 6,
+    "fields": {
+        "name": "Ondermijning",
+        "enabled": true,
+        "zaken_team_id": 4,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [],
+        "suggest_next_visit_choices": []
+    }
+},
+{
+    "model": "planner.teamsettings",
+    "pk": 7,
+    "fields": {
+        "name": "Opkoopbescherming",
+        "enabled": true,
+        "zaken_team_id": 7,
+        "fraudprediction_pilot_enabled": false,
+        "default_weights": null,
+        "fraud_prediction_model": null,
+        "top_cases_count": 0,
+        "observation_choices": [],
+        "suggest_next_visit_choices": []
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 1,
+    "fields": {
+        "name": "Centrum"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 2,
+    "fields": {
+        "name": "Nieuw-West"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 3,
+    "fields": {
+        "name": "Noord"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 4,
+    "fields": {
+        "name": "Oost"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 5,
+    "fields": {
+        "name": "Weesp"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 6,
+    "fields": {
+        "name": "West"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 7,
+    "fields": {
+        "name": "Westpoort"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 8,
+    "fields": {
+        "name": "Zuid"
+    }
+},
+{
+    "model": "planner.postalcoderangeset",
+    "pk": 9,
+    "fields": {
+        "name": "Zuidoost"
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 1,
+    "fields": {
+        "range_start": 1011,
+        "range_end": 1019,
+        "postal_code_range_set": 1
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 2,
+    "fields": {
+        "range_start": 1043,
+        "range_end": 1043,
+        "postal_code_range_set": 2
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 3,
+    "fields": {
+        "range_start": 1046,
+        "range_end": 1047,
+        "postal_code_range_set": 2
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 4,
+    "fields": {
+        "range_start": 1057,
+        "range_end": 1069,
+        "postal_code_range_set": 2
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 5,
+    "fields": {
+        "range_start": 1021,
+        "range_end": 1028,
+        "postal_code_range_set": 3
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 6,
+    "fields": {
+        "range_start": 1031,
+        "range_end": 1037,
+        "postal_code_range_set": 3
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 7,
+    "fields": {
+        "range_start": 1019,
+        "range_end": 1019,
+        "postal_code_range_set": 4
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 8,
+    "fields": {
+        "range_start": 1086,
+        "range_end": 1087,
+        "postal_code_range_set": 4
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 9,
+    "fields": {
+        "range_start": 1091,
+        "range_end": 1098,
+        "postal_code_range_set": 4
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 10,
+    "fields": {
+        "range_start": 1380,
+        "range_end": 1384,
+        "postal_code_range_set": 5
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 11,
+    "fields": {
+        "range_start": 1013,
+        "range_end": 1015,
+        "postal_code_range_set": 6
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 12,
+    "fields": {
+        "range_start": 1051,
+        "range_end": 1058,
+        "postal_code_range_set": 6
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 13,
+    "fields": {
+        "range_start": 1061,
+        "range_end": 1061,
+        "postal_code_range_set": 6
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 14,
+    "fields": {
+        "range_start": 1071,
+        "range_end": 1071,
+        "postal_code_range_set": 6
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 15,
+    "fields": {
+        "range_start": 1075,
+        "range_end": 1075,
+        "postal_code_range_set": 6
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 16,
+    "fields": {
+        "range_start": 1098,
+        "range_end": 1098,
+        "postal_code_range_set": 6
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 17,
+    "fields": {
+        "range_start": 1013,
+        "range_end": 1014,
+        "postal_code_range_set": 7
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 18,
+    "fields": {
+        "range_start": 1041,
+        "range_end": 1047,
+        "postal_code_range_set": 7
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 19,
+    "fields": {
+        "range_start": 1058,
+        "range_end": 1059,
+        "postal_code_range_set": 8
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 20,
+    "fields": {
+        "range_start": 1071,
+        "range_end": 1079,
+        "postal_code_range_set": 8
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 21,
+    "fields": {
+        "range_start": 1081,
+        "range_end": 1083,
+        "postal_code_range_set": 8
+    }
+},
+{
+    "model": "planner.postalcoderange",
+    "pk": 22,
+    "fields": {
+        "range_start": 1101,
+        "range_end": 1109,
+        "postal_code_range_set": 9
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 1,
+    "fields": {
+        "team_settings": 1,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"0\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"3\", \"4\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"8\"]",
+        "reasons": "[\"2\", \"4\", \"12\", \"26\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": "[]",
+        "tags": "[]",
+        "districts": "[]",
+        "housing_corporations": "[]",
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 2,
+    "fields": {
+        "team_settings": 1,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"3\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"3\", \"4\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"4\", \"8\"]",
+        "reasons": "[\"2\", \"4\", \"12\", \"26\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 3,
+    "fields": {
+        "team_settings": 3,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"1\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"5\", \"6\"]",
+        "week_segments": "[\"6\", \"5\"]",
+        "priorities": "[\"5\", \"6\", \"7\"]",
+        "reasons": "[\"5\", \"6\", \"27\", \"32\", \"37\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": "[]",
+        "tags": "[]",
+        "districts": "[\"2\"]",
+        "housing_corporations": "[]",
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 5,
+    "fields": {
+        "team_settings": 3,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"3\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"5\", \"6\"]",
+        "week_segments": "[\"5\", \"6\"]",
+        "priorities": "[\"5\", \"6\", \"7\"]",
+        "reasons": "[\"5\", \"6\", \"27\", \"32\", \"37\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 6,
+    "fields": {
+        "team_settings": 1,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"4\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"4\", \"3\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"8\", \"4\", \"3\"]",
+        "reasons": "[\"2\", \"4\", \"26\", \"12\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 7,
+    "fields": {
+        "team_settings": 1,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"6\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"3\", \"4\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"4\", \"8\"]",
+        "reasons": "[\"2\", \"4\", \"26\", \"12\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 8,
+    "fields": {
+        "team_settings": 1,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"1\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"4\", \"3\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"4\", \"8\"]",
+        "reasons": "[\"2\", \"4\", \"12\", \"26\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 9,
+    "fields": {
+        "team_settings": 1,
+        "name": "Prio 3",
+        "week_day": null,
+        "week_days": "[\"1\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"4\", \"3\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"8\", \"4\"]",
+        "reasons": "[\"31\", \"2\", \"12\", \"26\", \"4\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": "[]",
+        "tags": "[]",
+        "districts": "[]",
+        "housing_corporations": "[]",
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 10,
+    "fields": {
+        "team_settings": 1,
+        "name": "Prio 4",
+        "week_day": null,
+        "week_days": "[\"1\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"4\", \"3\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"4\", \"8\"]",
+        "reasons": "[\"2\", \"4\", \"12\", \"26\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": "[\"75\"]",
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 11,
+    "fields": {
+        "team_settings": 1,
+        "name": "standaard",
+        "week_day": null,
+        "week_days": "[\"2\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"4\", \"3\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"4\", \"8\", \"3\"]",
+        "reasons": "[\"26\", \"4\", \"31\", \"12\", \"2\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 13,
+    "fields": {
+        "team_settings": 3,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"0\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"6\", \"5\"]",
+        "week_segments": "[\"5\", \"6\"]",
+        "priorities": "[\"5\", \"6\", \"7\"]",
+        "reasons": "[\"5\", \"6\", \"32\", \"37\", \"27\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 14,
+    "fields": {
+        "team_settings": 3,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"4\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"5\", \"6\"]",
+        "week_segments": "[\"5\", \"6\"]",
+        "priorities": "[\"5\", \"6\", \"7\"]",
+        "reasons": "[\"5\", \"6\", \"32\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": "[]",
+        "tags": "[]",
+        "districts": "[]",
+        "housing_corporations": "[]",
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 15,
+    "fields": {
+        "team_settings": 4,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"2\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"10\", \"9\"]",
+        "week_segments": "[\"9\", \"10\"]",
+        "priorities": "[\"13\", \"12\", \"14\"]",
+        "reasons": "[\"14\", \"15\", \"16\", \"18\", \"29\", \"33\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 16,
+    "fields": {
+        "team_settings": 4,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"0\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"10\", \"9\"]",
+        "week_segments": "[\"10\", \"9\"]",
+        "priorities": "[\"13\", \"12\", \"14\"]",
+        "reasons": "[\"14\", \"15\", \"16\", \"18\", \"29\", \"33\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 17,
+    "fields": {
+        "team_settings": 3,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"6\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"6\", \"5\"]",
+        "week_segments": "[\"5\", \"6\"]",
+        "priorities": "[\"5\", \"6\", \"7\"]",
+        "reasons": "[\"5\", \"6\", \"27\", \"32\", \"37\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 18,
+    "fields": {
+        "team_settings": 1,
+        "name": "Sarina",
+        "week_day": null,
+        "week_days": "[\"1\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"4\", \"3\"]",
+        "week_segments": "[\"3\", \"4\"]",
+        "priorities": "[\"3\", \"4\"]",
+        "reasons": "[\"2\", \"12\", \"26\", \"4\", \"31\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": "[]",
+        "tags": "[]",
+        "districts": "[]",
+        "housing_corporations": "[]",
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 19,
+    "fields": {
+        "team_settings": 6,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"3\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"8\", \"7\"]",
+        "week_segments": "[\"7\", \"8\"]",
+        "priorities": "[\"10\", \"9\", \"11\"]",
+        "reasons": "[\"7\", \"8\", \"9\", \"10\", \"11\", \"13\", \"17\", \"19\", \"25\", \"28\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 20,
+    "fields": {
+        "team_settings": 2,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"2\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"16\", \"15\"]",
+        "week_segments": "[\"16\", \"15\"]",
+        "priorities": "[\"21\", \"23\", \"22\"]",
+        "reasons": "[\"38\", \"39\", \"40\", \"41\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": "[]",
+        "subjects": "[]",
+        "tags": "[]",
+        "districts": "[]",
+        "housing_corporations": "[]",
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 21,
+    "fields": {
+        "team_settings": 3,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"2\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"5\", \"6\"]",
+        "week_segments": "[\"5\", \"6\"]",
+        "priorities": "[\"5\", \"6\", \"7\"]",
+        "reasons": "[\"5\", \"6\", \"27\", \"32\", \"37\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 22,
+    "fields": {
+        "team_settings": 4,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"4\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"10\", \"9\"]",
+        "week_segments": "[\"9\", \"10\"]",
+        "priorities": "[\"12\", \"13\", \"14\"]",
+        "reasons": "[\"14\", \"15\", \"16\", \"18\", \"29\", \"33\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "planner.daysettings",
+    "pk": 23,
+    "fields": {
+        "team_settings": 6,
+        "name": "Standaard",
+        "week_day": null,
+        "week_days": "[\"1\"]",
+        "start_time": null,
+        "opening_date": "2019-01-01",
+        "postal_code_ranges": [
+            {
+                "range_end": 1109,
+                "range_start": 1000
+            },
+            {
+                "range_end": 1384,
+                "range_start": 1380
+            }
+        ],
+        "length_of_list": 8,
+        "max_use_limit": 0,
+        "day_segments": "[\"7\", \"8\"]",
+        "week_segments": "[\"7\", \"8\"]",
+        "priorities": "[\"10\", \"9\", \"11\"]",
+        "reasons": "[\"7\", \"8\", \"9\", \"10\", \"11\", \"13\", \"17\", \"19\", \"25\", \"28\"]",
+        "state_types": "[\"235\", \"236\"]",
+        "project_ids": null,
+        "subjects": null,
+        "tags": null,
+        "districts": "[]",
+        "housing_corporations": null,
+        "housing_corporation_combiteam": false,
+        "postal_code_ranges_presets": []
+    }
+},
+{
+    "model": "visits.situation",
+    "pk": 1,
+    "fields": {
+        "value": "nobody_present",
+        "verbose": "Niemand aanwezig",
+        "position": 0.0
+    }
+},
+{
+    "model": "visits.situation",
+    "pk": 2,
+    "fields": {
+        "value": "no_cooperation",
+        "verbose": "Geen medewerking",
+        "position": 0.5
+    }
+},
+{
+    "model": "visits.situation",
+    "pk": 3,
+    "fields": {
+        "value": "access_granted",
+        "verbose": "Toegang verleend",
+        "position": 0.8
+    }
+},
+{
+    "model": "visits.observation",
+    "pk": 1,
+    "fields": {
+        "value": "malfunctioning_doorbell",
+        "verbose": "Bel functioneert niet",
+        "position": 0.3
+    }
+},
+{
+    "model": "visits.suggestnextvisit",
+    "pk": 1,
+    "fields": {
+        "value": "daytime",
+        "verbose": "Overdag",
+        "position": 0.0
+    }
+},
+{
+    "model": "visits.suggestnextvisit",
+    "pk": 2,
+    "fields": {
+        "value": "weekend",
+        "verbose": "Weekend",
+        "position": 0.3
+    }
+},
+{
+    "model": "visits.suggestnextvisit",
+    "pk": 3,
+    "fields": {
+        "value": "evening",
+        "verbose": "'s Avonds",
+        "position": 0.5
+    }
+},
+{
+    "model": "visits.suggestnextvisit",
+    "pk": 4,
+    "fields": {
+        "value": "unknown",
+        "verbose": "Niet meer uitzetten",
+        "position": 0.7
+    }
+}
+]
