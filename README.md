@@ -5,9 +5,9 @@ Dankzij de TOP app hebben toezichthouders Wonen veel informatie over zaken, adre
 
 - [Docker](https://docs.docker.com/docker-for-mac/install/)
 
-# Steps For Local Development
+# Steps for local development
 
-## Build:
+## Build
 ```bash
 docker compose -f docker-compose.local.yml build
 ```
@@ -19,21 +19,22 @@ docker network create top_network
 docker network create top_and_zaak_backend_bridge
 ```
 
-## Starting the development server:
+## Starting the development server
 Start the dev server for local development:
 ```bash
 docker compose -f docker-compose.local.yml up
 ```
 
 ## Importing fixtures dump
-The Django project needs some configuration in order to run locally. It's possible to add these manually, but the quickest way is importing using fixtures from the acceptance environment. You can download these at: https://acc.api.top.amsterdam.nl/admin/planner/ by clicking on "DOWNLOAD JSON FIXTURE". You'll need to be logged in using an admin account first to access this url.
-
-Move the json into the `app` directory on the root of your project, and run the following command
+This project needs some data configuration in order to run locally. It's possible to add this manually, but the quickest way is to import fixtures by running this command:
 
 ```bash
-docker compose -f docker-compose.local.yml run --rm api python manage.py loaddata <name of fixture>
+docker compose -f docker-compose.local.yml run --rm api python manage.py loaddata
 ```
-Remove the json fixture after installing it.
+
+Note: you can also download updated fixtures from the acceptance environment. Go to https://acc.api.top.amsterdam.nl/admin/planner/ and click on "DOWNLOAD JSON FIXTURE". You'll need to be logged in using an admin account first to access this url.
+
+Move the json into the `app` directory on the root of your project, and run the above command with the filename (`top-planner-<date>.json`) appended to it. Remove the JSON fixture after importing it.
 
 ## Creating a superuser
 For accessing the Django admin during local development you'll have to become a `superuser`. This user should have the same `email` and `username` as the one that will be auto-created by the SSO login.
@@ -47,6 +48,7 @@ sh bin/setup_superuser.sh <email>
 ## Accessing the Django admin and adding users:
 In order to generate lists you need at least 2 other users.
 You can add other users easily through the Django admin.
+
 Navigate to http://localhost:8000/admin and sign in using the superuser you just created.
 Once you're in the admin, you can click on "add" in the User section to create new users.
 
@@ -55,19 +57,26 @@ Once you're in the admin, you can click on "add" in the User section to create n
 You can access the documentation at:
 http://localhost:8000/api/v1/swagger/
 
-## Bypassing Keycloak and using local development authentication:
-It's possible to bypass Keycloak authentication when running the project locally.
-To do so, make sure the LOCAL_DEVELOPMENT_AUTHENTICATION flag is set to True in docker-compose.yml.
+## Bypassing Keycloak and using local development authentication
+It's possible to bypass Keycloak authentication when running the project locally. \
+To do so, create `.env.local` file with:
 
-## Bypassing multiprocessing and use threads:
+```bash
+LOCAL_DEVELOPMENT_AUTHENTICATION=False
+```
+
+## Bypassing multiprocessing and use threads
 The algorithm uses multiprocessing to select cases for a list. Multiprocessing sometimes freezes during local development. You will see a database SSL error:
-```
-    SSL error: decryption failed or bad record mac
-    could not receive data from client: Connection reset by peer
-    unexpected EOF on client connection with an open transaction
-```
-To fix this use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in the .env file.
 
+> SSL error: decryption failed or bad record mac
+> could not receive data from client: Connection reset by peer
+> unexpected EOF on client connection with an open transaction
+
+To fix this use threads instead by creating/updating your `.env.local` file:
+
+```bash
+LOCAL_DEVELOPMENT_USE_MULTIPROCESSING=False
+```
 
 # Running commands
 Run a command inside the docker container:
