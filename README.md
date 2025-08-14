@@ -18,6 +18,7 @@ Before running the project, you need to create the networks:
 docker network create top_network
 docker network create top_and_zaak_backend_bridge
 ```
+
 ## Starting the development server:
 Start the dev server for local development:
 ```bash
