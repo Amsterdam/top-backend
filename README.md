@@ -127,6 +127,7 @@ The Github actions will use the same bash script to check if the code in the pul
 ### Coding conventions and style
 The project uses [Black](https://github.com/psf/black) for formatting and [Flake8](https://pypi.org/project/flake8/) for linting.
 
+
 ## Testing
 
 ### Running unit tests
