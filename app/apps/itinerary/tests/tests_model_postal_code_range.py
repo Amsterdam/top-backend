@@ -16,7 +16,7 @@ class ItinerarySettingsModelTest(TestCase):
             itinerary=itinerary, range_start=FOO_MIN_RANGE, range_end=FOO_MAX_RANGE
         )
         postal_code_range.clean()
-        self.assertEquals(PostalCodeSettings.objects.count(), 1)
+        self.assertEqual(PostalCodeSettings.objects.count(), 1)
 
     def test_with_postal_code_range_fail(self):
         """

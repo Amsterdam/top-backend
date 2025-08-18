@@ -26,7 +26,7 @@ class IsAuthenticatedViewTest(APITestCase):
 
         expected_response = {"is_authorized": True}
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.json(), expected_response)
+        self.assertEqual(response.json(), expected_response)
 
     def test_unauthenticated_requests(self):
         """
@@ -38,7 +38,7 @@ class IsAuthenticatedViewTest(APITestCase):
 
         expected_response = {"is_authorized": False}
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.json(), expected_response)
+        self.assertEqual(response.json(), expected_response)
 
 
 class ObtainAuthTokenOIDCTest(APITestCase):
@@ -54,7 +54,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.post(url, {})
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch("apps.users.views.AuthenticationBackend")
     def test_with_authentication_code(self, mock_AuthenticationBackend):
@@ -68,7 +68,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.post(url, {"code": "FOO-CODE"})
 
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     @patch("apps.users.views.AuthenticationBackend")
     def test_with_authentication_code_response(self, mock_AuthenticationBackend):
@@ -85,7 +85,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         token_response = response.json()
 
         # The response contains a refresh and an access token and a user object
-        self.assertEquals(list(token_response.keys()), ["refresh", "access", "user"])
+        self.assertEqual(list(token_response.keys()), ["refresh", "access", "user"])
         self.assertIsNotNone(token_response["refresh"])
         self.assertIsNotNone(token_response["access"])
         self.assertIsNotNone(token_response["user"])
@@ -106,4 +106,4 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.post(url, {"code": "FOO-CODE"})
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

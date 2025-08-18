@@ -67,7 +67,7 @@ class ItineraryTeamsViewsTest(APITestCase):
         user_a = User.objects.create(email="foo_a@foo.com")
         user_b = User.objects.create(email="foo_b@foo.com")
 
-        self.assertEquals([], list(itinerary.team_members.all()))
+        self.assertEqual([], list(itinerary.team_members.all()))
 
         url = reverse("v1:itinerary-team", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
@@ -84,7 +84,7 @@ class ItineraryTeamsViewsTest(APITestCase):
         team_members = [
             team_member.user for team_member in itinerary.team_members.all()
         ]
-        self.assertEquals([user_a, user_b], team_members)
+        self.assertEqual([user_a, user_b], team_members)
 
     def test_itinerary_update_team(self):
         """
@@ -110,4 +110,4 @@ class ItineraryTeamsViewsTest(APITestCase):
         team_members = [
             team_member.user for team_member in itinerary.team_members.all()
         ]
-        self.assertEquals([user_a, user_b], team_members)
+        self.assertEqual([user_a, user_b], team_members)

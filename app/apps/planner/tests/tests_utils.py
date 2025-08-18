@@ -24,7 +24,7 @@ class UtilsTests(TestCase):
         result = remove_cases_from_list(cases, cases_to_remove)
         expected = [case_a, case_c, case_d]
 
-        self.assertEquals(result, expected)
+        self.assertEqual(result, expected)
 
     def test_remove_cases_from_list_safety_fallback(self):
         """
@@ -43,7 +43,7 @@ class UtilsTests(TestCase):
         result = remove_cases_from_list(cases, cases_to_remove)
         expected = [case_c, case_d, case_e]
 
-        self.assertEquals(result, expected)
+        self.assertEqual(result, expected)
 
     def test_get_case_coordinates(self):
         case_a = {
@@ -65,7 +65,7 @@ class UtilsTests(TestCase):
         case_coordinates = get_case_coordinates(cases)
         expected = [[0, 1], [2, 3], [4, 5]]
 
-        self.assertEquals(case_coordinates, expected)
+        self.assertEqual(case_coordinates, expected)
 
     def test_filter_cases_with_postal_code_empty_list(self):
         """
@@ -108,7 +108,7 @@ class UtilsTests(TestCase):
 
         filtered_cases = filter_cases_with_postal_code(cases, RANGES)
 
-        self.assertEquals(filtered_cases, [FOO_CASE_A, FOO_CASE_C, FOO_CASE_D])
+        self.assertEqual(filtered_cases, [FOO_CASE_A, FOO_CASE_C, FOO_CASE_D])
 
     def test_filter_cases_with_multiple_postal_code_ranges(self):
         """
@@ -129,6 +129,6 @@ class UtilsTests(TestCase):
 
         filtered_cases = filter_cases_with_postal_code(cases, RANGES)
 
-        self.assertEquals(
+        self.assertEqual(
             filtered_cases, [FOO_CASE_A, FOO_CASE_B, FOO_CASE_D, FOO_CASE_E]
         )

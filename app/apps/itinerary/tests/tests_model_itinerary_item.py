@@ -85,7 +85,7 @@ class ItineraryItemModelTest(TestCase):
         case_c = Case.get(FOO_CASE_C_ID)
         item = ItineraryItem.objects.create(itinerary=itinerary, case=case_c)
 
-        self.assertEquals(item.position, items[-1].position + 1)
+        self.assertEqual(item.position, items[-1].position + 1)
 
     def test_save_same_case_error(self, mock):
         """

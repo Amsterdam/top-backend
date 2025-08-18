@@ -35,7 +35,7 @@ class GetHealthResponseTests(TestCase):
         """
         health_check = Mock()
         response = get_health_response(health_check, SUCCESS_MESSAGE)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_health_response_success_message(self):
         """
@@ -43,7 +43,7 @@ class GetHealthResponseTests(TestCase):
         """
         health_check = Mock()
         response = get_health_response(health_check, SUCCESS_MESSAGE)
-        self.assertEquals(json.loads(response.content), SUCCESS_MESSAGE)
+        self.assertEqual(json.loads(response.content), SUCCESS_MESSAGE)
 
     def test_get_health_response_fail(self):
         """
@@ -51,7 +51,7 @@ class GetHealthResponseTests(TestCase):
         """
         health_check = Mock(side_effect=Exception(ERROR_MESSAGE))
         response = get_health_response(health_check, SUCCESS_MESSAGE)
-        self.assertEquals(response.status_code, 500)
+        self.assertEqual(response.status_code, 500)
 
     def test_get_health_response_fail_message(self):
         """
@@ -59,7 +59,7 @@ class GetHealthResponseTests(TestCase):
         """
         health_check = Mock(side_effect=Exception(ERROR_MESSAGE))
         response = get_health_response(health_check, SUCCESS_MESSAGE)
-        self.assertEquals(json.loads(response.content), {"error": ERROR_MESSAGE})
+        self.assertEqual(json.loads(response.content), {"error": ERROR_MESSAGE})
 
     def test_is_table_filled_query(self):
         """
@@ -68,7 +68,7 @@ class GetHealthResponseTests(TestCase):
         FOO_TABLE_NAME = "foo-table"
         query = is_table_filled_query(FOO_TABLE_NAME)
 
-        self.assertEquals(
+        self.assertEqual(
             "SELECT reltuples::bigint FROM pg_catalog.pg_class WHERE relname ="
             " 'foo-table'",
             query,
@@ -83,7 +83,7 @@ class TableFilledQueryTests(TestCase):
         FOO_TABLE_NAME = "foo-table"
         query = is_table_filled_query(FOO_TABLE_NAME)
 
-        self.assertEquals(
+        self.assertEqual(
             "SELECT reltuples::bigint FROM pg_catalog.pg_class WHERE relname ="
             " 'foo-table'",
             query,
@@ -143,7 +143,7 @@ class HealthTablesTests(TestCase):
         """
         assert_health_database_tables(DATABASE_NAME, [TABLE_NAME])
 
-        self.assertEquals(mock_assert_health_table.call_count, 1)
+        self.assertEqual(mock_assert_health_table.call_count, 1)
 
     @patch("apps.health.utils.assert_health_table")
     def test_assert_health_tables_2(self, mock_assert_health_table):
@@ -151,7 +151,7 @@ class HealthTablesTests(TestCase):
         assert_health_database_tables calls assert_health_table n times for number of tables
         """
         assert_health_database_tables(DATABASE_NAME, [TABLE_NAME, TABLE_NAME])
-        self.assertEquals(mock_assert_health_table.call_count, 2)
+        self.assertEqual(mock_assert_health_table.call_count, 2)
 
     @patch("apps.health.utils.assert_health_table")
     def test_assert_health_tables_arguments(self, mock_assert_health_table):
