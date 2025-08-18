@@ -116,7 +116,6 @@ LANGUAGE_CODE = "en-us"
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
-USE_L10N = True
 USE_TZ = True
 TIME_ZONE = "Europe/Amsterdam"
 
