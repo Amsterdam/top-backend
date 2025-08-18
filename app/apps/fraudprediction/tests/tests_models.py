@@ -1,9 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from apps.fraudprediction.models import FraudPrediction
 from django.test import TestCase
 from freezegun import freeze_time
-from pytz import UTC
 
 
 class FraudPredictionModelTest(TestCase):
@@ -36,4 +35,6 @@ class FraudPredictionModelTest(TestCase):
         The sync date should be the current date
         """
         fraud_prediction = self.get_and_create()
-        self.assertEqual(fraud_prediction.sync_date, datetime(2019, 12, 25, tzinfo=UTC))
+        self.assertEqual(
+            fraud_prediction.sync_date, datetime(2019, 12, 25, tzinfo=timezone.utc)
+        )

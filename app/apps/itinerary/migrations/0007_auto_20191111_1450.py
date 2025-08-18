@@ -3,7 +3,6 @@
 import datetime
 
 from django.db import migrations, models
-from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
@@ -17,7 +16,16 @@ class Migration(migrations.Migration):
             model_name="itinerary",
             name="date",
             field=models.DateField(
-                default=datetime.datetime(2019, 11, 11, 14, 50, 30, 557094, tzinfo=utc)
+                default=datetime.datetime(
+                    2019,
+                    11,
+                    11,
+                    14,
+                    50,
+                    30,
+                    557094,
+                    tzinfo=datetime.timezone.utc,
+                )
             ),
             preserve_default=False,
         ),

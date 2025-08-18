@@ -24,7 +24,8 @@ RUN apt-get update && apt-get install -y \
   libgdal-dev \
   graphviz \
   graphviz-dev \
-  postgresql-client
+  postgresql-client \
+  tzdata
 
 RUN pip install --upgrade pip
 RUN pip install uwsgi
