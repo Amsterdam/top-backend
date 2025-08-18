@@ -33,7 +33,7 @@ class NoteViewsCreateTest(APITestCase):
         itinerary = Itinerary.objects.create()
         itinerary_item = ItineraryItem.objects.create(itinerary=itinerary)
 
-        self.assertEquals([], list(itinerary_item.notes.all()))
+        self.assertEqual([], list(itinerary_item.notes.all()))
 
         FOO_TEXT = "FOO NOTE TEXT"
 

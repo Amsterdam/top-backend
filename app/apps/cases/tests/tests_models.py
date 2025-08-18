@@ -24,7 +24,7 @@ class CaseModelTest(TestCase):
         """
         CASE_ID = "CASE ID FOO"
         case = Case.objects.create(case_id=CASE_ID)
-        self.assertEquals(case.__str__(), CASE_ID)
+        self.assertEqual(case.__str__(), CASE_ID)
 
     def test_case_object_data(self):
         """
@@ -40,7 +40,7 @@ class CaseModelTest(TestCase):
 
         data = case.data
 
-        self.assertEquals(data, MOCK_DATA)
+        self.assertEqual(data, MOCK_DATA)
         case.__get_case__.assert_called_with(CASE_ID)
 
     def test_case_get_function(self):

@@ -45,7 +45,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
             status_code=200,
         )
         itinerary = Itinerary.objects.create()
-        self.assertEquals([], list(itinerary.items.all()))
+        self.assertEqual([], list(itinerary.items.all()))
 
         data = {"itinerary": itinerary.id, "id": self.CASE_ID}
 
@@ -70,7 +70,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
             status_code=200,
         )
         itinerary = Itinerary.objects.create()
-        self.assertEquals([], list(itinerary.items.all()))
+        self.assertEqual([], list(itinerary.items.all()))
 
         POSITION = 1.234567
 

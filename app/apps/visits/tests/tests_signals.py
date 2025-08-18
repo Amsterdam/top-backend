@@ -41,11 +41,11 @@ class VisitsSignalsTests(TestCase):
         """
         Tests if the visit method capture_visit_meta_data creates VisitMetaData
         """
-        self.assertEquals(VisitMetaData.objects.count(), 0)
+        self.assertEqual(VisitMetaData.objects.count(), 0)
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)
 
     def test_visit_single_meta_data(self):
         """
@@ -54,10 +54,10 @@ class VisitsSignalsTests(TestCase):
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)
 
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)
 
     def test_fraud_prediction_empty(self):
         """
@@ -96,10 +96,8 @@ class VisitsSignalsTests(TestCase):
         # Fraud prediction data should now be captured in the meta data
         visit_meta_data = VisitMetaData.objects.all()[0]
 
-        self.assertEquals(visit_meta_data.fraud_probability, MOCK_FRAUD_PROBABILITY)
-        self.assertEquals(
+        self.assertEqual(visit_meta_data.fraud_probability, MOCK_FRAUD_PROBABILITY)
+        self.assertEqual(
             visit_meta_data.fraud_prediction_business_rules, MOCK_BUSINESS_RULES
         )
-        self.assertEquals(
-            visit_meta_data.fraud_prediction_shap_values, MOCK_SHAP_VALUES
-        )
+        self.assertEqual(visit_meta_data.fraud_prediction_shap_values, MOCK_SHAP_VALUES)

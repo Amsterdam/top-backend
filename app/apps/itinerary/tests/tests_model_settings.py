@@ -17,26 +17,26 @@ class ItinerarySettingsModelTest(TestCase):
         """
         ItinerarySettings can be created
         """
-        self.assertEquals(ItinerarySettings.objects.count(), 0)
+        self.assertEqual(ItinerarySettings.objects.count(), 0)
         self.get_new_itinerary_settings()
-        self.assertEquals(ItinerarySettings.objects.count(), 1)
+        self.assertEqual(ItinerarySettings.objects.count(), 1)
 
     def test_target_length_default(self):
         """
         Target length should default to 8
         """
         itinerary_settings = self.get_new_itinerary_settings()
-        self.assertEquals(8, itinerary_settings.target_length)
+        self.assertEqual(8, itinerary_settings.target_length)
 
     def test_create_with_start_case(self):
         """
         Test creating with start_case
         """
-        self.assertEquals(ItinerarySettings.objects.count(), 0)
+        self.assertEqual(ItinerarySettings.objects.count(), 0)
         itinerary = Itinerary.objects.create()
         case = Case.get("FOO_CASE_ID")
 
         ItinerarySettings.objects.create(
             opening_date="2020-04-04", itinerary=itinerary, start_case=case
         )
-        self.assertEquals(ItinerarySettings.objects.count(), 1)
+        self.assertEqual(ItinerarySettings.objects.count(), 1)

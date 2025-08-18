@@ -36,6 +36,4 @@ class FraudPredictionModelTest(TestCase):
         The sync date should be the current date
         """
         fraud_prediction = self.get_and_create()
-        self.assertEquals(
-            fraud_prediction.sync_date, datetime(2019, 12, 25, tzinfo=UTC)
-        )
+        self.assertEqual(fraud_prediction.sync_date, datetime(2019, 12, 25, tzinfo=UTC))
