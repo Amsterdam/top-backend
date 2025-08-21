@@ -1,7 +1,10 @@
-FROM python:3.13-trixie
+FROM python:3.13-slim-trixie
 LABEL maintainer="datapunt@amsterdam.nl"
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1 \
+  POETRY_VIRTUALENVS_CREATE=false \
+  POETRY_VERSION=2.1.4
+
 ARG ONDERHUUR_MODEL_CREDS
 ARG ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN
 
@@ -12,12 +15,11 @@ RUN chmod 644 /usr/local/share/ca-certificates/extras/adp_rootca.crt \
 
 # Setup datapunt directories and user
 RUN adduser --system datapunt
-ENV DIRECTORYLIST "/static /app /downloads /certificates /deploy /var/log/uwsgi"
-RUN mkdir -p ${DIRECTORYLIST} && chown datapunt ${DIRECTORYLIST}
+ARG DIRECTORYLIST="/static /app /downloads /certificates /deploy /var/log/uwsgi"
+RUN mkdir -p "$DIRECTORYLIST" && chown datapunt "$DIRECTORYLIST"
 
 # Setup application
 WORKDIR /app
-COPY requirements.txt /app/
 
 RUN apt-get update && apt-get install -y \
   gdal-bin \
@@ -27,9 +29,12 @@ RUN apt-get update && apt-get install -y \
   postgresql-client \
   tzdata
 
-RUN pip install --upgrade pip
-RUN pip install uwsgi
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip setuptools uwsgi
+RUN pip install "poetry==$POETRY_VERSION"
+
+COPY pyproject.toml poetry.lock /app/
+
+RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY . /app/
 
