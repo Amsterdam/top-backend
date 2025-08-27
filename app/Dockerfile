@@ -27,7 +27,11 @@ RUN apt-get update && apt-get install -y \
   graphviz \
   graphviz-dev \
   postgresql-client \
-  tzdata
+  tzdata \
+  wget \
+  curl \
+  netcat-openbsd \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip setuptools uwsgi
 RUN pip install "poetry==$POETRY_VERSION"
