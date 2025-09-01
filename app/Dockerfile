@@ -5,9 +5,6 @@ ENV PYTHONUNBUFFERED=1 \
   POETRY_VIRTUALENVS_CREATE=false \
   POETRY_VERSION=2.1.4
 
-ARG ONDERHUUR_MODEL_CREDS
-ARG ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN
-
 # Setup Certificates for ADP/Motiv
 COPY certificates/adp_rootca.crt /usr/local/share/ca-certificates/extras/adp_rootca.crt
 RUN chmod 644 /usr/local/share/ca-certificates/extras/adp_rootca.crt \

@@ -3,7 +3,6 @@ from datetime import datetime
 
 import requests
 from apps.cases.swagger_parameters import case_search_parameters
-from apps.fraudprediction.utils import get_fraud_prediction
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import ItineraryTeamMemberSerializer
 from apps.users.auth_apps import AZAKeyAuth
@@ -60,7 +59,6 @@ class CaseViewSet(ViewSet):
                     nummeraanduiding_id
                 ),
                 "brk_data": brk_api.get_brk_data(bag_id),
-                "fraud_prediction": get_fraud_prediction(case_id),
                 "day_settings_id": day_settings_id,
             }
         )
@@ -106,18 +104,6 @@ class CaseSearchViewSet(ViewSet):
     """
     A temporary search ViewSet for listing cases
     """
-
-    def __add_fraud_prediction__(self, cases):
-        """
-        Enriches the cases with fraud predictions
-        """
-        cases = cases.copy()
-
-        for case in cases:
-            case_id = str(case.get("id"))
-            case["fraud_prediction"] = get_fraud_prediction(case_id)
-
-        return cases
 
     def __add_teams__(self, cases, itineraries_created_at):
         """
@@ -211,7 +197,6 @@ class CaseSearchViewSet(ViewSet):
             for case in result:
                 Case.get(case_id=case.get("id"))
 
-            cases = self.__add_fraud_prediction__(result)
-            cases = self.__add_teams__(cases, datetime.now())
+            cases = self.__add_teams__(result, datetime.now())
             cases = self._clean_cases(cases)
             return JsonResponse({"cases": cases})

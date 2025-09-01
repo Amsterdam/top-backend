@@ -43,7 +43,6 @@ class DaySettingsInline(admin.TabularInline):
 class TeamSettingsAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "fraudprediction_pilot_enabled",
         "enabled",
     )
 
@@ -55,8 +54,6 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                     "name",
                     "enabled",
                     "zaken_team_id",
-                    "fraudprediction_pilot_enabled",
-                    "fraud_prediction_model",
                 )
             },
         ),
@@ -94,11 +91,9 @@ class WeightsAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "distance",
-        "fraud_probability",
         "priority",
     )
     list_editable = (
         "distance",
-        "fraud_probability",
         "priority",
     )

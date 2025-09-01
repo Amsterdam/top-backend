@@ -143,12 +143,10 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
-            "fraudprediction_pilot_enabled",
             "zaken_team_id",
             "observation_choices",
             "situation_choices",
             "suggest_next_visit_choices",
-            "fraud_prediction_model",
         )
 
 
@@ -298,13 +296,11 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
-            "fraudprediction_pilot_enabled",
             "zaken_team_id",
             "observation_choices",
             "situation_choices",
             "suggest_next_visit_choices",
             "day_settings_list",
-            "fraud_prediction_model",
         )
 
 
