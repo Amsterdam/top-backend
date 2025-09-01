@@ -48,7 +48,6 @@ INSTALLED_APPS = (
     "apps.itinerary",
     "apps.cases",
     "apps.planner",
-    "apps.fraudprediction",
     "apps.visits",
     "apps.health",
     "apps.addresses",
@@ -296,11 +295,6 @@ LOGGING = {
         },
     },
     "loggers": {
-        "woonfraude_model": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": True,
-        },
         "apps": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
@@ -360,7 +354,6 @@ if APPLICATIONINSIGHTS_CONNECTION_STRING:
     LOGGING["loggers"]["django"]["handlers"] = ["azure", "console"]
     LOGGING["loggers"][""]["handlers"] = ["azure", "console"]
     LOGGING["loggers"]["apps"]["handlers"] = ["azure", "console"]
-    LOGGING["loggers"]["woonfraude_model"]["handlers"] = ["azure", "console"]
     LOGGING["loggers"]["celery"]["handlers"] = ["azure", "console", "celery"]
 
 SIMPLE_JWT = {
@@ -404,20 +397,6 @@ SECURE_HSTS_PRELOAD = is_secure_environment
 X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-
-# Secret key for accessing fraud prediction scoring endpoint
-FRAUD_PREDICTION_MODEL_ONDERHUUR = "onderhuur"
-FRAUD_PREDICTION_MODELS = [
-    FRAUD_PREDICTION_MODEL_ONDERHUUR,
-]
-
-# Settings for hitkans api endpoint
-ONDERHUUR_HITKANS_API_BASE = os.environ.get(
-    "ONDERHUUR_HITKANS_API_BASE", "http://localhost:8000"
-)
-ONDERHUUR_HITKANS_AUTH_TOKEN = os.environ.get("ONDERHUUR_HITKANS_AUTH_TOKEN")
-ONDERHUUR_HITKANS_HEALTH_URL = ONDERHUUR_HITKANS_API_BASE + "/healthcheck"
-USE_HITKANS_MOCK_DATA = os.environ.get("USE_HITKANS_MOCK_DATA", "False") == "True"
 
 # City central geolocation and postal code range
 CITY_CENTRAL_LOCATION_LAT = 52.379189

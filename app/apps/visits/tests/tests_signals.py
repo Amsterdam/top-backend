@@ -5,7 +5,6 @@ Tests for helpers
 from datetime import datetime
 
 from apps.cases.models import Case
-from apps.fraudprediction.models import FraudPrediction
 from apps.itinerary.models import Itinerary, ItineraryItem
 from apps.users.models import User
 from apps.visits.models import Visit, VisitMetaData
@@ -58,48 +57,3 @@ class VisitsSignalsTests(TestCase):
 
         visit.capture_visit_meta_data()
         self.assertEquals(VisitMetaData.objects.count(), 1)
-
-    def test_fraud_prediction_empty(self):
-        """
-        Visit fraud prediction meta data can be empty
-        """
-        case = self.get_mock_case()
-        visit = self.get_mock_visit(case)
-        visit.capture_visit_meta_data()
-        visit_meta_data = VisitMetaData.objects.all()[0]
-
-        self.assertIsNone(visit_meta_data.fraud_probability)
-        self.assertIsNone(visit_meta_data.fraud_prediction_business_rules)
-        self.assertIsNone(visit_meta_data.fraud_prediction_shap_values)
-
-    def test_fraud_prediction_meta_data(self):
-        """
-        Visit fraud prediction logs are stored correctly
-        """
-        case = self.get_mock_case()
-        visit = self.get_mock_visit(case)
-
-        MOCK_FRAUD_PROBABILITY = 0.6
-        MOCK_BUSINESS_RULES = {"business_rule": "foo"}
-        MOCK_SHAP_VALUES = {"shap_values": "foo"}
-
-        FraudPrediction.objects.create(
-            case_id=case.case_id,
-            fraud_probability=MOCK_FRAUD_PROBABILITY,
-            fraud_prediction=True,
-            business_rules=MOCK_BUSINESS_RULES,
-            shap_values=MOCK_SHAP_VALUES,
-        )
-
-        visit.capture_visit_meta_data()
-
-        # Fraud prediction data should now be captured in the meta data
-        visit_meta_data = VisitMetaData.objects.all()[0]
-
-        self.assertEquals(visit_meta_data.fraud_probability, MOCK_FRAUD_PROBABILITY)
-        self.assertEquals(
-            visit_meta_data.fraud_prediction_business_rules, MOCK_BUSINESS_RULES
-        )
-        self.assertEquals(
-            visit_meta_data.fraud_prediction_shap_values, MOCK_SHAP_VALUES
-        )
