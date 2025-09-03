@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y \
   graphviz-dev \
   postgresql-client \
   tzdata \
+  media-types \
   wget \
   curl \
   netcat-openbsd \
