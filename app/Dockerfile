@@ -1,9 +1,7 @@
 FROM python:3.10-bullseye
 LABEL maintainer="datapunt@amsterdam.nl"
 
-ENV PYTHONUNBUFFERED 1
-ARG ONDERHUUR_MODEL_CREDS
-ARG ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN
+ENV PYTHONUNBUFFERED=1
 
 # Setup Certificates for ADP/Motiv
 COPY certificates/adp_rootca.crt /usr/local/share/ca-certificates/extras/adp_rootca.crt

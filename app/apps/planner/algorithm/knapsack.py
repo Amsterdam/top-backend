@@ -2,15 +2,10 @@ import logging
 import multiprocessing
 
 from apps.cases.models import Case
-from apps.fraudprediction.utils import get_fraud_predictions
 from apps.planner.algorithm.base import ItineraryGenerateAlgorithm
 from apps.planner.const import MAX_SUGGESTIONS_COUNT
 from apps.planner.models import Weights
-from apps.planner.utils import (
-    calculate_geo_distances,
-    is_day_of_this_year_odd,
-    remove_cases_from_list,
-)
+from apps.planner.utils import calculate_geo_distances, remove_cases_from_list
 from django.conf import settings
 from joblib import Parallel, delayed
 
@@ -28,7 +23,6 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         if settings_weights:
             self.weights = Weights(
                 distance=settings_weights.distance,
-                fraud_probability=settings_weights.fraud_probability,
                 priority=settings_weights.priority,
             )
 
@@ -38,13 +32,6 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         """
         distance = case.get("normalized_inverse_distance", 0)
 
-        fraud_probability = case.get("fraud_prediction", {}).get("fraud_probability", 0)
-        if (
-            self.settings.day_settings.team_settings.fraudprediction_pilot_enabled
-            and is_day_of_this_year_odd()
-        ):
-            fraud_probability = 0
-
         priority = (
             next(iter(case.get("schedules", [])), {"priority": {"weight": 0}})
             .get("priority", {})
@@ -53,7 +40,6 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
 
         score = self.weights.score(
             distance,
-            fraud_probability,
             priority,
         )
 
@@ -62,29 +48,24 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
     def get_center(self, case):
         return case.get("address", {}).get("lat"), case.get("address", {}).get("lng")
 
-    def generate(self, center_case, cases=[], fraud_predictions=[]):
+    def generate(self, center_case, cases=[]):
         if not cases:
             cases = self.__get_eligible_cases__()
 
         if not cases:
             return []
 
-        if not fraud_predictions:
-            fraud_predictions = get_fraud_predictions()
-
         # Calculate a list of distances for each case
         center = self.get_center(center_case)
         distances = calculate_geo_distances(center, cases)
         max_distance = max(distances)
 
-        # Add the distances and fraud predictions to the cases
+        # Add the distances to the cases
         for index, case in enumerate(cases):
-            case_id = str(case.get("id"))
             case["distance"] = distances[index]
             case["normalized_inverse_distance"] = (
                 (max_distance - case["distance"]) / max_distance if max_distance else 0
             )
-            case["fraud_prediction"] = fraud_predictions.get(case_id, {})
             case["score"] = self.get_score(case)
 
         # Sort the cases based on score
@@ -127,23 +108,19 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
         return cases
 
-    def parallelized_function(self, case, cases, fraud_predictions, index):
-        suggestions = super().generate(case, cases, fraud_predictions)
+    def parallelized_function(self, case, cases, index):
+        suggestions = super().generate(case, cases)
         cases = self.shorten_list(suggestions)
 
         score = sum([case["score"] for case in cases])
         return {"score": score, "list": cases}
 
     def generate(self, auth_header=None):
-        fraud_predictions = get_fraud_predictions()
         # If the user has selected a start_case, this will be the center for the distance score calculations.
         if self.start_case_id:
             case = Case.get(
                 case_id=self.start_case_id,
             ).__get_case__(self.start_case_id, auth_header)
-            case["fraud_prediction"] = fraud_predictions.get(
-                str(self.start_case_id), None
-            )
 
             suggestions = super().generate(case)
             suggestions = remove_cases_from_list(suggestions, [case])
@@ -166,7 +143,6 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
             self.settings.day_settings.team_settings, "top_cases_count"
         ) and getattr(self.settings.day_settings.team_settings, "top_cases_count"):
             for c in cases:
-                c["fraud_prediction"] = fraud_predictions.get(str(c.get("id")), {})
                 c["score"] = self.get_score(c)
             topped_cases = sorted(cases, key=lambda case: case["score"], reverse=True)
             logger.info("Algorithm: use top_cases_count")
@@ -183,16 +159,12 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         # Use threads instead by setting LOCAL_DEVELOPMENT_USE_MULTIPROCESSING to False in .env
         if settings.LOCAL_DEVELOPMENT_USE_MULTIPROCESSING:
             candidates = Parallel(n_jobs=jobs, backend="multiprocessing")(
-                delayed(self.parallelized_function)(
-                    case, cases, fraud_predictions, index
-                )
+                delayed(self.parallelized_function)(case, cases, index)
                 for index, case in enumerate(topped_cases)
             )
         else:
             candidates = Parallel(n_jobs=jobs, prefer="threads")(
-                delayed(self.parallelized_function)(
-                    case, cases, fraud_predictions, index
-                )
+                delayed(self.parallelized_function)(case, cases, index)
                 for index, case in enumerate(topped_cases)
             )
 

@@ -1,7 +1,6 @@
 import datetime
 
 import requests
-from apps.fraudprediction.models import FraudPrediction
 from apps.users.utils import get_keycloak_auth_header_from_request
 from django.conf import settings
 from django.db import models
@@ -131,11 +130,6 @@ class Case(models.Model):
     @property
     def day_settings(self):
         return self.itinerary.settings.day_settings if self.itinerary else None
-
-    @property
-    def fraud_prediction(self):
-        fraud_prediction = FraudPrediction.objects.get(case_id=self.case_id)
-        return fraud_prediction
 
     def __str__(self):
         if self.case_id:

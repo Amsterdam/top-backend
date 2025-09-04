@@ -5,7 +5,6 @@ Tests for cases models
 from unittest.mock import Mock
 
 from apps.cases.models import Case
-from apps.fraudprediction.models import FraudPrediction
 from django.test import TestCase
 
 
@@ -71,19 +70,3 @@ class CaseModelTest(TestCase):
         location = case.get_location()
 
         self.assertEqual(location, {"lat": 0, "lng": 1})
-
-    def test_fraud_prediction_property(self):
-        """
-        Fraud prediction can be accessed through a case property
-        """
-        CASE_ID = "FOO"
-        case = Case.get(CASE_ID)
-        fraud_prediction = FraudPrediction.objects.create(
-            case_id=CASE_ID,
-            fraud_probability=0.6,
-            fraud_prediction=True,
-            business_rules={},
-            shap_values={},
-        )
-
-        self.assertEqual(case.fraud_prediction, fraud_prediction)

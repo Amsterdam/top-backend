@@ -15,8 +15,6 @@ from .mock import get_team_reasons, get_team_schedules
 
 WEIGHTS_VALIDATORS = [MinValueValidator(0), MaxValueValidator(1)]
 
-FRAUD_PREDICTION_MODEL_CHOICES = [[m, m] for m in settings.FRAUD_PREDICTION_MODELS]
-
 
 def team_settings_settings_default():
     # TODO: remove this unused so fix in migrations
@@ -38,22 +36,12 @@ class TeamSettings(models.Model):
         blank=True,
         null=True,
     )
-    fraudprediction_pilot_enabled = models.BooleanField(
-        default=False,
-        help_text="enables fraudprediction A/B testing for this theme on AZA cases",
-    )
     default_weights = models.ForeignKey(
         to="Weights",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
         related_name="team_settings_default_weights",
-    )
-    fraud_prediction_model = models.CharField(
-        choices=FRAUD_PREDICTION_MODEL_CHOICES,
-        max_length=50,
-        blank=True,
-        null=True,
     )
     observation_choices = models.ManyToManyField(
         to=Observation,
@@ -385,10 +373,6 @@ class Weights(models.Model):
         default=SCORING_WEIGHTS.DISTANCE.value,
         validators=WEIGHTS_VALIDATORS,
     )
-    fraud_probability = models.FloatField(
-        default=SCORING_WEIGHTS.FRAUD_PROBABILITY.value,
-        validators=WEIGHTS_VALIDATORS,
-    )
     priority = models.FloatField(
         default=SCORING_WEIGHTS.PRIORITY.value,
         validators=WEIGHTS_VALIDATORS,
@@ -401,17 +385,14 @@ class Weights(models.Model):
     def score(
         self,
         distance,
-        fraud_probability,
         priority,
     ):
         values = [
             distance,
-            fraud_probability,
             priority,
         ]
         weights = [
             self.distance,
-            self.fraud_probability,
             self.priority,
         ]
 
@@ -419,9 +400,8 @@ class Weights(models.Model):
         return sum(products)
 
     def __str__(self):
-        return "%s: %s-%s-%s" % (
+        return "%s: %s-%s" % (
             self.name,
             self.distance,
-            self.fraud_probability,
             self.priority,
         )
