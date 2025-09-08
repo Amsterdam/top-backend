@@ -55,4 +55,4 @@ class VisitsSignalsTests(TestCase):
         self.assertEqual(VisitMetaData.objects.count(), 1)
 
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)
