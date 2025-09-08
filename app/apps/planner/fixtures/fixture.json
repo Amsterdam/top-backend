@@ -6,9 +6,7 @@
         "name": "Vakantieverhuur",
         "enabled": true,
         "zaken_team_id": 2,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [
             1
@@ -28,9 +26,7 @@
         "name": "Goed verhuurderschap",
         "enabled": true,
         "zaken_team_id": 8,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [],
         "suggest_next_visit_choices": []
@@ -43,9 +39,7 @@
         "name": "Kamerverhuur",
         "enabled": true,
         "zaken_team_id": 3,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [
             1
@@ -65,9 +59,7 @@
         "name": "Leegstand",
         "enabled": true,
         "zaken_team_id": 5,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [],
         "suggest_next_visit_choices": []
@@ -80,9 +72,7 @@
         "name": "Onderhuur",
         "enabled": true,
         "zaken_team_id": 6,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [],
         "suggest_next_visit_choices": []
@@ -95,9 +85,7 @@
         "name": "Ondermijning",
         "enabled": true,
         "zaken_team_id": 4,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [],
         "suggest_next_visit_choices": []
@@ -110,9 +98,7 @@
         "name": "Opkoopbescherming",
         "enabled": true,
         "zaken_team_id": 7,
-        "fraudprediction_pilot_enabled": false,
         "default_weights": null,
-        "fraud_prediction_model": null,
         "top_cases_count": 0,
         "observation_choices": [],
         "suggest_next_visit_choices": []

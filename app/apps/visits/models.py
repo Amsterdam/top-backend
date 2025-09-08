@@ -1,5 +1,4 @@
 from apps.cases.models import Case
-from apps.fraudprediction.models import FraudPrediction
 from apps.users.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -60,20 +59,8 @@ class Visit(models.Model):
 
     def capture_visit_meta_data(self):
         """Captures visit data"""
-        visit_meta_data = VisitMetaData.objects.get_or_create(visit=self)[0]
-
-        try:
-            fraud_prediction = self.itinerary_item.case.fraud_prediction
-        except FraudPrediction.DoesNotExist:
-            return
-
-        # Add visit data to persist it as judicial documentation
-        visit_meta_data.fraud_probability = fraud_prediction.fraud_probability
-        visit_meta_data.fraud_prediction_business_rules = (
-            fraud_prediction.business_rules
-        )
-        visit_meta_data.fraud_prediction_shap_values = fraud_prediction.shap_values
-        visit_meta_data.save()
+        VisitMetaData.objects.get_or_create(visit=self)[0]
+        return
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -106,7 +93,6 @@ class VisitTeamMember(models.Model):
 class VisitMetaData(models.Model):
     """
     Some data surrounding a visit is transient, and can change over time.
-    One example are the fraud predictions, which change over the lifetime of a case.
     This model serves to capture and persist (meta) data at the time of a visit.
     The data should be relevant as (legal) documentation.
     """
@@ -114,11 +100,6 @@ class VisitMetaData(models.Model):
     visit = models.OneToOneField(
         to=Visit, on_delete=models.CASCADE, related_name="meta_data", unique=True
     )
-
-    # Persist the fraud prediction data here
-    fraud_probability = models.FloatField(null=True)
-    fraud_prediction_business_rules = models.JSONField(null=True)
-    fraud_prediction_shap_values = models.JSONField(null=True)
 
     # Expand with more meta data later (for example, planner settings)
 

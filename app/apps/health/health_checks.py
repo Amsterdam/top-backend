@@ -69,16 +69,6 @@ class ZakenServiceCheck(APIServiceCheckBackend):
     verbose_name = "Zaken API Endpoint"
 
 
-class OnderhuurHitkansServiceCheck(APIServiceCheckBackend):
-    """
-    Endpoint for checking onderhuurverhuur fraudpredictions API Endpoint
-    """
-
-    critical_service = False
-    api_url = settings.ONDERHUUR_HITKANS_HEALTH_URL
-    verbose_name = "Onderhuur fraudpredictions API Endpoint"
-
-
 class CeleryExecuteTask(BaseHealthCheckBackend):
     def check_status(self):
         result = debug_task.apply_async(ignore_result=False)

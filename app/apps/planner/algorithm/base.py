@@ -3,11 +3,7 @@ import logging
 
 import requests
 from apps.cases.mock import get_zaken_case_list
-from apps.planner.utils import (
-    get_cases_with_odd_or_even_ids,
-    is_day_of_this_year_odd,
-    remove_cases_from_list,
-)
+from apps.planner.utils import remove_cases_from_list
 from django.conf import settings
 from utils.queries_zaken_api import get_headers
 
@@ -64,10 +60,6 @@ class ItineraryGenerateAlgorithm:
         cases = remove_cases_from_list(cases, exclude_cases)
         logger.info("after remove_cases_from_list")
         logger.info(len(cases))
-
-        if self.settings.day_settings.team_settings.fraudprediction_pilot_enabled:
-            cases = get_cases_with_odd_or_even_ids(cases, odd=is_day_of_this_year_odd())
-            logger.info("after get_cases_with_odd_or_even_ids")
 
         return cases
 
