@@ -2,14 +2,13 @@
 Tests for helpers
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItineraryItem
 from apps.users.models import User
 from apps.visits.models import Visit, VisitMetaData
 from django.test import TestCase
-from pytz import UTC
 
 
 class VisitsSignalsTests(TestCase):
@@ -30,7 +29,7 @@ class VisitsSignalsTests(TestCase):
         visit = Visit.objects.create(
             author=user,
             itinerary_item=itinerary_item,
-            start_time=datetime(2020, 10, 6, tzinfo=UTC),
+            start_time=datetime(2020, 10, 6, tzinfo=timezone.utc),
             case_id=case,
         )
 
@@ -40,11 +39,11 @@ class VisitsSignalsTests(TestCase):
         """
         Tests if the visit method capture_visit_meta_data creates VisitMetaData
         """
-        self.assertEquals(VisitMetaData.objects.count(), 0)
+        self.assertEqual(VisitMetaData.objects.count(), 0)
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)
 
     def test_visit_single_meta_data(self):
         """
@@ -53,7 +52,7 @@ class VisitsSignalsTests(TestCase):
         case = self.get_mock_case()
         visit = self.get_mock_visit(case)
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)
 
         visit.capture_visit_meta_data()
-        self.assertEquals(VisitMetaData.objects.count(), 1)
+        self.assertEqual(VisitMetaData.objects.count(), 1)

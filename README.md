@@ -112,12 +112,12 @@ docker compose run --rm api python manage.py migrate
 
 ### Adding pre-commit hooks
 You can add pre-commit hooks for checking and cleaning up your changes:
-```
+```sh
 bash install.sh
 ```
 
 You can also run the following command to ensure all files adhere to coding conventions:
-```
+```sh
 bash cleanup.sh
 ```
 This will autoformat your code, sort your imports and fix or find overal problems.
@@ -126,6 +126,35 @@ The Github actions will use the same bash script to check if the code in the pul
 
 ### Coding conventions and style
 The project uses [Black](https://github.com/psf/black) for formatting and [Flake8](https://pypi.org/project/flake8/) for linting.
+
+
+## Dependency management & upgrading
+
+This project uses [Poetry](https://python-poetry.org/docs/cli/) for dependency management. You can either manage this locally on your CLI, or do it inside the backend container.
+
+To check for outdated dependencies, run:
+
+```sh
+poetry show --outdated
+```
+
+To upgrade all packages to their latests version constraints and and create a new lockfile, run:
+
+
+```sh
+poetry update
+```
+
+> Note: this means that when `~=1.10` is specified, the package will upgrade to `1.x.x`, but will not upgrade to `2.x.x`.
+
+To upgrade individual packages to major versions, run:
+
+```sh
+poetry add <package>@latest
+```
+
+> Note: always read changelogs for breaking changes.
+
 
 ## Testing
 

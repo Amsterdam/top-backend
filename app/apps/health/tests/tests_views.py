@@ -36,4 +36,4 @@ class HealthViewsUrlsTests(TestCase):
         response = client.get(url)
 
         mock_assert_health_generic.assert_called()
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)

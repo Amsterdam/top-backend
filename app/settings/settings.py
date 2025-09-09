@@ -1,17 +1,11 @@
 import os
 import socket
-import sys
 from datetime import timedelta
 from os.path import join
-
-from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.trace import config_integration
 
 from .azure_settings import Azure
 
 azure = Azure()
-
-config_integration.trace_integrations(["requests", "logging", "postgresql"])
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -66,7 +60,6 @@ MIDDLEWARE = (
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "opencensus.ext.django.middleware.OpencensusMiddleware",
 )
 
 ROOT_URLCONF = "settings.urls"
@@ -116,7 +109,6 @@ LANGUAGE_CODE = "en-us"
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
-USE_L10N = True
 USE_TZ = True
 TIME_ZONE = "Europe/Amsterdam"
 
@@ -266,95 +258,6 @@ LOGIN_URL = "/oidc/authenticate/"
 
 if LOCAL_DEVELOPMENT_AUTHENTICATION:
     OIDC_AUTHENTICATION_CALLBACK_URL = "oidc-authenticate"
-
-LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "WARNING")
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
-        },
-    },
-    "root": {"handlers": ["console"], "level": LOGGING_LEVEL},
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": LOGGING_LEVEL,
-            "stream": sys.stdout,
-        },
-        "celery": {
-            "level": LOGGING_LEVEL,
-            "class": "logging.StreamHandler",
-            "stream": sys.stdout,
-        },
-    },
-    "loggers": {
-        "apps": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": True,
-        },
-        "mozilla_django_oidc": {"handlers": ["console"], "level": LOGGING_LEVEL},
-        "celery": {
-            "handlers": ["celery", "console"],
-            "level": LOGGING_LEVEL,
-            "propagate": True,
-        },
-        "django": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": True,
-        },
-        "": {
-            "level": LOGGING_LEVEL,
-            "handlers": ["console"],
-            "propagate": True,
-        },
-    },
-}
-
-APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv(
-    "APPLICATIONINSIGHTS_CONNECTION_STRING"
-)
-
-if APPLICATIONINSIGHTS_CONNECTION_STRING:
-    # Only log queries when in DEBUG due to high cost
-    def filter_traces(envelope):
-        if LOGGING_LEVEL == "DEBUG":
-            return True
-        log_data = envelope.data.baseData
-        if "query" in log_data["name"].lower():
-            return False
-        if log_data["name"] == "GET /":
-            return False
-        if "applicationinsights" in log_data["message"].lower():
-            return False
-        return True
-
-    exporter = AzureExporter(connection_string=APPLICATIONINSIGHTS_CONNECTION_STRING)
-    exporter.add_telemetry_processor(filter_traces)
-    OPENCENSUS = {
-        "TRACE": {
-            "SAMPLER": "opencensus.trace.samplers.ProbabilitySampler(rate=1)",
-            "EXPORTER": exporter,
-        }
-    }
-    LOGGING["handlers"]["azure"] = {
-        "level": LOGGING_LEVEL,
-        "class": "opencensus.ext.azure.log_exporter.AzureLogHandler",
-        "connection_string": APPLICATIONINSIGHTS_CONNECTION_STRING,
-    }
-    LOGGING["root"]["handlers"] = ["azure", "console"]
-    LOGGING["loggers"]["django"]["handlers"] = ["azure", "console"]
-    LOGGING["loggers"][""]["handlers"] = ["azure", "console"]
-    LOGGING["loggers"]["apps"]["handlers"] = ["azure", "console"]
-    LOGGING["loggers"]["celery"]["handlers"] = ["azure", "console", "celery"]
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
