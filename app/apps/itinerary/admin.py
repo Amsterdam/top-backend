@@ -27,18 +27,35 @@ class ItinerarySettingsInline(admin.StackedInline):
         "start_case",
     )
     model = ItinerarySettings
+    raw_id_fields = ("day_settings",)
+    autocomplete_fields = ("start_case",)
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("itinerary", "day_settings", "start_case")
+        )
 
 
 class ItineraryTeamMemberInline(admin.StackedInline):
     fields = ("user",)
     model = ItineraryTeamMember
     extra = 0
+    autocomplete_fields = ("user",)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("user")
 
 
 class ItineraryItemInline(admin.StackedInline):
     fields = ("case",)
     model = ItineraryItem
     extra = 0
+    autocomplete_fields = ("case",)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("case")
 
 
 class CreatedAtFilter(admin.SimpleListFilter):
