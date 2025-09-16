@@ -22,6 +22,9 @@ class Itinerary(models.Model):
 
     created_at = models.DateField(auto_now_add=True)
 
+    class Meta:
+        verbose_name_plural = "Itineraries"
+
     @property
     def get_itinerary_algorithm(self):
         return ItineraryKnapsackList
