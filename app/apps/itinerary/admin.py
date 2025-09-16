@@ -10,6 +10,7 @@ from apps.itinerary.models import (
 )
 from apps.itinerary.serializers import ItinerarySerializer
 from django.contrib import admin
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.utils import timezone
 
@@ -114,6 +115,15 @@ class ItineraryAdmin(admin.ModelAdmin):
     ]
 
     actions = ["export_as_json"]
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related("settings__start_case").prefetch_related(
+            Prefetch(
+                "team_members",
+                queryset=ItineraryTeamMember.objects.select_related("user"),
+            )
+        )
 
     def start_case(self, obj):
         return obj.settings.start_case
