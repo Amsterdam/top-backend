@@ -24,6 +24,7 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateMod
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from settings.const import ITINERARY_NOT_ENOUGH_CASES
+from utils.queries_zaken_api import fetch_cases_data
 
 
 class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMixin):
@@ -52,8 +53,18 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         if date:
             itineraries = itineraries.filter(created_at=date)
 
+        # Collect all case_ids for items in the filtered itineraries
+        item_qs = ItineraryItem.objects.filter(itinerary__in=itineraries)
+        case_ids = list(item_qs.values_list("case__case_id", flat=True))
+
+        # Batch fetch case details from Zaken and pass via context
+        auth_header = get_keycloak_auth_header_from_request(self.request)
+        cases_data_cache = fetch_cases_data(case_ids, auth_header)
+
         serializer = self.get_serializer_class()(
-            itineraries, many=True, context={"request": self.request}
+            itineraries,
+            many=True,
+            context={"request": self.request, "cases_data_cache": cases_data_cache},
         )
 
         return serializer.data

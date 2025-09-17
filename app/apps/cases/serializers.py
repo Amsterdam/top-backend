@@ -30,4 +30,10 @@ class CaseSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.DictField())
     def get_data(self, obj):
+        # Prefer pre-fetched batch data to avoid per-item external requests
+        cache = self.context.get("cases_data_cache")
+        if cache is not None:
+            data = cache.get(str(obj.case_id))
+            if data is not None:
+                return data
         return obj.data_context(self.context)
