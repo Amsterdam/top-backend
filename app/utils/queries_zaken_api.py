@@ -39,6 +39,7 @@ def fetch_cases_data(
 
     - Uses /cases/data/?ids=... in a single request.
     - Accepts ids as strings or ints; keys in the result are strings.
+    - Injects a 404 case for each id that is not found.
     """
     unique_ids: List[str] = list({str(i) for i in ids if i is not None})
     if not unique_ids:
@@ -60,5 +61,14 @@ def fetch_cases_data(
     for item in items:
         # Zaken IDs are integers; TOP stores them as strings in Case.case_id
         result[str(item["id"])] = item
+
+    # Inject a 404 case for each id that is not found.
+    from apps.cases.models import CASE_404
+
+    for case_id in unique_ids:
+        if case_id not in result:
+            deleted_case = CASE_404.copy()
+            deleted_case["id"] = int(case_id)
+            result[case_id] = deleted_case
 
     return result
