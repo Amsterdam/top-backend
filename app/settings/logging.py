@@ -33,8 +33,6 @@ def start_logging():
         "APPLICATIONINSIGHTS_CONNECTION_STRING"
     )
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
     def response_hook(span, request, response):
         if (
             span
