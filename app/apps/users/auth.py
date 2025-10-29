@@ -1,3 +1,4 @@
+import datetime
 import time
 
 import requests
@@ -15,6 +16,7 @@ class OIDCAuthenticationBackend(OIDCAuthenticationBackend):
     def save_user(self, user, claims):
         user.first_name = claims.get("given_name", "")
         user.last_name = claims.get("family_name", "")
+        user.last_login = datetime.datetime.now(datetime.timezone.utc)
         user.save()
         return user
 
