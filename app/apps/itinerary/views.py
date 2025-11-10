@@ -84,8 +84,10 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         try:
             date = datetime.strptime(date_string, "%Y-%m-%d")
             return date
-        except ValueError as e:
-            raise APIException("Could not read date query parameter: {}".format(e))
+        except ValueError:
+            logger.exception("Failed to parse date query parameter: %s", date_string)
+            # Return a generic error to the client
+            raise APIException("Invalid date format. Please use YYYY-MM-DD.")
 
     def __get_serialized_team__(self, itinerary_pk):
         itinerary = self.get_object()
