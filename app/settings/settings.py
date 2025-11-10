@@ -89,8 +89,9 @@ DATABASE_OPTIONS = {"sslmode": "allow", "connect_timeout": 5}
 parsed = urlparse(DATABASE_HOST)
 host = parsed.hostname or DATABASE_HOST
 
-# Check if this is an Azure database
-IS_AZURE_DB = host.endswith("azure.com")
+# Explicitly validate that this is an Azure database
+allowed_suffix = ".azure.com"
+IS_AZURE_DB = host is not None and host.lower().endswith(allowed_suffix)
 
 if IS_AZURE_DB:
     DATABASE_PASSWORD = azure.auth.db_password
