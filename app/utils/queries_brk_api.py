@@ -49,8 +49,6 @@ def request_new_token():
 
     token_request_url = settings.BRK_ACCESS_URL
     try:
-        logger.error("token req url", token_request_url)
-        logger.error("token req payload", payload)
         response = requests.post(token_request_url, data=payload, timeout=5)
     except Exception as e:
         logger.error("Request token error: ", e)

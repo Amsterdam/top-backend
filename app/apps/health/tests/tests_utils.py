@@ -57,9 +57,10 @@ class GetHealthResponseTests(TestCase):
         """
         get_health_response should return a fail message if the health check fails
         """
-        health_check = Mock(side_effect=Exception(ERROR_MESSAGE))
+        health_check = Mock(side_effect=Exception("foo-error"))
         response = get_health_response(health_check, SUCCESS_MESSAGE)
-        self.assertEqual(json.loads(response.content), {"error": ERROR_MESSAGE})
+        expected_error = "Health check failed. Please try again later."
+        self.assertEqual(json.loads(response.content), {"error": expected_error})
 
     def test_is_table_filled_query(self):
         """

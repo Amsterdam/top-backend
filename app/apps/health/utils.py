@@ -1,5 +1,9 @@
+import logging
+
 from django.db import connections
 from django.http import JsonResponse
+
+logger = logging.getLogger(__name__)
 
 
 def get_health_response(health_checks, success_dictionary):
@@ -9,8 +13,13 @@ def get_health_response(health_checks, success_dictionary):
     """
     try:
         health_checks()
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    except Exception:
+        # Log the full exception for debugging
+        logger.exception("Health check failed")
+        # Return a generic error message to the client
+        return JsonResponse(
+            {"error": "Health check failed. Please try again later."}, status=500
+        )
     else:
         return JsonResponse(success_dictionary, status=200)
 
