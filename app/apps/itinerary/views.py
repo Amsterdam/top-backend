@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from apps.itinerary.models import Itinerary, ItineraryItem, Note
@@ -25,6 +26,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from settings.const import ITINERARY_NOT_ENOUGH_CASES
 from utils.queries_zaken_api import fetch_cases_data
+
+logger = logging.getLogger(__name__)
 
 
 class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMixin):
@@ -165,8 +168,8 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             cases = itinerary.get_cases_from_settings(
                 get_keycloak_auth_header_from_request(request)
             )
-        except Exception as e:
-            raise APIException("Could not create itinerary from settings: {}".format(e))
+        except Exception:
+            raise APIException("Could not create itinerary from settings.")
 
         if not len(cases):
             raise NotFound(ITINERARY_NOT_ENOUGH_CASES)
@@ -217,8 +220,13 @@ class ItineraryItemViewSet(
 
         try:
             itinerary_item = serializer.create(request.data)
-        except Exception as e:
-            raise APIException(str(e))
+        except Exception:
+            # Log the original exception for debugging
+            logger.exception("Error creating itinerary item")
+            # Raise a generic API exception for the client
+            raise APIException(
+                "An unexpected error occurred creating the itinerary item."
+            )
 
         # Serialize and return data
         serializer = ItineraryItemSerializer(itinerary_item, many=False)

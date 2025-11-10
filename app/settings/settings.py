@@ -2,6 +2,7 @@ import os
 import socket
 from datetime import timedelta
 from os.path import join
+from urllib.parse import urlparse
 
 from .azure_settings import Azure
 
@@ -85,7 +86,13 @@ DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
 DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
 DATABASE_OPTIONS = {"sslmode": "allow", "connect_timeout": 5}
 
-if "azure.com" in DATABASE_HOST:
+parsed = urlparse(DATABASE_HOST)
+host = parsed.hostname or DATABASE_HOST
+
+# Check if this is an Azure database
+IS_AZURE_DB = host.endswith("azure.com")
+
+if IS_AZURE_DB:
     DATABASE_PASSWORD = azure.auth.db_password
     DATABASE_OPTIONS["sslmode"] = "require"
 
