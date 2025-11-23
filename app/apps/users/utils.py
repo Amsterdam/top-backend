@@ -9,7 +9,7 @@ def generate_username(email):
     return unicodedata.normalize("NFKC", email)[:150]
 
 
-def get_keycloak_auth_header_from_request(rqst):
+def get_auth_header_from_request(rqst):
     if hasattr(rqst, "headers"):
         return rqst.headers.get("Authorization")
     return False

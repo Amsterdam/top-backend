@@ -1,5 +1,5 @@
 import requests
-from apps.users.utils import get_keycloak_auth_header_from_request
+from apps.users.utils import get_auth_header_from_request
 from django.conf import settings
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -72,7 +72,7 @@ def fetch_registrations(bag_id, auth_header=None, query_params=None):
 
 
 def fetch_residents(bag_id, body, auth_header=None):
-    url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents/"
+    url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents-new/"
     response = requests.post(
         url, timeout=30, headers=get_headers(auth_header), json=body
     )
@@ -120,7 +120,7 @@ class AddressViewSet(ViewSet):
     )
     def power_browser_permits_by_bag_id(self, request, bag_id):
         data, status_code = fetch_power_browser_permits(
-            bag_id, get_keycloak_auth_header_from_request(request)
+            bag_id, get_auth_header_from_request(request)
         )
         return Response(data, status=status_code)
 
@@ -137,7 +137,7 @@ class AddressViewSet(ViewSet):
         data = []
 
         serializer = HousingCorporationSerializer(
-            fetch_housing_corporations(get_keycloak_auth_header_from_request(request)),
+            fetch_housing_corporations(get_auth_header_from_request(request)),
             many=True,
         )
         data = serializer.data
@@ -185,7 +185,7 @@ class AddressViewSet(ViewSet):
     )
     def meldingen_by_bag_id(self, request, bag_id):
         data, status_code = fetch_meldingen(
-            bag_id, get_keycloak_auth_header_from_request(request), request.query_params
+            bag_id, get_auth_header_from_request(request), request.query_params
         )
         return Response(data, status=status_code)
 
@@ -200,7 +200,7 @@ class AddressViewSet(ViewSet):
     )
     def registrations_by_bag_id(self, request, bag_id):
         data, status_code = fetch_registrations(
-            bag_id, get_keycloak_auth_header_from_request(request), request.query_params
+            bag_id, get_auth_header_from_request(request), request.query_params
         )
         return Response(data, status=status_code)
 
@@ -226,7 +226,7 @@ class AddressViewSet(ViewSet):
     )
     def residents_by_bag_id(self, request, bag_id):
         data, status_code = fetch_residents(
-            bag_id, request.data, get_keycloak_auth_header_from_request(request)
+            bag_id, request.data, get_auth_header_from_request(request)
         )
         return Response(data, status=status_code)
 
@@ -236,5 +236,5 @@ class AddressViewSet(ViewSet):
         url_path="districts",
     )
     def get_districts(self, request):
-        data = fetch_districts(get_keycloak_auth_header_from_request(request))
+        data = fetch_districts(get_auth_header_from_request(request))
         return Response(data)

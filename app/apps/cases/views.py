@@ -7,7 +7,7 @@ from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import ItineraryTeamMemberSerializer
 from apps.users.auth_apps import AZAKeyAuth
 from apps.users.permissions import IsInAuthorizedRealm
-from apps.users.utils import get_keycloak_auth_header_from_request
+from apps.users.utils import get_auth_header_from_request
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from django.conf import settings
@@ -95,7 +95,7 @@ class CaseViewSet(ViewSet):
 
         case = Case.get(case_id=pk)
 
-        data = case.fetch_events(get_keycloak_auth_header_from_request(request))
+        data = case.fetch_events(get_auth_header_from_request(request))
 
         return Response(data)
 
@@ -188,7 +188,7 @@ class CaseSearchViewSet(ViewSet):
                 url,
                 params=queryParams,
                 timeout=60,
-                headers=get_headers(get_keycloak_auth_header_from_request(request)),
+                headers=get_headers(get_auth_header_from_request(request)),
             )
             response.raise_for_status()
 
