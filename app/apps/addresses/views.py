@@ -73,7 +73,7 @@ def fetch_registrations(bag_id, auth_header=None, query_params=None):
 
 def fetch_residents(bag_id, body, auth_header=None):
     url = f"{settings.ZAKEN_API_URL}/addresses/{bag_id}/residents-new/"
-    response = requests.post(
+    response = requests.get(
         url, timeout=30, headers=get_headers(auth_header), json=body
     )
 
