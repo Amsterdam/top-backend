@@ -221,7 +221,7 @@ class AddressViewSet(ViewSet):
     )
     @action(
         detail=True,
-        methods=["post"],
+        methods=["get"],
         url_path="residents",
     )
     def residents_by_bag_id(self, request, bag_id):
