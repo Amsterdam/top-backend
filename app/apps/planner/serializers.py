@@ -4,7 +4,7 @@ from apps.planner.models import (
     PostalCodeRangeSet,
     TeamSettings,
 )
-from apps.users.utils import get_keycloak_auth_header_from_request
+from apps.users.utils import get_auth_header_from_request
 from apps.visits.serializers import ObservationSerializer, SuggestNextVisitSerializer
 from django.conf import settings
 from drf_spectacular.utils import extend_schema_field
@@ -219,7 +219,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
     def get_case_count(self, obj):
         request = self.context.get("request")
         if bool(request.GET.get("case-count")):
-            return obj.fetch_cases_count(get_keycloak_auth_header_from_request(request))
+            return obj.fetch_cases_count(get_auth_header_from_request(request))
         return {"count": 0}
 
     class Meta:

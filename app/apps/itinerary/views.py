@@ -11,7 +11,7 @@ from apps.itinerary.serializers import (
     NoteCrudSerializer,
 )
 from apps.users.models import User
-from apps.users.utils import get_keycloak_auth_header_from_request
+from apps.users.utils import get_auth_header_from_request
 from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -61,7 +61,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         case_ids = list(item_qs.values_list("case__case_id", flat=True))
 
         # Batch fetch case details from Zaken and pass via context
-        auth_header = get_keycloak_auth_header_from_request(self.request)
+        auth_header = get_auth_header_from_request(self.request)
         cases_data_cache = fetch_cases_data(case_ids, auth_header)
 
         serializer = self.get_serializer_class()(
@@ -150,9 +150,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         if lat and lng:
             center = {"lat": lat, "lng": lng}
         itinerary = self.get_object()
-        cases = itinerary.get_suggestions(
-            get_keycloak_auth_header_from_request(request), center
-        )
+        cases = itinerary.get_suggestions(get_auth_header_from_request(request), center)
         return JsonResponse({"cases": cases})
 
     @transaction.atomic
@@ -168,7 +166,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         try:
             itinerary = serializer.create(request.data)
             cases = itinerary.get_cases_from_settings(
-                get_keycloak_auth_header_from_request(request)
+                get_auth_header_from_request(request)
             )
         except Exception:
             raise APIException("Could not create itinerary from settings.")

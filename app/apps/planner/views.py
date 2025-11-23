@@ -15,7 +15,7 @@ from apps.planner.serializers import (
     TeamSettingsSerializer,
     TeamSettingsThemeSerializer,
 )
-from apps.users.utils import get_keycloak_auth_header_from_request
+from apps.users.utils import get_auth_header_from_request
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.core.management import call_command
@@ -52,9 +52,7 @@ class TeamSettingsViewSet(ModelViewSet):
         data = []
 
         serializer = CaseReasonSerializer(
-            team_settings.fetch_team_reasons(
-                get_keycloak_auth_header_from_request(request)
-            ),
+            team_settings.fetch_team_reasons(get_auth_header_from_request(request)),
             many=True,
         )
         data = serializer.data
@@ -75,9 +73,7 @@ class TeamSettingsViewSet(ModelViewSet):
         data = {}
 
         serializer = TeamScheduleTypesSerializer(
-            team_settings.fetch_team_schedules(
-                get_keycloak_auth_header_from_request(request)
-            )
+            team_settings.fetch_team_schedules(get_auth_header_from_request(request))
         )
         data = serializer.data
 
@@ -117,9 +113,7 @@ class TeamSettingsViewSet(ModelViewSet):
         data = []
 
         serializer = CaseProjectSerializer(
-            team_settings.fetch_projects(
-                get_keycloak_auth_header_from_request(request)
-            ),
+            team_settings.fetch_projects(get_auth_header_from_request(request)),
             many=True,
         )
         data = serializer.data
@@ -140,9 +134,7 @@ class TeamSettingsViewSet(ModelViewSet):
         data = []
 
         serializer = CaseSubjectSerializer(
-            team_settings.fetch_subjects(
-                get_keycloak_auth_header_from_request(request)
-            ),
+            team_settings.fetch_subjects(get_auth_header_from_request(request)),
             many=True,
         )
         data = serializer.data
@@ -163,7 +155,7 @@ class TeamSettingsViewSet(ModelViewSet):
         data = []
 
         serializer = CaseTagSerializer(
-            team_settings.fetch_tags(get_keycloak_auth_header_from_request(request)),
+            team_settings.fetch_tags(get_auth_header_from_request(request)),
             many=True,
         )
         data = serializer.data
@@ -214,7 +206,7 @@ class DaySettingsViewSet(ModelViewSet):
     )
     def case_count(self, request, pk):
         obj = self.get_object()
-        data = obj.fetch_cases_count(get_keycloak_auth_header_from_request(request))
+        data = obj.fetch_cases_count(get_auth_header_from_request(request))
         return Response(data)
 
 

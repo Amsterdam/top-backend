@@ -1,7 +1,7 @@
 import datetime
 
 import requests
-from apps.users.utils import get_keycloak_auth_header_from_request
+from apps.users.utils import get_auth_header_from_request
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -110,9 +110,7 @@ class Case(models.Model):
     def data_context(self, context):
         auth_header = None
         try:
-            auth_header = get_keycloak_auth_header_from_request(
-                context.get("request", {})
-            )
+            auth_header = get_auth_header_from_request(context.get("request", {}))
         except Exception:
             pass
         return self.__get_case__(self.case_id, auth_header)
