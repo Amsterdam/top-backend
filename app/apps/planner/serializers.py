@@ -150,23 +150,6 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
         )
 
 
-class DaySettingsCompactSerializer(serializers.ModelSerializer):
-    team_settings = TeamSettingsCompactSerializer(read_only=True)
-    week_days = serializers.ListField(child=serializers.IntegerField(), read_only=True)
-    used_today_count = serializers.IntegerField(read_only=True)
-
-    class Meta:
-        model = DaySettings
-        fields = (
-            "id",
-            "name",
-            "week_days",
-            "used_today_count",
-            "max_use_limit",
-            "team_settings",
-        )
-
-
 class TeamScheduleTypesSerializer(serializers.Serializer):
     actions = serializers.ListField(read_only=True)
     day_segments = serializers.ListField(read_only=True)
@@ -289,7 +272,7 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
     situation_choices = serializers.ListField(read_only=True)
     observation_choices = ObservationSerializer(read_only=True, many=True)
     suggest_next_visit_choices = SuggestNextVisitSerializer(read_only=True, many=True)
-    day_settings_list = DaySettingsCompactSerializer(read_only=True, many=True)
+    day_settings_list = DaySettingsSerializer(read_only=True, many=True)
 
     class Meta:
         model = TeamSettings
