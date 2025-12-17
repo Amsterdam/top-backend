@@ -193,6 +193,15 @@ class TeamSettingsRelatedField(serializers.RelatedField):
         return TeamSettingsCompactSerializer(value).data
 
 
+class DaySettingsCompactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DaySettings
+        fields = (
+            "id",
+            "name",
+        )
+
+
 class DaySettingsSerializer(serializers.ModelSerializer):
     team_settings = TeamSettingsCompactSerializer(read_only=True)
     used_today_count = serializers.IntegerField(read_only=True)
