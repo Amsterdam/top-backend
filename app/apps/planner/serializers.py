@@ -219,7 +219,6 @@ class DaySettingsSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
-            "week_day",
             "week_days",
             "opening_date",
             "postal_code_ranges",
@@ -253,7 +252,6 @@ class NewDaySettingsSerializer(DaySettingsSerializer):
         fields = (
             "id",
             "name",
-            "week_day",
             "week_days",
             "opening_date",
             "postal_code_ranges",

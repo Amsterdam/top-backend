@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
-from settings.const import POSTAL_CODE_RANGES, WEEK_DAYS_CHOICES
+from settings.const import POSTAL_CODE_RANGES
 from utils.queries_zaken_api import get_headers
 
 from .const import SCORING_WEIGHTS
@@ -181,11 +181,6 @@ class DaySettings(models.Model):
     )
     name = models.CharField(
         max_length=50,
-    )
-    week_day = models.PositiveSmallIntegerField(
-        choices=WEEK_DAYS_CHOICES,
-        blank=True,
-        null=True,
     )
     week_days = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
