@@ -76,7 +76,7 @@ urlpatterns = [
     re_path(r"^$", view=MyView.as_view(), name="index"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if settings.DEBUG:
+if settings.DEBUG or os.getenv("ENVIRONMENT", "").lower() == "acceptance":
     urlpatterns += [
         # # Swagger/OpenAPI documentation
         path(
