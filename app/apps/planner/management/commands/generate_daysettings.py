@@ -31,10 +31,10 @@ class Command(BaseCommand):
         if options.get("exclude-disabled"):
             teams = teams.filter(enabled=True)
 
-        if options.get("cleanup"):
+        if options.get("cleanup") and not options.get("dry_run"):
             DaySettings.objects.filter(team_settings__in=teams).delete()
 
-        created, updated, skipped = 0, 0, 0
+        created, skipped = 0, 0
 
         for team in teams:
             # Fetch selectable values once per team
@@ -64,7 +64,6 @@ class Command(BaseCommand):
             for idx, day_name in enumerate(WEEK_DAYS):
                 defaults = {
                     "name": "Standaard",
-                    "week_day": idx,
                     "week_days": [idx],
                     "reasons": reasons_ids,
                     "state_types": state_types_ids,
@@ -73,62 +72,22 @@ class Command(BaseCommand):
                     "priorities": priorities_ids,
                 }
 
-                if options.get("dry_run"):
-                    exists = DaySettings.objects.filter(
-                        team_settings=team,
-                        week_day=idx,
-                    ).exists()
-                    if exists:
-                        skipped += 1
-                    else:
-                        created += 1
-                    continue
-
-                obj, was_created = DaySettings.objects.get_or_create(
+                exists = DaySettings.objects.filter(
                     team_settings=team,
-                    week_day=idx,
-                    defaults=defaults,
-                )
-                if was_created:
-                    created += 1
+                    week_days__contains=[idx],
+                ).exists()
+
+                if exists:
+                    skipped += 1
                 else:
-                    changed = False
-                    if obj.name != day_name:
-                        obj.name = day_name
-                        changed = True
-                    if obj.week_days != [idx]:
-                        obj.week_days = [idx]
-                        changed = True
-                    update_fields = ["name", "week_days"]
-                    # Synchronize selectable arrays
-                    if obj.reasons != reasons_ids:
-                        obj.reasons = reasons_ids
-                        changed = True
-                        update_fields.append("reasons")
-                    if obj.state_types != state_types_ids:
-                        obj.state_types = state_types_ids
-                        changed = True
-                        update_fields.append("state_types")
-                    if obj.day_segments != day_segments_ids:
-                        obj.day_segments = day_segments_ids
-                        changed = True
-                        update_fields.append("day_segments")
-                    if obj.week_segments != week_segments_ids:
-                        obj.week_segments = week_segments_ids
-                        changed = True
-                        update_fields.append("week_segments")
-                    if obj.priorities != priorities_ids:
-                        obj.priorities = priorities_ids
-                        changed = True
-                        update_fields.append("priorities")
-                    if changed:
-                        obj.save(update_fields=update_fields)
-                        updated += 1
-                    else:
-                        skipped += 1
+                    created += 1
+
+                if not exists and not options.get("dry_run"):
+                    DaySettings.objects.create(
+                        team_settings=team,
+                        **defaults,
+                    )
 
         self.stdout.write(
-            self.style.SUCCESS(
-                f"DaySettings created={created}, updated={updated}, skipped={skipped}"
-            )
+            self.style.SUCCESS(f"DaySettings created: {created}, skipped: {skipped}")
         )
