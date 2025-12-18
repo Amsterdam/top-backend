@@ -9,6 +9,7 @@ from apps.planner.serializers import (
     CaseStateTypeSerializer,
     CaseSubjectSerializer,
     CaseTagSerializer,
+    DaySettingsCompactSerializer,
     DaySettingsSerializer,
     NewDaySettingsSerializer,
     TeamScheduleTypesSerializer,
@@ -161,6 +162,34 @@ class TeamSettingsViewSet(ModelViewSet):
         data = serializer.data
 
         return Response(data)
+
+    @extend_schema(
+        description="Gets the day settings for a specific day of the week",
+        parameters=[
+            OpenApiParameter(
+                "day",
+                OpenApiTypes.INT,
+                OpenApiParameter.PATH,
+                description="Day of the week (0=Sunday, 6=Saturday)",
+            ),
+        ],
+        responses={status.HTTP_200_OK: DaySettingsCompactSerializer(many=True)},
+    )
+    @action(
+        detail=True,
+        url_path="weekday/(?P<day>[0-6])",
+        methods=["get"],
+    )
+    def weekday(self, request, pk, **kwargs):
+        day_index = int(kwargs.get("day"))
+
+        team_settings = self.get_object()
+        result = DaySettings.objects.filter(
+            team_settings=team_settings, week_days__contains=[day_index]
+        )
+        serializer = DaySettingsCompactSerializer(result, many=True)
+
+        return Response(serializer.data)
 
 
 @extend_schema(

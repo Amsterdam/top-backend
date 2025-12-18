@@ -1,3 +1,5 @@
+import os
+
 from apps.addresses import router as addresses_router
 from apps.cases import router as case_router
 from apps.health.views import health_default, is_healthy
@@ -28,9 +30,9 @@ class MyView(View):
         return JsonResponse({}, status=204)
 
 
-admin.site.site_header = "Wonen looplijsten"
-admin.site.site_title = "Wonen looplijsten"
-admin.site.index_title = "Wonen looplijsten"
+admin.site.site_header = "Toezicht op pad"
+admin.site.site_title = "TOP Admin"
+admin.site.index_title = os.getenv("ENVIRONMENT", "").upper()
 
 v1_urls = (
     itinerary_router.router.urls
