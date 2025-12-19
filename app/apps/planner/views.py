@@ -170,7 +170,7 @@ class TeamSettingsViewSet(ModelViewSet):
                 "day",
                 OpenApiTypes.INT,
                 OpenApiParameter.PATH,
-                description="Day of the week (0=Sunday, 6=Saturday)",
+                description="Day of the week (0=Monday, 6=Sunday)",
             ),
         ],
         responses={status.HTTP_200_OK: DaySettingsCompactSerializer(many=True)},
