@@ -179,7 +179,9 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             case_id = case.get("id")
             itinerary.add_case(case_id)
 
-        return Response("Itinerary created successfully")
+        return Response(
+            {"message": "Itinerary created successfully", "itinerary_id": itinerary.id}
+        )
 
     def list(self, request):
         date = self.__get_date_from_query_parameter__(request)
