@@ -180,7 +180,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
             itinerary.add_case(case_id)
 
         return Response(
-            {"message": "Itinerary created successfully", "itinerary_id": itinerary.id}
+            {"message": "Itinerary created successfully", "id": itinerary.id}
         )
 
     def list(self, request):
