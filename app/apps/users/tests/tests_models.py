@@ -84,8 +84,7 @@ class UserModelTest(TestCase):
         """
         USER_EMAIL = "f.o.foo@foo.com"
         user = User.objects.create(email=USER_EMAIL)
-
-        self.assertEqual(user.full_name, "F. O. Foo")
+        self.assertEqual(user.full_name, "F.O. Foo")
 
     def test_full_name_double_surname(self):
         """
