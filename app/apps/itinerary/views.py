@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import date, datetime
 
 from apps.itinerary.models import Itinerary, ItineraryItem, Note
 from apps.itinerary.serializers import (
@@ -7,6 +7,7 @@ from apps.itinerary.serializers import (
     ItineraryItemSerializer,
     ItineraryItemUpdateSerializer,
     ItinerarySerializer,
+    ItinerarySummarySerializer,
     ItineraryTeamMemberSerializer,
     NoteCrudSerializer,
 )
@@ -17,11 +18,21 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+)
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin,
+    DestroyModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from settings.const import ITINERARY_NOT_ENOUGH_CASES
@@ -30,7 +41,9 @@ from utils.queries_zaken_api import fetch_cases_data
 logger = logging.getLogger(__name__)
 
 
-class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMixin):
+class ItineraryViewSet(
+    ViewSet, GenericAPIView, RetrieveModelMixin, DestroyModelMixin, CreateModelMixin
+):
     """
     CRUD for itineraries and teams
     """
@@ -193,6 +206,43 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
                 "itineraries": itineraries,
             }
         )
+
+    @extend_schema(
+        responses=OpenApiResponse(
+            response=ItinerarySummarySerializer(many=True),
+            description="Summary list of all itineraries for today for the logged-in user",
+            examples=[
+                OpenApiExample(
+                    "Example response",
+                    value=[
+                        {
+                            "id": 1,
+                            "team_members": ["Alice Smith", "Bob Jones"],
+                            "theme": "Kamerverhuur",
+                        },
+                        {
+                            "id": 2,
+                            "team_members": ["Charlie Brown"],
+                            "theme": "Vakantieverhuur",
+                        },
+                    ],
+                    response_only=True,
+                ),
+            ],
+        ),
+    )
+    @action(detail=False, methods=["get"], url_path="summary")
+    def summary(self, request):
+        qs = (
+            Itinerary.objects.filter(team_members__user=request.user)
+            .distinct()
+            .prefetch_related("team_members")
+            .select_related("settings__day_settings__team_settings")
+            .filter(created_at=date.today())
+        )
+
+        serializer = ItinerarySummarySerializer(qs, many=True)
+        return Response(serializer.data)
 
 
 class ItineraryItemViewSet(
