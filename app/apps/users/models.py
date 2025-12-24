@@ -50,22 +50,24 @@ class User(AbstractUser):
     @property
     def full_name(self):
         """
-        Parses and returns last name from email (f.foo will return F. Foo)
+        Parses name from email.
+        a.van.de.boer -> A. Van De Boer
+        anton -> Anton
         """
 
-        def capitalize(string):
-            return string.capitalize()
+        if not self.email:
+            return ""
 
-        def add_punctuation(string):
-            return string + "." if len(string) == 1 else " " + string
+        parts = self.email.split("@")[0].split(".")
 
-        if self.email:
-            full_name = self.email.split("@")[0].split(".")
-            full_name = [capitalize(part) for part in full_name]
-            full_name = [add_punctuation(part) for part in full_name]
-            full_name = "".join(full_name)
+        formatted_parts = []
+        for part in parts:
+            if len(part) == 1:
+                formatted_parts.append(part.upper() + ".")
+            else:
+                formatted_parts.append(part.capitalize())
 
-            return full_name
+        return " ".join(formatted_parts)
 
     def __str__(self):
         return self.full_name

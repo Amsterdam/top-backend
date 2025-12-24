@@ -193,3 +193,25 @@ class ItinerarySerializer(serializers.ModelSerializer):
             "settings",
             "postal_code_settings",
         )
+
+
+class ItinerarySummarySerializer(serializers.ModelSerializer):
+    team_members = serializers.SerializerMethodField()
+    theme = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Itinerary
+        fields = [
+            "id",
+            "team_members",
+            "theme",
+        ]
+
+    def get_team_members(self, obj):
+        return [str(member) for member in obj.team_members.all()]
+
+    def get_theme(self, obj):
+        try:
+            return obj.settings.day_settings.team_settings.name
+        except AttributeError:
+            return None
