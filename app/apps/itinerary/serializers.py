@@ -1,5 +1,9 @@
 from apps.cases.models import Case
-from apps.cases.serializers import CaseSerializer, CaseSimpleSerializer
+from apps.cases.serializers import (
+    CaseDetailSerializer,
+    CaseSerializer,
+    CaseSimpleSerializer,
+)
 from apps.itinerary.models import (
     Itinerary,
     ItineraryItem,
@@ -215,3 +219,11 @@ class ItinerarySummarySerializer(serializers.ModelSerializer):
             return obj.settings.day_settings.team_settings.name
         except AttributeError:
             return None
+
+
+class ItineraryItemDetailSerializer(ItineraryItemSerializer):
+    case = CaseDetailSerializer(read_only=True)
+
+
+class ItineraryDetailSerializer(ItinerarySerializer):
+    items = ItineraryItemDetailSerializer(many=True)
