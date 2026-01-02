@@ -3,6 +3,7 @@ from datetime import date, datetime
 
 from apps.itinerary.models import Itinerary, ItineraryItem, Note
 from apps.itinerary.serializers import (
+    ItineraryDetailSerializer,
     ItineraryItemCreateSerializer,
     ItineraryItemSerializer,
     ItineraryItemUpdateSerializer,
@@ -52,6 +53,11 @@ class ItineraryViewSet(
     queryset = Itinerary.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["created_at"]
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return ItineraryDetailSerializer
+        return ItinerarySerializer
 
     def get_object(self):
         MESSAGE = (
