@@ -15,9 +15,23 @@ class CaseAddress(serializers.Serializer):
     bag_id = serializers.CharField(required=True)
 
 
+class CaseWorkflowStateSerializer(serializers.Serializer):
+    name = serializers.CharField(source="state.name")
+
+
+class IdNameSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
+
 class CaseSearchSerializer(serializers.Serializer):
     id = serializers.CharField(source="case_id")
     address = CaseAddress(read_only=True)
+    reason = IdNameSerializer()
+    workflows = CaseWorkflowStateSerializer(many=True)
+    project = IdNameSerializer(required=False, allow_null=True)
+    subjects = IdNameSerializer(many=True)
+    tags = IdNameSerializer(many=True)
 
 
 class CaseSerializer(serializers.ModelSerializer):
@@ -37,10 +51,6 @@ class CaseSerializer(serializers.ModelSerializer):
             if data is not None:
                 return data
         return obj.data_context(self.context)
-
-
-class CaseWorkflowStateSerializer(serializers.Serializer):
-    name = serializers.CharField(source="state.name")
 
 
 class CaseDetailSerializer(serializers.ModelSerializer):

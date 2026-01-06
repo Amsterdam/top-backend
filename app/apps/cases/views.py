@@ -1,8 +1,9 @@
+import json
 import logging
 from datetime import datetime
 
 import requests
-from apps.cases.swagger_parameters import case_search_parameters
+from apps.cases.serializers import CaseSearchSerializer
 from apps.itinerary.models import Itinerary
 from apps.itinerary.serializers import ItineraryTeamMemberSerializer
 from apps.users.auth_apps import AZAKeyAuth
@@ -100,103 +101,158 @@ class CaseViewSet(ViewSet):
         return Response(data)
 
 
-class CaseSearchViewSet(ViewSet):
+class BaseCaseSearchViewSet(ViewSet):
     """
-    A temporary search ViewSet for listing cases
+    Shared base ViewSet for case search endpoints
     """
 
-    def __add_teams__(self, cases, itineraries_created_at):
-        """
-        Enriches the cases with teams
-        """
-        # Enrich the search result data with teams whose itinerary contains this item
+    def _add_teams(self, cases, itineraries_created_at):
         mapped_cases = {}
         cases = cases.copy()
 
         for case in cases:
-            # Map the objects so that they're easily accessible through the case_id
             case_id = str(case.get("id"))
             mapped_cases[case_id] = case
-            # Add a teams arrar to the case object as well
             case["teams"] = []
 
-        # Get today's itineraries
         itineraries = Itinerary.objects.filter(created_at=itineraries_created_at).all()
 
         for itinerary in itineraries:
             team = itinerary.team_members.all()
             itinerary_cases = itinerary.get_cases()
 
-            # Match the mapped_cases to the itinerary_cases, and add the teams
             for case in itinerary_cases:
                 case_id = case.case_id
-                mapped_case = mapped_cases.get(case_id, {"teams": []})
-                serialized_team = ItineraryTeamMemberSerializer(team, many=True)
+                mapped_case = mapped_cases.get(case_id)
+                if not mapped_case:
+                    continue
+
+                serialized_team = ItineraryTeamMemberSerializer(
+                    team,
+                    many=True,
+                )
                 mapped_case["teams"].append(serialized_team.data)
 
         return cases
 
     def _clean_cases(self, cases):
-        cases = [
+        return [
             {
                 **c,
-                **{
-                    "workflows": [
-                        s
-                        for s in c.get("workflows", [])
-                        if s.get("state", {}).get("name")
-                        in settings.AZA_CASE_STATE_NAMES
-                    ]
-                },
+                "workflows": [
+                    {"state": s.get("state")}
+                    for s in c.get("workflows", [])
+                    if s.get("state", {}).get("name") in settings.AZA_CASE_STATE_NAMES
+                ],
             }
             for c in cases
         ]
-        return cases
 
-    @extend_schema(
-        parameters=case_search_parameters, description="Search query parameters"
-    )
-    def list(self, request):
+    def get_cases_from_api(self, request):
         """
-        Returns a list of cases found with the given parameters
+        Must be implemented by subclasses
         """
+        raise NotImplementedError
 
+    def list(self, request, *args, **kwargs):
         if settings.USE_ZAKEN_MOCK_DATA:
-            result = get_zaken_case_list()
+            cases = get_zaken_case_list()
         else:
-            param_translate = {
-                "streetName": "street_name",
-                "streetNumber": "number",
-                "suffix": "suffix",
-                "postalCode": "postal_code",
-            }
-            url = f"{settings.ZAKEN_API_URL}/cases/"
-            queryParams = {}
-            queryParams.update(request.GET)
-
-            queryParams = dict(
-                (param_translate.get(k, k), v) for k, v in queryParams.items()
-            )
-            queryParams.update(
-                {
-                    "open_cases": True,
-                    "page_size": 1000,
-                    "task": ["task_uitvoeren_leegstandsgesprek", "task_create_visit"],
-                }
-            )
-            response = requests.get(
-                url,
-                params=queryParams,
-                timeout=60,
-                headers=get_headers(get_auth_header_from_request(request)),
-            )
-            response.raise_for_status()
-
-            result = response.json().get("results", [])
-
-            for case in result:
+            cases = self.get_cases_from_api(request)
+            for case in cases:
                 Case.get(case_id=case.get("id"))
 
-            cases = self.__add_teams__(result, datetime.now())
-            cases = self._clean_cases(cases)
-            return JsonResponse({"cases": cases})
+        cases = self._add_teams(cases, datetime.now())
+        cases = self._clean_cases(cases)
+
+        return JsonResponse(cases, safe=False)
+
+
+class CaseSearchViewSet(BaseCaseSearchViewSet):
+    """
+    Legacy search endpoint
+    """
+
+    serializer_class = CaseSearchSerializer
+
+    def list(self, request, *args, **kwargs):
+        response_list = super().list(request, *args, **kwargs).content
+        cases = json.loads(response_list)
+        return JsonResponse({"cases": cases})
+
+    def get_cases_from_api(self, request):
+        param_translate = {
+            "streetName": "street_name",
+            "streetNumber": "number",
+            "suffix": "suffix",
+            "postalCode": "postal_code",
+        }
+
+        queryParams = {param_translate.get(k, k): v for k, v in request.GET.items()}
+
+        queryParams.update(
+            {
+                "open_cases": True,
+                "page_size": 1000,
+                "task": [
+                    "task_uitvoeren_leegstandsgesprek",
+                    "task_create_visit",
+                ],
+            }
+        )
+
+        response = requests.get(
+            f"{settings.ZAKEN_API_URL}/cases/",
+            params=queryParams,
+            timeout=60,
+            headers=get_headers(get_auth_header_from_request(request)),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
+
+
+class CaseSearchV2ViewSet(BaseCaseSearchViewSet):
+    """
+    Search v2 endpoint for cases
+    """
+
+    serializer_class = CaseSearchSerializer
+
+    def get(self, request, *args, **kwargs):
+        cases = self._clean_cases(...)  # lijst van dicts
+        serializer = self.get_serializer(cases, many=True)
+        return Response(serializer.data)  # dit geeft direct een lijst terug
+
+    def get_cases_from_api(self, request):
+        allowed_params = {
+            "page",
+            "page_size",
+            "theme_name",
+            "address_search",
+        }
+
+        queryParams = {k: v for k, v in request.GET.items() if k in allowed_params}
+
+        if "page_size" not in queryParams:
+            queryParams["page_size"] = 1000
+
+        queryParams.update(
+            {
+                "open_cases": True,
+                "task": [
+                    "task_uitvoeren_leegstandsgesprek",
+                    "task_create_visit",
+                ],
+            }
+        )
+
+        response = requests.get(
+            f"{settings.ZAKEN_API_URL}/cases/",
+            params=queryParams,
+            timeout=60,
+            headers=get_headers(get_auth_header_from_request(request)),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
