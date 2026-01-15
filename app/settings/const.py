@@ -16,12 +16,12 @@ POSTAL_CODE_RANGES = [
     {"range_start": 1380, "range_end": 1384},
 ]
 
-API_EXCEPTION_SEVERITY_ERROR = "ERROR"
+
 API_EXCEPTION_SEVERITY_WARNING = "WARNING"
 API_EXCEPTION_SEVERITY_INFO = "INFO"
 
 ITINERARY_NOT_ENOUGH_CASES = {
-    "severity": API_EXCEPTION_SEVERITY_INFO,
+    "severity": API_EXCEPTION_SEVERITY_WARNING,
     "message": "Er zijn vandaag niet genoeg zaken die voldoen aan de ingestelde criteria. Neem contact op met je dagcoördinator of handhaver.",
     "title": "Helaas, geen looplijst mogelijk",
 }
