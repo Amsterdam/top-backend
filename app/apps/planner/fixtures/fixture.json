@@ -106,7 +106,7 @@
     },
     {
         "model": "planner.teamsettings",
-        "pk": 8,
+        "pk": 15,
         "fields": {
             "name": "Huisvestingsvergunning",
             "enabled": true,
