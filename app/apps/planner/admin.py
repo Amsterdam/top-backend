@@ -6,6 +6,7 @@ from apps.planner.models import (
     Weights,
 )
 from django.contrib import admin
+from settings.const import WEEK_DAYS
 
 
 class DaySettingsInline(admin.TabularInline):
@@ -17,6 +18,7 @@ class DaySettingsInline(admin.TabularInline):
             {
                 "fields": (
                     "name",
+                    "week_days",
                     "housing_corporations",
                     "housing_corporation_combiteam",
                     "day_segments",
@@ -27,7 +29,6 @@ class DaySettingsInline(admin.TabularInline):
                     "districts",
                     "postal_code_ranges_presets",
                     "state_types",
-                    "week_days",
                     "max_use_limit",
                     "start_time",
                     "project_ids",
@@ -97,3 +98,25 @@ class WeightsAdmin(admin.ModelAdmin):
         "distance",
         "priority",
     )
+
+
+@admin.register(DaySettings)
+class DaySettingsAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "week_days_display",
+        "team_settings",
+    )
+    list_filter = ("team_settings",)
+
+    def week_days_display(self, obj):
+        indices = obj.week_days or []
+        labels = []
+        for idx in indices:
+            try:
+                labels.append(WEEK_DAYS[int(idx)])
+            except (ValueError, TypeError, IndexError):
+                labels.append(str(idx))
+        return ", ".join(labels)
+
+    week_days_display.short_description = "Week days"

@@ -196,6 +196,7 @@ class DaySettings(models.Model):
     )
     postal_code_ranges = models.JSONField(
         default=day_settings__postal_code_ranges__default,
+        blank=True,
     )
     postal_code_ranges_presets = models.ManyToManyField(
         to=PostalCodeRangeSet,
@@ -259,6 +260,11 @@ class DaySettings(models.Model):
         null=True,
     )
     housing_corporation_combiteam = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.postal_code_ranges is None:
+            self.postal_code_ranges = []
+        super().save(*args, **kwargs)
 
     def get_postal_code_ranges(self):
         postal_code_ranges_presets = [
