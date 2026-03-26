@@ -1,9 +1,5 @@
 from apps.cases.models import Case
-from apps.cases.serializers import (
-    CaseDetailSerializer,
-    CaseSerializer,
-    CaseSimpleSerializer,
-)
+from apps.cases.serializers import CaseSerializer, CaseSimpleSerializer
 from apps.itinerary.models import (
     Itinerary,
     ItineraryItem,
@@ -222,7 +218,33 @@ class ItinerarySummarySerializer(serializers.ModelSerializer):
 
 
 class ItineraryItemDetailSerializer(ItineraryItemSerializer):
-    case = CaseDetailSerializer(read_only=True)
+    case = serializers.SerializerMethodField()
+
+    def get_case(self, obj):
+        return self._serialize_case(obj)
+
+    def _serialize_case(self, obj):
+        cache = self.context.get("cases_data_cache")
+
+        if cache is not None:
+            data = cache.get(str(obj.case.case_id))
+        else:
+            data = obj.case.data_context(self.context)
+
+        if not isinstance(data, dict):
+            return {}
+
+        workflows = data.get("workflows", [])
+        data["workflows"] = [
+            wf["state"]["name"]
+            for wf in workflows
+            if isinstance(wf, dict)
+            and "state" in wf
+            and isinstance(wf["state"], dict)
+            and "name" in wf["state"]
+        ]
+
+        return data
 
 
 class ItineraryDetailSerializer(ItinerarySerializer):

@@ -69,6 +69,28 @@ class ItineraryViewSet(
         except Http404:
             raise NotFound(MESSAGE)
 
+    def retrieve(self, request, *args, **kwargs):
+        user = get_object_or_404(User, id=request.user.id)
+        itinerary = Itinerary.objects.filter(
+            id=kwargs["pk"], team_members__user=user
+        ).first()
+        if not itinerary:
+            return Response({"detail": "Not authorized."}, status=403)
+        item_qs = ItineraryItem.objects.filter(itinerary=itinerary)
+        case_ids = list(item_qs.values_list("case__case_id", flat=True))
+
+        auth_header = get_auth_header_from_request(request)
+        cases_data_cache = fetch_cases_data(case_ids, auth_header)
+
+        serializer = self.get_serializer(
+            itinerary,
+            context={
+                **self.get_serializer_context(),
+                "cases_data_cache": cases_data_cache,
+            },
+        )
+        return Response(serializer.data)
+
     def __get_all_itineraries__(self, user, date=None):
         itineraries = Itinerary.objects.filter(team_members__user=user)
 
