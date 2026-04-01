@@ -15,6 +15,7 @@ from apps.itinerary.serializers import (
 from apps.users.models import User
 from apps.users.utils import get_auth_header_from_request
 from django.db import transaction
+from django.db.models import Count
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -245,6 +246,7 @@ class ItineraryViewSet(
             .prefetch_related("team_members")
             .select_related("settings__day_settings__team_settings")
             .filter(created_at=date.today())
+            .annotate(num_cases=Count("items"))
         )
 
         serializer = ItinerarySummarySerializer(qs, many=True)
