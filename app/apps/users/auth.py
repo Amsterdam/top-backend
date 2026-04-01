@@ -27,6 +27,8 @@ class OIDCAuthenticationBackend(OIDCAuthenticationBackend):
 
     def update_user(self, user, claims):
         user = self.save_user(user, claims)
+        if not user.is_active:
+            raise PermissionDenied("User account is inactive.")
         return user
 
     def validate_issuer(self, payload):
