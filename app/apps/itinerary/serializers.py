@@ -203,6 +203,9 @@ class ItinerarySummarySerializer(serializers.ModelSerializer):
     team_members = serializers.SerializerMethodField()
     theme = serializers.SerializerMethodField()
     num_cases = serializers.IntegerField(read_only=True)
+    day_settings_name = serializers.CharField(
+        source="settings.day_settings.name", read_only=True
+    )
 
     class Meta:
         model = Itinerary
@@ -211,6 +214,7 @@ class ItinerarySummarySerializer(serializers.ModelSerializer):
             "team_members",
             "theme",
             "num_cases",
+            "day_settings_name",
         ]
 
     def get_team_members(self, obj):
