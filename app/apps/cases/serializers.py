@@ -51,35 +51,3 @@ class CaseSerializer(serializers.ModelSerializer):
             if data is not None:
                 return data
         return obj.data_context(self.context)
-
-
-class CaseDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Case
-        fields = ()
-
-    def to_representation(self, obj):
-        """
-        Retrieves the full case data from the cache or data_context,
-        but reduces workflows to a list containing only state.name.
-        """
-
-        cache = self.context.get("cases_data_cache")
-
-        if cache is not None:
-            data = cache.get(str(obj.case_id))
-        else:
-            data = obj.data_context(self.context)
-
-        if not isinstance(data, dict):
-            return {}
-
-        # Transformeer workflows naar alleen de namen
-        workflows = data.get("workflows", [])
-        data["workflows"] = [
-            wf["state"]["name"]
-            for wf in workflows
-            if "state" in wf and "name" in wf["state"]
-        ]
-
-        return data
