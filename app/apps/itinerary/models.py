@@ -254,21 +254,26 @@ class ItinerarySettings(models.Model):
         blank=True,
         null=True,
     )
-    housing_corporation_combiteam = models.BooleanField(default=False)
+    housing_corporation_combiteam = models.BooleanField(
+        null=True,
+        blank=True,
+        default=None,
+    )
 
     def get_cases_query_params(self):
         cases_query_params = self.day_settings.get_cases_query_params()
+
         postal_code_range = [
             f"{pr.get('range_start')}-{pr.get('range_end')}"
             for pr in self.postal_code_ranges
         ]
         if self.day_settings.team_settings.zaken_team_id == 6:
-            cases_query_params.update(
-                {
-                    "housing_corporation": self.housing_corporations,
-                    "schedule_housing_corporation_combiteam": self.housing_corporation_combiteam,
-                }
-            )
+            cases_query_params["housing_corporation"] = self.housing_corporations
+
+            if self.housing_corporation_combiteam is not None:
+                cases_query_params[
+                    "schedule_housing_corporation_combiteam"
+                ] = self.housing_corporation_combiteam
         cases_query_params.update(
             {
                 "state_types": self.state_types,
