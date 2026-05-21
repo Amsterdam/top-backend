@@ -21,7 +21,7 @@ dependencies = [
     "django-filter~=25.1",
     "django-health-check~=3.16",
     "django-timezone-field<8.0",
-    "djangorestframework~=3.15",
+    "djangorestframework~=3.17",
     "djangorestframework-simplejwt~=5.3",
     "drf-spectacular~=0.28",
     "freezegun~=1.5",
