@@ -136,6 +136,7 @@ class TeamSettings(models.Model):
         return response.json().get("results", [])
 
     class Meta:
+        permissions = [("manage_settings", "Can manage settings")]
         verbose_name_plural = "Team settings"
         ordering = ["name"]
 

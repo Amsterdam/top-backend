@@ -7,7 +7,11 @@ from apps.itinerary import router as itinerary_router
 from apps.planner import router as planner_router
 from apps.planner.views import dumpdata
 from apps.users import router as users_router
-from apps.users.views import IsAuthorizedView, ObtainAuthTokenOIDC
+from apps.users.views import (
+    CurrentUserPermissionsView,
+    IsAuthorizedView,
+    ObtainAuthTokenOIDC,
+)
 from apps.visits import router as visits_router
 from django.conf import settings
 from django.conf.urls.static import static
@@ -48,6 +52,7 @@ v1_urls = (
             name="oidc-authenticate",
         ),
         path("is-authorized/", IsAuthorizedView.as_view(), name="is-authorized"),
+        path("permissions/", CurrentUserPermissionsView.as_view(), name="permissions"),
     ]
 )
 

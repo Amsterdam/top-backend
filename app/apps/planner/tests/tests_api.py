@@ -1,4 +1,5 @@
 from apps.planner.models import DaySettings, TeamSettings
+from django.contrib.auth.models import Permission
 from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
@@ -6,6 +7,7 @@ from rest_framework.test import APITestCase
 
 from app.utils.unittest_helpers import (
     get_authenticated_client,
+    get_test_user,
     get_unauthenticated_client,
 )
 
@@ -52,6 +54,22 @@ class TeamSettingsViewSet(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json().get("results")), 2)
+
+    def test_authenticated_post_requires_manage_settings_permission(self):
+        client = get_authenticated_client()
+
+        response = client.post(self.get_url(), {"name": "Team settings"})
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_post_with_manage_settings_permission(self):
+        user = get_test_user()
+        user.user_permissions.add(Permission.objects.get(codename="manage_settings"))
+        client = get_authenticated_client()
+
+        response = client.post(self.get_url(), {"name": "Team settings"})
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
 class DaySettingsViewSet(APITestCase):
@@ -125,6 +143,17 @@ class DaySettingsViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json().get("name"), DAY_SETTINGS_NAME)
 
+    def test_authenticated_post_requires_manage_settings_permission(self):
+        team_settings = baker.make(TeamSettings)
+        client = get_authenticated_client()
+
+        response = client.post(
+            self.get_url(),
+            {"name": "Day settings", "team_settings": team_settings.id},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
 class DaySettingsUpdateTestViewSet(APITestCase):
     """
@@ -179,5 +208,25 @@ class DaySettingsUpdateTestViewSet(APITestCase):
 
         client = get_authenticated_client()
         response = client.put(url, {})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        # self.assertEqual(response.json().get("name"), DAY_SETTINGS_NAME)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_put_with_manage_settings_permission(self):
+        day_settings_id = 1
+        team_settings = baker.make(TeamSettings)
+        baker.make(
+            DaySettings,
+            team_settings=team_settings,
+            id=day_settings_id,
+            name="FOO_NAME",
+        )
+
+        user = get_test_user()
+        user.user_permissions.add(Permission.objects.get(codename="manage_settings"))
+
+        url = reverse("v1:day-settings-detail", kwargs={"pk": day_settings_id})
+        client = get_authenticated_client()
+        response = client.put(url, {"name": "UPDATED_NAME"})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get("name"), "UPDATED_NAME")
