@@ -2,6 +2,7 @@ import os
 
 from apps.addresses import router as addresses_router
 from apps.cases import router as case_router
+from apps.feedback.views import FeedbackView
 from apps.health.views import health_default, is_healthy
 from apps.itinerary import router as itinerary_router
 from apps.planner import router as planner_router
@@ -53,6 +54,7 @@ v1_urls = (
         ),
         path("is-authorized/", IsAuthorizedView.as_view(), name="is-authorized"),
         path("permissions/", CurrentUserPermissionsView.as_view(), name="permissions"),
+        path("feedback/", FeedbackView.as_view(), name="feedback"),
     ]
 )
 
