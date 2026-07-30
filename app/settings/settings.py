@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     "apps.visits",
     "apps.health",
     "apps.addresses",
+    "apps.feedback",
     # Enable admin templates inheritance
     "django.contrib.admin",
 )
