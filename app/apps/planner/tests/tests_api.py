@@ -60,7 +60,7 @@ class TeamSettingsViewSet(APITestCase):
 
         response = client.post(self.get_url(), {"name": "Team settings"})
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_authenticated_post_with_manage_settings_permission(self):
         user = get_test_user()
