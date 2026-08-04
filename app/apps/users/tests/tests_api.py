@@ -1,5 +1,6 @@
 from unittest.mock import Mock, patch
 
+from django.contrib.auth.models import Group, Permission
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -107,3 +108,30 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         response = client.post(url, {"code": "FOO-CODE"})
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class CurrentUserPermissionsViewTest(APITestCase):
+    def test_authenticated_requests_return_all_current_user_permissions(self):
+        url = reverse("v1:permissions")
+        user = get_test_user()
+        group = Group.objects.create(name="planners")
+        permission = Permission.objects.get(codename="view_user")
+        group.permissions.add(permission)
+        user.groups.add(group)
+
+        client = get_authenticated_client()
+        response = client.get(url)
+
+        expected_permission = (
+            f"{permission.content_type.app_label}.{permission.codename}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), {"permissions": [expected_permission]})
+
+    def test_unauthenticated_requests_are_rejected(self):
+        url = reverse("v1:permissions")
+        client = get_unauthenticated_client()
+
+        response = client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

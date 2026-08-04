@@ -27,6 +27,11 @@ class IsAuthorizedView(APIView):
         return Response({"is_authorized": is_authorized})
 
 
+class CurrentUserPermissionsView(APIView):
+    def get(self, request):
+        return Response({"permissions": sorted(request.user.get_all_permissions())})
+
+
 class OIDCAuthenticateSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
 

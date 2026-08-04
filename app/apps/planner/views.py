@@ -16,6 +16,7 @@ from apps.planner.serializers import (
     TeamSettingsSerializer,
     TeamSettingsThemeSerializer,
 )
+from apps.users.permissions import CanManageSettingsOrReadOnly
 from apps.users.utils import get_auth_header_from_request
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
@@ -38,6 +39,7 @@ class TeamSettingsViewSet(ModelViewSet):
 
     serializer_class = TeamSettingsSerializer
     queryset = TeamSettings.objects.filter(enabled=True)
+    permission_classes = [CanManageSettingsOrReadOnly]
 
     @extend_schema(
         description="Gets the reasons associated with the requested team",
@@ -204,6 +206,7 @@ class DaySettingsViewSet(ModelViewSet):
 
     serializer_class = DaySettingsSerializer
     queryset = DaySettings.objects.all()
+    permission_classes = [CanManageSettingsOrReadOnly]
 
     def destroy(self, request, *args, **kwargs):
         try:
