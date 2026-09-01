@@ -1,7 +1,7 @@
 services:
   api:
     hostname: api
-    image: ${REGISTRY:-127.0.0.1:5001}/${REPOSITORY:-salmagundi/top-backend}:${VERSION:-latest}
+    image: ${REGISTRY:-127.0.0.1:5001}/${REPOSITORY:-ams-woon/top/backend}:${VERSION:-latest}
     build:
       context: ./app
     ports:
