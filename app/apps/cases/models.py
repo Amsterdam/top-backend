@@ -115,6 +115,26 @@ class Case(models.Model):
             pass
         return self.__get_case__(self.case_id, auth_header)
 
+    def get_teams(self, from_date=None):
+        """
+        Returns the teams (per itinerary) that are scheduled to visit this case.
+        Only itineraries of today or in the future are taken into account.
+        """
+        from apps.itinerary.models import Itinerary
+        from apps.itinerary.serializers import ItineraryTeamMemberSerializer
+
+        from_date = from_date or timezone.localdate()
+        itineraries = (
+            Itinerary.objects.filter(created_at__gte=from_date, items__case=self)
+            .distinct()
+            .order_by("created_at", "id")
+        )
+
+        return [
+            ItineraryTeamMemberSerializer(itinerary.team_members.all(), many=True).data
+            for itinerary in itineraries
+        ]
+
     @property
     def itinerary(self):
         now = datetime.datetime.now()

@@ -1,6 +1,5 @@
 import json
 import logging
-from datetime import datetime
 
 import requests
 from apps.cases.serializers import CaseSearchSerializer
@@ -15,6 +14,7 @@ from django.conf import settings
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework.decorators import action
@@ -61,6 +61,7 @@ class CaseViewSet(ViewSet):
                 ),
                 "brk_data": brk_api.get_brk_data(bag_id),
                 "day_settings_id": day_settings_id,
+                "teams": case_instance.get_teams(),
             }
         )
 
@@ -106,7 +107,7 @@ class BaseCaseSearchViewSet(ViewSet):
     Shared base ViewSet for case search endpoints
     """
 
-    def _add_teams(self, cases, itineraries_created_at):
+    def _add_teams(self, cases, from_date=None):
         mapped_cases = {}
         cases = cases.copy()
 
@@ -115,7 +116,8 @@ class BaseCaseSearchViewSet(ViewSet):
             mapped_cases[case_id] = case
             case["teams"] = []
 
-        itineraries = Itinerary.objects.filter(created_at=itineraries_created_at).all()
+        from_date = from_date or timezone.localdate()
+        itineraries = Itinerary.objects.filter(created_at__gte=from_date).all()
 
         for itinerary in itineraries:
             team = itinerary.team_members.all()
@@ -162,7 +164,7 @@ class BaseCaseSearchViewSet(ViewSet):
             for case in cases:
                 Case.get(case_id=case.get("id"))
 
-        cases = self._add_teams(cases, datetime.now())
+        cases = self._add_teams(cases)
         cases = self._clean_cases(cases)
 
         return JsonResponse(cases, safe=False)
