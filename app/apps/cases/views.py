@@ -1,4 +1,3 @@
-import json
 import logging
 
 import requests
@@ -172,59 +171,10 @@ class BaseCaseSearchViewSet(ViewSet):
 
 class CaseSearchViewSet(BaseCaseSearchViewSet):
     """
-    Legacy search endpoint
+    Search endpoint for cases
     """
 
     serializer_class = CaseSearchSerializer
-
-    def list(self, request, *args, **kwargs):
-        response_list = super().list(request, *args, **kwargs).content
-        cases = json.loads(response_list)
-        return JsonResponse({"cases": cases})
-
-    def get_cases_from_api(self, request):
-        param_translate = {
-            "streetName": "street_name",
-            "streetNumber": "number",
-            "suffix": "suffix",
-            "postalCode": "postal_code",
-        }
-
-        queryParams = {param_translate.get(k, k): v for k, v in request.GET.items()}
-
-        queryParams.update(
-            {
-                "open_cases": True,
-                "page_size": 1000,
-                "task": [
-                    "task_uitvoeren_leegstandsgesprek",
-                    "task_create_visit",
-                ],
-            }
-        )
-
-        response = requests.get(
-            f"{settings.ZAKEN_API_URL}/cases/",
-            params=queryParams,
-            timeout=60,
-            headers=get_headers(get_auth_header_from_request(request)),
-        )
-        response.raise_for_status()
-
-        return response.json().get("results", [])
-
-
-class CaseSearchV2ViewSet(BaseCaseSearchViewSet):
-    """
-    Search v2 endpoint for cases
-    """
-
-    serializer_class = CaseSearchSerializer
-
-    def get(self, request, *args, **kwargs):
-        cases = self._clean_cases(...)  # lijst van dicts
-        serializer = self.get_serializer(cases, many=True)
-        return Response(serializer.data)  # dit geeft direct een lijst terug
 
     def get_cases_from_api(self, request):
         allowed_params = {
