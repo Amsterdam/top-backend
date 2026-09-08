@@ -3,6 +3,7 @@ import datetime
 from apps.cases.models import Case
 from apps.itinerary.models import ItineraryItem
 from apps.visits.models import Visit
+from django.test import override_settings
 from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
@@ -75,16 +76,15 @@ class CaseViewSetTest(APITestCase):
         self.assertEqual(response.json()[1]["id"], visit_2.id)
 
 
+@override_settings(USE_ZAKEN_MOCK_DATA=True)
 class CaseSearchViewSetTest(APITestCase):
     """
     Tests for the API endpoint for searching cases
     """
 
     MOCK_SEARCH_QUERY_PARAMETERS = {
-        "postalCode": "FOO_POSTAL_CODE",
-        "streetNumber": "FOO_STREET_NUMBER",
-        "suffix": "FOO_SUFFIX",
-        "streetName": "FOO_STREET_NAME",
+        "theme_name": "FOO_THEME",
+        "address_search": "FOO_ADDRESS",
     }
 
     def test_unauthenticated_request(self):
@@ -95,3 +95,13 @@ class CaseSearchViewSetTest(APITestCase):
         client = get_unauthenticated_client()
         response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_authenticated_request_returns_list(self):
+        """
+        The search endpoint returns a bare list of cases (not wrapped)
+        """
+        url = reverse("v1:search-list")
+        client = get_authenticated_client()
+        response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsInstance(response.json(), list)
