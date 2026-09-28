@@ -23,6 +23,7 @@ from django.shortcuts import redirect
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView, View
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from puntenteller import router as puntenteller_router
 
 
 @login_required
@@ -44,6 +45,7 @@ v1_urls = (
     + case_router.router.urls
     + addresses_router.router.urls
     + planner_router.router.urls
+    + puntenteller_router.router.urls
     + users_router.router.urls
     + visits_router.router.urls
     + [
