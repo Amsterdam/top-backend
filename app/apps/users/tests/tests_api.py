@@ -135,3 +135,16 @@ class CurrentUserPermissionsViewTest(APITestCase):
         response = client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class UserListViewTest(APITestCase):
+    def test_returns_unpaginated_list(self):
+        """
+        Users are returned as a plain list, without pagination
+        """
+        url = reverse("v1:users-list")
+        client = get_authenticated_client()
+        response = client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsInstance(response.json(), list)
