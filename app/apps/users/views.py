@@ -17,6 +17,7 @@ LOGGER = logging.getLogger(__name__)
 class UserListView(ViewSet, generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = None
 
 
 class IsAuthorizedView(APIView):
