@@ -64,6 +64,8 @@ class TeamSettings(models.Model):
         )
         return {
             "open_cases": "true",
+            # Addresses with an open sensitive case (Ondermijning) may not be visited by other themes.
+            "has_open_sensitive_case_on_address": "false",
             "theme": self.zaken_team_id,
             "page_size": 1000,
             "schedule_visit_from": today,

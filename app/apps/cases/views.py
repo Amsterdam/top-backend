@@ -192,6 +192,8 @@ class CaseSearchViewSet(BaseCaseSearchViewSet):
         queryParams.update(
             {
                 "open_cases": True,
+                # Addresses with an open sensitive case (Ondermijning) may not be visited by other themes.
+                "has_open_sensitive_case_on_address": False,
                 "task": [
                     "task_uitvoeren_leegstandsgesprek",
                     "task_create_visit",
