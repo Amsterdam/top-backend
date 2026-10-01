@@ -1,4 +1,5 @@
 import datetime
+from unittest.mock import Mock, patch
 
 from apps.cases.models import Case
 from apps.itinerary.models import ItineraryItem
@@ -105,3 +106,34 @@ class CaseSearchViewSetTest(APITestCase):
         response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response.json(), list)
+
+    @override_settings(USE_ZAKEN_MOCK_DATA=False)
+    @patch("apps.cases.views.requests.get")
+    def test_search_excludes_cases_with_open_sensitive_case_on_address(self, mock_get):
+        mock_get.return_value = Mock(json=Mock(return_value={"results": []}))
+
+        url = reverse("v1:search-list")
+        client = get_authenticated_client()
+        response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        params = mock_get.call_args.kwargs["params"]
+        self.assertIs(params["has_open_sensitive_case_on_address"], False)
+
+    @override_settings(USE_ZAKEN_MOCK_DATA=False)
+    @patch("apps.cases.views.requests.get")
+    def test_search_filter_cannot_be_overridden(self, mock_get):
+        mock_get.return_value = Mock(json=Mock(return_value={"results": []}))
+
+        url = reverse("v1:search-list")
+        client = get_authenticated_client()
+        client.get(
+            url,
+            {
+                **self.MOCK_SEARCH_QUERY_PARAMETERS,
+                "has_open_sensitive_case_on_address": "true",
+            },
+        )
+
+        params = mock_get.call_args.kwargs["params"]
+        self.assertIs(params["has_open_sensitive_case_on_address"], False)
