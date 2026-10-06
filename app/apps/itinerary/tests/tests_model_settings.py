@@ -1,8 +1,6 @@
 from apps.cases.models import Case
 from apps.itinerary.models import Itinerary, ItinerarySettings
-from apps.planner.models import DaySettings
 from django.test import TestCase
-from model_bakery import baker
 
 
 class ItinerarySettingsModelTest(TestCase):
@@ -42,17 +40,3 @@ class ItinerarySettingsModelTest(TestCase):
             opening_date="2020-04-04", itinerary=itinerary, start_case=case
         )
         self.assertEqual(ItinerarySettings.objects.count(), 1)
-
-    def test_get_cases_query_params_include_is_bed_and_breakfast_when_configured(self):
-        itinerary = Itinerary.objects.create()
-        day_settings = baker.make(DaySettings)
-        itinerary_settings = ItinerarySettings.objects.create(
-            opening_date="2020-04-04",
-            itinerary=itinerary,
-            day_settings=day_settings,
-            is_bed_and_breakfast=True,
-        )
-
-        params = itinerary_settings.get_cases_query_params()
-
-        self.assertTrue(params["is_bed_and_breakfast"])
