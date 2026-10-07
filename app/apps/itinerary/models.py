@@ -259,6 +259,11 @@ class ItinerarySettings(models.Model):
         blank=True,
         default=None,
     )
+    is_bed_and_breakfast = models.BooleanField(
+        null=True,
+        blank=True,
+        default=None,
+    )
 
     def get_cases_query_params(self):
         cases_query_params = self.day_settings.get_cases_query_params()
@@ -274,6 +279,8 @@ class ItinerarySettings(models.Model):
                 cases_query_params[
                     "schedule_housing_corporation_combiteam"
                 ] = self.housing_corporation_combiteam
+        if self.is_bed_and_breakfast is not None:
+            cases_query_params["is_bed_and_breakfast"] = self.is_bed_and_breakfast
         cases_query_params.update(
             {
                 "state_types": self.state_types,

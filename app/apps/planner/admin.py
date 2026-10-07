@@ -21,6 +21,7 @@ class DaySettingsInline(admin.TabularInline):
                     "week_days",
                     "housing_corporations",
                     "housing_corporation_combiteam",
+                    "is_bed_and_breakfast",
                     "day_segments",
                     "week_segments",
                     "priorities",

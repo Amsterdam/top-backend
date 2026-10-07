@@ -160,6 +160,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
             districts=day_settings.districts,
             housing_corporations=day_settings.housing_corporations,
             housing_corporation_combiteam=day_settings.housing_corporation_combiteam,
+            is_bed_and_breakfast=day_settings.is_bed_and_breakfast,
             reasons=day_settings.reasons,
             state_types=day_settings.state_types,
         )
