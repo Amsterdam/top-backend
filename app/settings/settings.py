@@ -26,7 +26,6 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "corsheaders",
     # Third party apps
-    # "keycloak_oidc",
     "rest_framework",  # utilities for rest apis
     "django_filters",  # for filtering rest endpoints,
     "drf_spectacular",  # for generating real OpenAPI 3.0 documentation
