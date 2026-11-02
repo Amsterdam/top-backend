@@ -2,7 +2,7 @@ import logging
 
 import requests
 from django.conf import settings
-from health_check.backends import BaseHealthCheckBackend
+from health_check.backends import HealthCheck
 from health_check.exceptions import ServiceUnavailable
 from settings.celery import debug_task
 from utils import queries_brk_api as brk_api
@@ -10,7 +10,7 @@ from utils import queries_brk_api as brk_api
 logger = logging.getLogger(__name__)
 
 
-class APIServiceCheckBackend(BaseHealthCheckBackend):
+class APIServiceCheckBackend(HealthCheck):
     """
     Generic base class for checking API services
     """
@@ -42,7 +42,7 @@ class APIServiceCheckBackend(BaseHealthCheckBackend):
         else:
             logger.debug("Connection established. API is healthy.")
 
-    def identifier(self):
+    def __repr__(self):
         if self.verbose_name:
             return self.verbose_name
 
@@ -69,13 +69,13 @@ class ZakenServiceCheck(APIServiceCheckBackend):
     verbose_name = "Zaken API Endpoint"
 
 
-class CeleryExecuteTask(BaseHealthCheckBackend):
+class CeleryExecuteTask(HealthCheck):
     def check_status(self):
         result = debug_task.apply_async(ignore_result=False)
         assert result, "Debug task executes successfully"
 
 
-class BRKServiceCheck(BaseHealthCheckBackend):
+class BRKServiceCheck(HealthCheck):
     """
     Endpoint for checking the BRK Service API Endpoint
     """
@@ -92,5 +92,5 @@ class BRKServiceCheck(BaseHealthCheckBackend):
         else:
             logger.info("BRK API connection is healthy.")
 
-    def identifier(self):
+    def __repr__(self):
         return "BRK API"
