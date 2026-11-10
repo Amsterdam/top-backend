@@ -163,3 +163,17 @@ class PuntentellerViewSet(ViewSet):
             body=serializer.validated_data,
         )
         return Response(data, status=status_code)
+
+    @extend_schema(
+        description="Delete a puntentelling.",
+        parameters=[puntentelling_id_parameter],
+        responses={status.HTTP_204_NO_CONTENT: None},
+    )
+    @puntentelling.mapping.delete
+    def delete_puntentelling(self, request, id=None):
+        data, status_code = _proxy_request(
+            "delete",
+            f"/puntenteller/puntentellingen/{id}/",
+            auth_header=get_auth_header_from_request(request),
+        )
+        return Response(data, status=status_code)

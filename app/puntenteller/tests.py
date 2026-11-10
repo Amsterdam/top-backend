@@ -104,3 +104,42 @@ class PuntentellerViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {"id": int(PUNTENTELLING_ID), **payload})
         self.assertEqual(mocker.last_request.json(), payload)
+
+    @requests_mock.Mocker()
+    def test_delete_puntentelling_proxies_no_content(self, mocker):
+        mocker.delete(
+            f"{settings.ZAKEN_API_URL}/puntenteller/puntentellingen/{PUNTENTELLING_ID}/",
+            status_code=204,
+        )
+
+        client = get_force_authenticated_client()
+        response = client.delete(
+            reverse(
+                "v1:puntenteller-puntentelling",
+                kwargs={"id": PUNTENTELLING_ID},
+            )
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(mocker.call_count, 1)
+        self.assertEqual(mocker.last_request.method, "DELETE")
+
+    @requests_mock.Mocker()
+    def test_delete_puntentelling_proxies_error(self, mocker):
+        error = {"detail": "Niet gevonden."}
+        mocker.delete(
+            f"{settings.ZAKEN_API_URL}/puntenteller/puntentellingen/{PUNTENTELLING_ID}/",
+            json=error,
+            status_code=404,
+        )
+
+        client = get_force_authenticated_client()
+        response = client.delete(
+            reverse(
+                "v1:puntenteller-puntentelling",
+                kwargs={"id": PUNTENTELLING_ID},
+            )
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.json(), error)
