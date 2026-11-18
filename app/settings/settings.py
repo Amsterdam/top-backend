@@ -55,6 +55,7 @@ MIDDLEWARE = (
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "utils.middleware.ApiNoStoreMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "mozilla_django_oidc.middleware.SessionRefresh",
